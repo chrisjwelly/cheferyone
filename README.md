@@ -9,7 +9,7 @@ Front-end codebase can be found under `makan-frontend` folder whereas `makan` is
 1. Install ruby 2.6.5.
 2. `cd` to `makan` folder and run `gem install rails`.
 3. Run `bundle install`.
-4. Try starting the server with `rails -s`. Rails should be running at `localhost:3000`.
+4. Try starting the server with `rails s`. Rails should be running at `localhost:3000`.
 
 ### Frontend
 
