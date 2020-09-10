@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
+
+import { useGet } from "./utils/restUtils";
 
 function App() {
-  const [testPayload, setTestPayload] = useState("Loading...");
-
-  useEffect(() => {
-    axios.get("/test/index").then((res) => setTestPayload(res.data.content));
-  }, []);
-
+  const { data, isLoading, error } = useGet(
+    "https://jsonplaceholder.typicode.com/todos/1"
+  );
   return (
     <div>
       <h1>Hello Home Cooks!</h1>
       <p>Example loading from rails backend</p>
-      <p>{testPayload}</p>
+      {isLoading ? <p>Loading...</p> : <p>{data.title}</p>}
     </div>
   );
 }
