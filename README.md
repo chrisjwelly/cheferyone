@@ -15,7 +15,7 @@ Front-end codebase can be found under `makan-frontend` folder whereas `makan` is
 
 1. Install nodejs.
 2. `cd` to `frontend` folder and run `npm install`.
-3. Start the frontend with `npm run start`. Frontend should be running at `localhost:3001`
+3. Start the frontend with `npm run start`. Frontend should be running at `localhost:3001`.
 
 ### Summary
 
