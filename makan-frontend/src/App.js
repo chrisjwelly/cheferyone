@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useGet } from "./utils/restUtils";
+import { useGet } from "./utils/restU-utils";
 
 function App() {
   const { data, isLoading, error } = useGet(
