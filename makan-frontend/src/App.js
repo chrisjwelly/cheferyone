@@ -7,15 +7,22 @@ import { Switch, Route } from "react-router-dom";
 import { useGet } from "./utils/rest-utils";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
-import TopAppBar from "./components/TopAppBar";
 import Home from "./pages/Home";
-import Restaurant from "./pages/Restaurant";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import Restaurant from "./pages/Restaurant";
+import TopAppBar from "./components/TopAppBar";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 
 const useStyles = makeStyles({
   root: {
     marginBottom: "60px",
+  },
+  bottomNavigationBar: {
+    width: "100%",
+    position: "fixed",
+    bottom: 0,
   },
 });
 
@@ -26,6 +33,7 @@ function App() {
   return (
     <>
       <CssBaseline />
+      <ErrorSnackbar />
       {/* Add check to display top and bottom bar depending on auth status */}
       <TopAppBar />
       <Container className={classes.root} maxWidth="sm">
@@ -39,6 +47,9 @@ function App() {
           <Route path="/profile">
             <Profile />
           </Route>
+          <Route exact path="/register">
+            <Register />
+          </Route>
           <Route exact path="/">
             <Home />
           </Route>
@@ -47,7 +58,7 @@ function App() {
           </Route>
         </Switch>
       </Container>
-      <BottomNavigationBar />
+      <BottomNavigationBar className={classes.bottomNavigationBar} />
     </>
   );
 }

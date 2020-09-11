@@ -5,7 +5,12 @@ import rootReducer from "./reducers";
 
 const initialState = {
   auth: { user: {}, loading: false },
-  errors: {},
+  snackbar: {
+    error: {
+      isOpen: false,
+      message: "",
+    },
+  },
 };
 
 const middleware = [thunk];
