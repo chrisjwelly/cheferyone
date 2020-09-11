@@ -48,32 +48,31 @@ function App() {
 
   const currUser = useSelector((store) => store.auth.user);
   useEffect(() => {
-    if (_.isEmpty(currUser)) {
-      // Hydrate redux store if already logged in
-      const user =
-        localStorage.getItem("auth") || sessionStorage.getItem("auth");
-      if (user) {
-        console.log("Getting auth status");
-        const userObj = JSON.parse(user);
-        setAuthHeaders(userObj);
-        dispatch(setCurrentUser(userObj));
-        if (navigator.onLine) {
-          axios
-            .get("/api/authenticated")
-            .catch(() => {
+    async function hydrateRedux() {
+      if (_.isEmpty(currUser)) {
+        const user =
+          localStorage.getItem("auth") || sessionStorage.getItem("auth");
+        if (user) {
+          // Hydrate redux store if already logged in
+          console.log("Getting auth status");
+          const userObj = JSON.parse(user);
+          setAuthHeaders(userObj);
+          dispatch(setCurrentUser(userObj));
+          if (navigator.onLine) {
+            try {
+              await axios.get("/api/authenticated");
+            } catch {
               // Logout if not authenticated anymore
               dispatch(logoutUser());
-            })
-            .finally(() => setIsLoading(false));
-        } else {
-          setIsLoading(false);
+            }
+          }
         }
-      } else {
-        setIsLoading(false);
       }
-    } else {
+
       setIsLoading(false);
     }
+
+    hydrateRedux();
   }, [currUser, dispatch]);
 
   return (
