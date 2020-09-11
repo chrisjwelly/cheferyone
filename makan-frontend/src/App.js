@@ -22,6 +22,7 @@ import SuccessSnackbar from "./components/SuccessSnackbar";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import setAuthHeaders from "./utils/set-auth-headers";
 import axios from "axios";
+import PrivateRoute from "./components/PrivateRoute";
 
 const useStyles = makeStyles({
   root: {
@@ -54,7 +55,7 @@ function App() {
           localStorage.getItem("auth") || sessionStorage.getItem("auth");
         if (user) {
           // Hydrate redux store if already logged in
-          console.log("Getting auth status");
+          console.log("Logging in from storage...");
           const userObj = JSON.parse(user);
           setAuthHeaders(userObj);
           dispatch(setCurrentUser(userObj));
