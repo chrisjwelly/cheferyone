@@ -26,6 +26,7 @@ function App() {
   return (
     <>
       <CssBaseline />
+      {/* Add check to display top and bottom bar depending on auth status */}
       <TopAppBar />
       <Container className={classes.root} maxWidth="sm">
         <Switch>
@@ -38,8 +39,11 @@ function App() {
           <Route path="/profile">
             <Profile />
           </Route>
-          <Route path="/">
+          <Route exact path="/">
             <Home />
+          </Route>
+          <Route path="*">
+            {() => <p>Oh the sadness... This page does not exist.</p>}
           </Route>
         </Switch>
       </Container>
