@@ -1,5 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :ensure_params_exist, only: :create
+  acts_as_token_authentication_handler_for User, except: [:create]
 
   # Create an account
   def create

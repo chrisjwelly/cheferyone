@@ -1,6 +1,7 @@
 class Users::SessionsController < Devise::SessionsController
   before_action :sign_in_params, only: :create
   before_action :load_user, only: :create
+  acts_as_token_authentication_handler_for User, except: [:create]
 
   # sign in
   def create
