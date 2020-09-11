@@ -53,7 +53,8 @@ export const setCurrentUser = (user) => {
 // Log user out
 export const logoutUser = () => (dispatch) => {
   // Remove token from local storage
-  localStorage.removeItem("user");
+  localStorage.removeItem("auth");
+  sessionStorage.removeItem("auth");
   // Remove auth header for future requests
   setAuthHeaders(false);
   // Set current user to empty object {}
