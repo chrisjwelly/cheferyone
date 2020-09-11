@@ -7,14 +7,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 import LoadingButton from "../components/LoadingButton";
-import {
-  openErrorSnackBar,
-  closeErrorSnackBar,
-  openSuccessSnackBar,
-} from "../actions/snackbar-actions";
+import { loginUser } from "../actions/auth-actions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register() {
+export default function Login() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -40,7 +37,7 @@ export default function Register() {
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
-    password_confirmation: "",
+    isRemember: false,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,25 +50,22 @@ export default function Register() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    axios
-      .post("/api/users", JSON.stringify({ user: inputs }))
-      .then((res) => {
-        dispatch(closeErrorSnackBar());
-        dispatch(openSuccessSnackBar("Registration successful!"));
-        history.push("/login");
-      }) // re-direct to login on successful register
-      .catch((err) => {
-        dispatch(openErrorSnackBar("Registration Failed"));
-        setIsLoading(false);
-      });
+    dispatch(
+      loginUser(
+        inputs.email,
+        inputs.password,
+        inputs.isRemember,
+        () => setIsLoading(false),
+        history
+      )
+    );
   };
 
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Register
+          Log In
         </Typography>
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <Grid container spacing={2}>
@@ -101,20 +95,14 @@ export default function Register() {
                 value={inputs.password}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password_confirmation"
-                label="Confirm Password"
-                type="password"
-                id="password_confirmation"
-                onChange={onChange}
-                value={inputs.password_confirmation}
-              />
-            </Grid>
           </Grid>
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            onChange={() =>
+              setInputs({ ...inputs, isRemember: !inputs.isRemember })
+            }
+            label="Remember me"
+          />
           <LoadingButton
             type="submit"
             fullWidth
@@ -123,12 +111,17 @@ export default function Register() {
             className={classes.submit}
             isLoading={isLoading}
           >
-            Register
+            Log In
           </LoadingButton>
-          <Grid container justify="flex-end">
+          <Grid container>
+            <Grid item xs>
+              <Link href="/" variant="body2">
+                Forgot Password?
+              </Link>
+            </Grid>
             <Grid item>
-              <Link href="/login" variant="body2">
-                Already have an account? Log in
+              <Link href="/register" variant="body2">
+                Don't have an account? Register
               </Link>
             </Grid>
           </Grid>

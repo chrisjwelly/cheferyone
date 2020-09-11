@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Switch, Route } from "react-router-dom";
 
-import { useGet } from "./utils/rest-utils";
+// import { useGet } from "./utils/rest-utils";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import Home from "./pages/Home";
@@ -12,8 +12,10 @@ import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Restaurant from "./pages/Restaurant";
+import Login from "./pages/Login";
 import TopAppBar from "./components/TopAppBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
+import SuccessSnackbar from "./components/SuccessSnackbar";
 
 const useStyles = makeStyles({
   root: {
@@ -34,6 +36,7 @@ function App() {
     <>
       <CssBaseline />
       <ErrorSnackbar />
+      <SuccessSnackbar />
       {/* Add check to display top and bottom bar depending on auth status */}
       <TopAppBar />
       <Container className={classes.root} maxWidth="sm">
@@ -49,6 +52,9 @@ function App() {
           </Route>
           <Route exact path="/register">
             <Register />
+          </Route>
+          <Route exact path="/login">
+            <Login />
           </Route>
           <Route exact path="/">
             <Home />

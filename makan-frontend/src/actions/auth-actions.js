@@ -1,9 +1,20 @@
 import axios from "axios";
 import setAuthHeaders from "../utils/set-auth-headers";
-import { GET_ERRORS, SET_CURRENT_USER } from "./types";
+import { SET_CURRENT_USER } from "./types";
+import {
+  openErrorSnackBar,
+  openSuccessSnackBar,
+  closeErrorSnackBar,
+} from "./snackbar-actions";
 
 // Login - get user token
-export const loginUser = (email, password) => (dispatch) => {
+export const loginUser = (
+  email,
+  password,
+  isRemember,
+  setLoadingDone,
+  history
+) => (dispatch) => {
   axios
     .post(
       "/api/users/sign_in",
@@ -12,21 +23,23 @@ export const loginUser = (email, password) => (dispatch) => {
       })
     )
     .then((res) => {
-      // Save to localStorage
-      // Set token to localStorage
-      const { user } = res.data;
-      localStorage.setItem("user", JSON.stringify(user));
+      dispatch(closeErrorSnackBar());
+      const { user } = res.data.data;
       // Set token to Auth header
       setAuthHeaders(user);
-      // Set current user
       dispatch(setCurrentUser(user));
+      if (isRemember) {
+        localStorage.setItem("auth", JSON.stringify(user));
+      } else {
+        sessionStorage.setItem("auth", JSON.stringify(user));
+      }
+      dispatch(openSuccessSnackBar("Login successful!"));
+      history.push("/");
     })
-    .catch((err) =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      })
-    );
+    .catch((err) => {
+      dispatch(openErrorSnackBar("Log In Failed"));
+    })
+    .finally(setLoadingDone);
 };
 
 // Set logged in user

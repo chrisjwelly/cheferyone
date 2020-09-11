@@ -1,4 +1,10 @@
-import { OPEN_ERROR_SNACKBAR, CLOSE_ERROR_SNACKBAR } from "./types";
+import {
+  OPEN_ERROR_SNACKBAR,
+  CLOSE_ERROR_SNACKBAR,
+  CLOSE_ALL_SNACKBARS,
+  OPEN_SUCCESS_SNACKBAR,
+  CLOSE_SUCCESS_SNACKBAR,
+} from "./types";
 
 export const openErrorSnackBar = (message) => {
   return {
@@ -10,5 +16,24 @@ export const openErrorSnackBar = (message) => {
 export const closeErrorSnackBar = () => {
   return {
     type: CLOSE_ERROR_SNACKBAR,
+  };
+};
+
+export const openSuccessSnackBar = (message) => {
+  return {
+    type: OPEN_SUCCESS_SNACKBAR,
+    payload: message,
+  };
+};
+
+export const closeSuccessSnackBar = () => {
+  return {
+    type: CLOSE_SUCCESS_SNACKBAR,
+  };
+};
+
+export const closeAllSnackBars = () => {
+  return {
+    type: CLOSE_ALL_SNACKBARS,
   };
 };

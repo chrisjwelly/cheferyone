@@ -1,11 +1,19 @@
-import { OPEN_ERROR_SNACKBAR, CLOSE_ERROR_SNACKBAR } from "../actions/types";
+import {
+  OPEN_ERROR_SNACKBAR,
+  CLOSE_ERROR_SNACKBAR,
+  OPEN_SUCCESS_SNACKBAR,
+  CLOSE_SUCCESS_SNACKBAR,
+  CLOSE_ALL_SNACKBARS,
+} from "../actions/types";
 
 const initialState = {
-  snackbar: {
-    error: {
-      isOpen: false,
-      message: "",
-    },
+  error: {
+    isOpen: false,
+    message: "",
+  },
+  success: {
+    isOpen: false,
+    message: "",
   },
 };
 
@@ -27,6 +35,24 @@ export default function snackbarReducer(state = initialState, action) {
           message: "",
         },
       };
+    case OPEN_SUCCESS_SNACKBAR:
+      return {
+        ...state,
+        success: {
+          isOpen: true,
+          message: action.payload,
+        },
+      };
+    case CLOSE_SUCCESS_SNACKBAR:
+      return {
+        ...state,
+        success: {
+          isOpen: false,
+          message: "",
+        },
+      };
+    case CLOSE_ALL_SNACKBARS:
+      return initialState;
     default:
       return state;
   }

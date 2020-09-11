@@ -4,9 +4,13 @@ import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 
 const initialState = {
-  auth: { user: {}, loading: false },
+  auth: { user: {} },
   snackbar: {
     error: {
+      isOpen: false,
+      message: "",
+    },
+    success: {
       isOpen: false,
       message: "",
     },

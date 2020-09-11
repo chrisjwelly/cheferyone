@@ -1,7 +1,7 @@
-import { SET_CURRENT_USER, USER_LOADING } from "../actions/types";
+import { SET_CURRENT_USER } from "../actions/types";
 
 const initialState = {
-  auth: { user: {}, loading: false },
+  user: {},
 };
 
 export default function authReducer(state = initialState, action) {
@@ -10,11 +10,6 @@ export default function authReducer(state = initialState, action) {
       return {
         ...state,
         user: action.payload,
-      };
-    case USER_LOADING:
-      return {
-        ...state,
-        loading: true,
       };
     default:
       return state;
