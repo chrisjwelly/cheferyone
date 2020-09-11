@@ -2,6 +2,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import SearchIcon from "@material-ui/icons/Search";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
@@ -16,24 +18,38 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BottomNavigationBar({ className }) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const activeTab = useSelector((state) => state.activeTab);
 
   return (
     <BottomNavigation
-      value={value}
-      onChange={(event, newValue) => {
-        setValue(newValue);
-      }}
+      value={activeTab}
       showLabels
       className={clsx(className, classes.root)}
     >
-      <BottomNavigationAction label="Suggestions" icon={<SearchIcon />} />
+      <BottomNavigationAction
+        label="Suggestions"
+        icon={<SearchIcon />}
+        component={Link}
+        to="/"
+      />
       <BottomNavigationAction
         label="Your Restaurant"
         icon={<RestaurantIcon />}
+        component={Link}
+        to="/your-restaurant"
       />
-      <BottomNavigationAction label="Orders" icon={<ShoppingCartIcon />} />
-      <BottomNavigationAction label="Profile" icon={<PersonIcon />} />
+      <BottomNavigationAction
+        label="Orders"
+        icon={<ShoppingCartIcon />}
+        component={Link}
+        to="/orders"
+      />
+      <BottomNavigationAction
+        label="Profile"
+        icon={<PersonIcon />}
+        component={Link}
+        to="/profile"
+      />
     </BottomNavigation>
   );
 }
