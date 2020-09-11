@@ -1,6 +1,7 @@
 class Users::SessionsController < Devise::SessionsController
   before_action :sign_in_params, only: :create
   before_action :load_user, only: :create
+  acts_as_token_authentication_handler_for User, except: [:create]
 
   # sign in
   def create
@@ -39,7 +40,7 @@ class Users::SessionsController < Devise::SessionsController
         messages: "Cannot get User",
         is_success: false,
         data: {}
-      }, status: :failure
+      }, status: :unauthorized
     end
   end
 end
