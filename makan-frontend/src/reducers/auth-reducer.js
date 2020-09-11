@@ -5,7 +5,7 @@ const initialState = {
   loading: false,
 };
 
-export default function authReducers(state = initialState, action) {
+export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case SET_CURRENT_USER:
       return {
