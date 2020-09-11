@@ -6,17 +6,15 @@ import SearchIcon from "@material-ui/icons/Search";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PersonIcon from "@material-ui/icons/Person";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     borderTop: `1px solid ${theme.palette.grey[400]}`,
-    width: "100%",
-    position: "fixed",
-    bottom: 0,
   },
 }));
 
-export default function BottomNavigationBar() {
+export default function BottomNavigationBar({ className }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -27,7 +25,7 @@ export default function BottomNavigationBar() {
         setValue(newValue);
       }}
       showLabels
-      className={classes.root}
+      className={clsx(className, classes.root)}
     >
       <BottomNavigationAction label="Suggestions" icon={<SearchIcon />} />
       <BottomNavigationAction

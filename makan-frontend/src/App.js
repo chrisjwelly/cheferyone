@@ -1,33 +1,126 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { Switch, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 
-import { useGet } from "./utils/rest-utils";
+// import { useGet } from "./utils/rest-utils";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
+import Home from "./pages/Home";
+import Orders from "./pages/Orders";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import Restaurant from "./pages/Restaurant";
+import Login from "./pages/Login";
 import TopAppBar from "./components/TopAppBar";
+import ErrorSnackbar from "./components/ErrorSnackbar";
+import SuccessSnackbar from "./components/SuccessSnackbar";
+import { setCurrentUser, logoutUser } from "./actions/auth-actions";
+import setAuthHeaders from "./utils/set-auth-headers";
+import axios from "axios";
+import PrivateRoute from "./components/PrivateRoute";
 
 const useStyles = makeStyles({
   root: {
     marginBottom: "60px",
   },
+  bottomNavigationBar: {
+    width: "100%",
+    position: "fixed",
+    bottom: 0,
+  },
+  progress: {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+  },
 });
 
 function App() {
   const classes = useStyles();
-  const { data, isLoading, error } = useGet("/api/test/index");
+  // const { data, isLoading, error } = useGet("/api/test/index");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const dispatch = useDispatch();
+
+  const currUser = useSelector((store) => store.auth.user);
+  useEffect(() => {
+    async function hydrateRedux() {
+      if (_.isEmpty(currUser)) {
+        const user =
+          localStorage.getItem("auth") || sessionStorage.getItem("auth");
+        if (user) {
+          // Hydrate redux store if already logged in
+          console.log("Logging in from storage...");
+          const userObj = JSON.parse(user);
+          setAuthHeaders(userObj);
+          dispatch(setCurrentUser(userObj));
+          if (navigator.onLine) {
+            try {
+              await axios.get("/api/authenticated");
+            } catch {
+              // Logout if not authenticated anymore
+              dispatch(logoutUser());
+            }
+          }
+        }
+      }
+
+      setIsLoading(false);
+    }
+
+    hydrateRedux();
+  }, [currUser, dispatch]);
 
   return (
     <>
       <CssBaseline />
-      <TopAppBar />
+      {isLoading ? <CircularProgress className={classes.progress} /> : <Main />}
+    </>
+  );
+}
+
+function Main() {
+  const classes = useStyles();
+  const currUser = useSelector((store) => store.auth.user);
+
+  return (
+    <>
+      <ErrorSnackbar />
+      <SuccessSnackbar />
+      {!_.isEmpty(currUser) && <TopAppBar />}
       <Container className={classes.root} maxWidth="sm">
-        <h1>Hello Home Cooks!</h1>
-        <p>Example loading from rails backend</p>
-        {isLoading || error ? <p>Loading...</p> : <p>{data.content}</p>}
+        <Switch>
+          <PrivateRoute path="/your-restaurant">
+            <Restaurant />
+          </PrivateRoute>
+          <PrivateRoute path="/orders">
+            <Orders />
+          </PrivateRoute>
+          <PrivateRoute path="/profile">
+            <Profile />
+          </PrivateRoute>
+          <Route exact path="/register">
+            <Register />
+          </Route>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="*">
+            {() => <p>Oh the sadness... This page does not exist.</p>}
+          </Route>
+        </Switch>
       </Container>
-      <BottomNavigationBar />
+      {!_.isEmpty(currUser) && (
+        <BottomNavigationBar className={classes.bottomNavigationBar} />
+      )}
     </>
   );
 }
