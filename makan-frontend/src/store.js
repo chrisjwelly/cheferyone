@@ -15,6 +15,7 @@ const initialState = {
       message: "",
     },
   },
+  activeTab: null,
 };
 
 const middleware = [thunk];

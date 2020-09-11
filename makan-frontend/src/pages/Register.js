@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import _ from "lodash";
 
 import LoadingButton from "../components/LoadingButton";
 import {
@@ -36,6 +37,14 @@ export default function Register() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
+
+  // Redirect if logged in
+  const currUser = useSelector((store) => store.auth.user);
+  useEffect(() => {
+    if (!_.isEmpty(currUser)) {
+      history.push("/");
+    }
+  });
 
   const [inputs, setInputs] = useState({
     email: "",
