@@ -95,15 +95,15 @@ function Main() {
       {!_.isEmpty(currUser) && <TopAppBar />}
       <Container className={classes.root} maxWidth="sm">
         <Switch>
-          <Route path="/your-restaurant">
+          <PrivateRoute path="/your-restaurant">
             <Restaurant />
-          </Route>
-          <Route path="/orders">
+          </PrivateRoute>
+          <PrivateRoute path="/orders">
             <Orders />
-          </Route>
-          <Route path="/profile">
+          </PrivateRoute>
+          <PrivateRoute path="/profile">
             <Profile />
-          </Route>
+          </PrivateRoute>
           <Route exact path="/register">
             <Register />
           </Route>
