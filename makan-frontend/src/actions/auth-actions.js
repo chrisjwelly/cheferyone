@@ -17,7 +17,7 @@ export const loginUser = (
 ) => (dispatch) => {
   axios
     .post(
-      "/api/users/sign_in",
+      "/api/v1/users/sign_in",
       JSON.stringify({
         user: { email, password },
       })

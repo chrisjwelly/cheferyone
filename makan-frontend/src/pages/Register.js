@@ -64,7 +64,7 @@ export default function Register() {
     e.preventDefault();
     setIsLoading(true);
     axios
-      .post("/api/users", JSON.stringify({ user: inputs }))
+      .post("/api/v1/users", JSON.stringify({ user: inputs }))
       .then((res) => {
         dispatch(closeErrorSnackBar());
         dispatch(openSuccessSnackBar("Registration successful!"));
