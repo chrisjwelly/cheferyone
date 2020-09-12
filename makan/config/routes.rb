@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Since everything is a json, any endpoint has to be put inside this block
-  scope '/api', defaults: { format: :json } do
+  scope '/api/v1', defaults: { format: :json } do
     get 'test/index'
     get 'authenticated', to: 'test#authenticated'
 
