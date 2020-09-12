@@ -9,13 +9,16 @@ import { setTabIndex } from "../actions/bottombar-actions";
 
 const useStyles = makeStyles((theme) => ({
   signInContainer: {
-    marginTop: "45%",
+    height: "100vh",
   },
   loginButton: {
     backgroundColor: theme.palette.success.main,
     "&:hover": {
       backgroundColor: theme.palette.success.dark,
     },
+  },
+  buttonContainer: {
+    width: theme.breakpoints.values.sm / 3,
   },
 }));
 
@@ -44,9 +47,10 @@ function NotAuthenticated() {
       container
       spacing={3}
       direction="column"
-      alignContent="center"
+      alignItems="center"
+      justify="center"
     >
-      <Grid item xs={6}>
+      <Grid item className={classes.buttonContainer}>
         <Button
           fullWidth
           variant="contained"
@@ -57,7 +61,7 @@ function NotAuthenticated() {
           Login
         </Button>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item className={classes.buttonContainer}>
         <Button
           fullWidth
           variant="contained"
