@@ -61,7 +61,7 @@ function App() {
           dispatch(setCurrentUser(userObj));
           if (navigator.onLine) {
             try {
-              await axios.get("/api/authenticated");
+              await axios.get("/api/v1/authenticated");
             } catch {
               // Logout if not authenticated anymore
               dispatch(logoutUser());
