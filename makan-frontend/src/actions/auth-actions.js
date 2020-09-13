@@ -38,8 +38,8 @@ export const loginUser = (
     })
     .catch((err) => {
       dispatch(openErrorSnackBar("Log In Failed"));
-    })
-    .finally(setLoadingDone);
+      setLoadingDone();
+    });
 };
 
 // Set logged in user

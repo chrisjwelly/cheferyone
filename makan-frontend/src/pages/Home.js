@@ -5,6 +5,8 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
 
+import MenuCard from "../components/MenuCard";
+
 import { setTabIndex } from "../actions/bottombar-actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +36,7 @@ export default function Home() {
   if (_.isEmpty(currUser)) {
     return <NotAuthenticated />;
   } else {
-    return <h1>Suggestions</h1>;
+    return <MenuCard />;
   }
 }
 
