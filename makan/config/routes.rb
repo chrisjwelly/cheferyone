@@ -14,5 +14,9 @@ Rails.application.routes.draw do
       patch 'users', to: 'users/registrations#update'
       put 'users', to: 'users/registrations#update'
     end
+
+    scope '/menus', controller: 'menus' do
+      get 'recommended'
+    end
   end
 end
