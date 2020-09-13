@@ -4,7 +4,7 @@ class MenusController < ApplicationController
   DEFAULT_OFFSET = 0
   DEFAULT_LIMIT = 10
   def recommended
-    offset = params[:recommended] || DEFAULT_OFFSET
+    offset = params[:offset] || DEFAULT_OFFSET
     limit = params[:limit] || DEFAULT_LIMIT
 
     menus = Menu.limit(limit).offset(offset)
