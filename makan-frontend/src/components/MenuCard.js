@@ -5,9 +5,11 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
+import RatingStars from "../components/RatingStars";
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 250,
+    maxWidth: theme.breakpoints.values.sm / 3,
   },
   media: {
     height: 0,
@@ -18,9 +20,6 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     overflow: "hidden",
-  },
-  price: {
-    textAlign: "right",
   },
 }));
 
@@ -36,11 +35,12 @@ export default function MenuCard() {
       />
       <CardContent>
         <Typography variant="h6" className={classes.title}>
-          Chicken Rice Power nasi
+          The Soup Spoon
         </Typography>
-        <Typography variant="subtitle2" className={classes.price}>
+        <Typography variant="subtitle2" color="textSecondary">
           Price
         </Typography>
+        <RatingStars rating={3.8} />
       </CardContent>
     </Card>
   );

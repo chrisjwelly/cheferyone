@@ -36,7 +36,13 @@ export default function Home() {
   if (_.isEmpty(currUser)) {
     return <NotAuthenticated />;
   } else {
-    return <MenuCard />;
+    return (
+      <>
+        <MenuCard />
+        <MenuCard />
+        <MenuCard />
+      </>
+    );
   }
 }
 
