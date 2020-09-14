@@ -5,7 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
 
+import MenuCard from "../components/MenuCard";
+import SuggestionsSectionContainer from "../components/SuggestionsSectionContainer";
+import LoadingCenter from "../components/LoadingCenter";
 import { setTabIndex } from "../actions/bottombar-actions";
+import { useGet } from "../utils/rest-utils";
+import { NUMBER_OF_SUGGESTIONS } from "../constants";
 
 const useStyles = makeStyles((theme) => ({
   signInContainer: {
@@ -34,7 +39,56 @@ export default function Home() {
   if (_.isEmpty(currUser)) {
     return <NotAuthenticated />;
   } else {
-    return <h1>Suggestions</h1>;
+    return <Authenticated />;
+  }
+}
+
+function Authenticated() {
+  const {
+    data: recommended,
+    isLoading: isRecommendedLoading,
+    error: recommendedError,
+  } = useGet(
+    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+  );
+
+  if (isRecommendedLoading) {
+    return <LoadingCenter />;
+  } else {
+    return (
+      <>
+        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+          {recommended.map((obj, i) => (
+            <MenuCard
+              key={i}
+              price={obj.price}
+              rating={obj.rating}
+              title={obj.name}
+            />
+          ))}
+        </SuggestionsSectionContainer>
+        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+          {recommended.map((obj, i) => (
+            <MenuCard
+              key={i}
+              price={obj.price}
+              rating={obj.rating}
+              title={obj.name}
+            />
+          ))}
+        </SuggestionsSectionContainer>
+        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+          {recommended.map((obj, i) => (
+            <MenuCard
+              key={i}
+              price={obj.price}
+              rating={obj.rating}
+              title={obj.name}
+            />
+          ))}
+        </SuggestionsSectionContainer>
+      </>
+    );
   }
 }
 

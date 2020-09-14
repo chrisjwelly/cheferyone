@@ -31,6 +31,7 @@ you might need to reset the whole database with the following sequence of comman
 2. To run frontend, `cd` to `makan-frontend` and run `npm run start`.
 
 Team 1
+
 - Christian James Welly
 - Mario Lorenzo
 - Nelson Tan Kok Yi
