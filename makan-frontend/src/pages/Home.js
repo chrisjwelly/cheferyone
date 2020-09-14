@@ -4,21 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 import MenuCard from "../components/MenuCard";
-
-import { setTabIndex } from "../actions/bottombar-actions";
 import SuggestionsSectionContainer from "../components/SuggestionsSectionContainer";
+import LoadingCenter from "../components/LoadingCenter";
+import { setTabIndex } from "../actions/bottombar-actions";
+import { useGet } from "../utils/rest-utils";
+import { NUMBER_OF_SUGGESTIONS } from "../constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "relative",
-  },
-  progress: {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
   },
   signInContainer: {
     height: "100vh",
@@ -46,33 +42,23 @@ export default function Home() {
   if (_.isEmpty(currUser)) {
     return <NotAuthenticated />;
   } else {
-    return (
-      <>
-        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
-          <MenuCard />
-          <MenuCard />
-          <MenuCard />
-          <MenuCard />
-        </SuggestionsSectionContainer>
-        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
-          <MenuCard />
-          <MenuCard />
-          <MenuCard />
-          <MenuCard />
-        </SuggestionsSectionContainer>
-        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
-          <MenuCard />
-          <MenuCard />
-          <MenuCard />
-          <MenuCard />
-        </SuggestionsSectionContainer>
-      </>
-    );
+    return <Authenticated />;
   }
 }
 
 function Authenticated() {
   const classes = useStyles();
+  const {
+    data: recommended,
+    isLoading: recommendedLoading,
+    error: recommendedError,
+  } = useGet("/");
+
+  return (
+    <div className={classes.root}>
+      <LoadingCenter />
+    </div>
+  );
 }
 
 function NotAuthenticated() {

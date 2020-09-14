@@ -6,6 +6,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
+import axios from "axios";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import Home from "./pages/Home";
@@ -19,8 +20,8 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import setAuthHeaders from "./utils/set-auth-headers";
-import axios from "axios";
 import PrivateRoute from "./components/PrivateRoute";
+import LoadingCenter from "./components/LoadingCenter";
 
 const useStyles = makeStyles({
   root: {
@@ -31,15 +32,11 @@ const useStyles = makeStyles({
     position: "fixed",
     bottom: 0,
   },
-  progress: {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-  },
 });
 
 function App() {
   const classes = useStyles();
+  // const { data, isLoading, error } = useGet("/api/test/index");
   const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
@@ -76,7 +73,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      {isLoading ? <CircularProgress className={classes.progress} /> : <Main />}
+      {isLoading ? <LoadingCenter /> : <Main />}
     </>
   );
 }
