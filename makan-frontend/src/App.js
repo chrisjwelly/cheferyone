@@ -7,8 +7,6 @@ import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 
-// import { useGet } from "./utils/rest-utils";
-
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import Home from "./pages/Home";
 import Orders from "./pages/Orders";
@@ -42,7 +40,6 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
-  // const { data, isLoading, error } = useGet("/api/test/index");
   const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();

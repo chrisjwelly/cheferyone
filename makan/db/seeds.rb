@@ -6,6 +6,14 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+# Create Users
+
+# Create Home Chefs, Restaurants and Menus
 5.times do |i|
-  Menu.create(name: "Menu ##{i}", description: "A great menu.", price: 0.5 + i, rating: i - 0.5)
+  chef = User.create(email: "chef#{i + 1}@example.com", password: "123456")
+  restaurant = chef.create_restaurant(description: "Chef's Kitchen #{i + 1}", location: "NUS PGPR Block #{i + 1}")
+
+  3.times do |j|
+    restaurant.menus.create(name: "Menu ##{j + 1}", description: "A great menu.", price: 0.5 + i + j, rating: i + j + 0.5)
+  end
 end

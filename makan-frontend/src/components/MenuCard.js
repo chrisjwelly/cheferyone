@@ -9,7 +9,7 @@ import RatingStars from "../components/RatingStars";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: theme.breakpoints.values.sm / 3,
+    maxWidth: theme.breakpoints.values.sm / 4,
   },
   media: {
     height: 0,
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuCard() {
+export default function MenuCard({ title, price, rating }) {
   const classes = useStyles();
 
   return (
@@ -34,11 +34,11 @@ export default function MenuCard() {
         title="Paella dish"
       />
       <CardContent>
-        <Typography variant="h6" className={classes.title}>
-          The Soup Spoon
+        <Typography variant="subtitle1" className={classes.title}>
+          {title}
         </Typography>
         <Typography variant="subtitle2" color="textSecondary">
-          Price
+          {`S$${price}`}
         </Typography>
         <RatingStars rating={3.8} />
       </CardContent>

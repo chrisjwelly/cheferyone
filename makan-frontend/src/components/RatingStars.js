@@ -32,17 +32,17 @@ export default function RatingStars({ rating }) {
       {[
         ..._.range(numberOfFullStars).map((index) => (
           <Grid key={index} item>
-            <StarIcon className={classes.star} />
+            <StarIcon fontSize="small" className={classes.star} />
           </Grid>
         )),
         ..._.range(numberOfHalfStars).map((index) => (
           <Grid item key={index + numberOfFullStars}>
-            <StarHalfIcon className={classes.star} />
+            <StarHalfIcon fontSize="small" className={classes.star} />
           </Grid>
         )),
         ..._.range(numberOfEmptyStars).map((index) => (
           <Grid item key={index + numberOfFullStars + numberOfHalfStars}>
-            <StarBorderIcon className={classes.star} />
+            <StarBorderIcon fontSize="small" className={classes.star} />
           </Grid>
         )),
       ]}
