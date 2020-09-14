@@ -38,9 +38,9 @@ export default function MenuCard({ title, price, rating }) {
           {title}
         </Typography>
         <Typography variant="subtitle2" color="textSecondary">
-          {`S$${price}`}
+          {`S$${Number(price).toFixed(2)}`}
         </Typography>
-        <RatingStars rating={3.8} />
+        <RatingStars rating={rating} />
       </CardContent>
     </Card>
   );

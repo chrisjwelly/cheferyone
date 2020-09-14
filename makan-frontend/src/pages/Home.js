@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   useEffect(() => {
     dispatch(setTabIndex(0));
@@ -42,23 +43,39 @@ export default function Home() {
   if (_.isEmpty(currUser)) {
     return <NotAuthenticated />;
   } else {
-    return <Authenticated />;
+    return (
+      <div className={classes.root}>
+        <Authenticated />
+      </div>
+    );
   }
 }
 
 function Authenticated() {
-  const classes = useStyles();
   const {
     data: recommended,
-    isLoading: recommendedLoading,
+    isLoading: isRecommendedLoading,
     error: recommendedError,
-  } = useGet("/");
-
-  return (
-    <div className={classes.root}>
-      <LoadingCenter />
-    </div>
+  } = useGet(
+    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
   );
+
+  if (isRecommendedLoading) {
+    return <LoadingCenter />;
+  } else {
+    return (
+      <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+        {recommended.map((obj, i) => (
+          <MenuCard
+            key={i}
+            price={obj.price}
+            rating={obj.rating}
+            title={obj.name}
+          />
+        ))}
+      </SuggestionsSectionContainer>
+    );
+  }
 }
 
 function NotAuthenticated() {

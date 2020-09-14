@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
@@ -35,8 +34,6 @@ const useStyles = makeStyles({
 });
 
 function App() {
-  const classes = useStyles();
-  // const { data, isLoading, error } = useGet("/api/test/index");
   const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();

@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 export default function RatingStars({ rating }) {
   const classes = useStyles();
 
-  const nearestHalf = Math.round(rating * 2) / 2;
+  const nearestHalf = Math.round(Number(rating) * 2) / 2;
 
   const numberOfFullStars = Math.floor(nearestHalf);
   const numberOfHalfStars = (nearestHalf - numberOfFullStars) * 2;
