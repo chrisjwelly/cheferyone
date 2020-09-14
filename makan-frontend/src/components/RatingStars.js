@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RatingStars({ rating }) {
+export default function RatingStars({ rating, size }) {
   const classes = useStyles();
 
   const nearestHalf = Math.round(Number(rating) * 2) / 2;
@@ -32,17 +32,17 @@ export default function RatingStars({ rating }) {
       {[
         ..._.range(numberOfFullStars).map((index) => (
           <Grid key={index} item>
-            <StarIcon fontSize="small" className={classes.star} />
+            <StarIcon fontSize={size} className={classes.star} />
           </Grid>
         )),
         ..._.range(numberOfHalfStars).map((index) => (
           <Grid item key={index + numberOfFullStars}>
-            <StarHalfIcon fontSize="small" className={classes.star} />
+            <StarHalfIcon fontSize={size} className={classes.star} />
           </Grid>
         )),
         ..._.range(numberOfEmptyStars).map((index) => (
           <Grid item key={index + numberOfFullStars + numberOfHalfStars}>
-            <StarBorderIcon fontSize="small" className={classes.star} />
+            <StarBorderIcon fontSize={size} className={classes.star} />
           </Grid>
         )),
       ]}

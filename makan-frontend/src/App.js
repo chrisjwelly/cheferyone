@@ -13,6 +13,7 @@ import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Restaurant from "./pages/Restaurant";
+import Menu from "./pages/Menu";
 import Login from "./pages/Login";
 import TopAppBar from "./components/TopAppBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
@@ -83,7 +84,7 @@ function Main() {
     <>
       <ErrorSnackbar />
       <SuccessSnackbar />
-      {!_.isEmpty(currUser) && <TopAppBar />}
+      <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
         <Switch>
           <PrivateRoute path="/your-restaurant">
@@ -100,6 +101,9 @@ function Main() {
           </Route>
           <Route exact path="/login">
             <Login />
+          </Route>
+          <Route exact path="/menu">
+            <Menu />
           </Route>
           <Route exact path="/">
             <Home />

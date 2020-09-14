@@ -13,9 +13,6 @@ import { useGet } from "../utils/rest-utils";
 import { NUMBER_OF_SUGGESTIONS } from "../constants";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    position: "relative",
-  },
   signInContainer: {
     height: "100vh",
   },
@@ -32,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   useEffect(() => {
     dispatch(setTabIndex(0));
@@ -43,11 +39,7 @@ export default function Home() {
   if (_.isEmpty(currUser)) {
     return <NotAuthenticated />;
   } else {
-    return (
-      <div className={classes.root}>
-        <Authenticated />
-      </div>
-    );
+    return <Authenticated />;
   }
 }
 
@@ -64,16 +56,38 @@ function Authenticated() {
     return <LoadingCenter />;
   } else {
     return (
-      <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
-        {recommended.map((obj, i) => (
-          <MenuCard
-            key={i}
-            price={obj.price}
-            rating={obj.rating}
-            title={obj.name}
-          />
-        ))}
-      </SuggestionsSectionContainer>
+      <>
+        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+          {recommended.map((obj, i) => (
+            <MenuCard
+              key={i}
+              price={obj.price}
+              rating={obj.rating}
+              title={obj.name}
+            />
+          ))}
+        </SuggestionsSectionContainer>
+        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+          {recommended.map((obj, i) => (
+            <MenuCard
+              key={i}
+              price={obj.price}
+              rating={obj.rating}
+              title={obj.name}
+            />
+          ))}
+        </SuggestionsSectionContainer>
+        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+          {recommended.map((obj, i) => (
+            <MenuCard
+              key={i}
+              price={obj.price}
+              rating={obj.rating}
+              title={obj.name}
+            />
+          ))}
+        </SuggestionsSectionContainer>
+      </>
     );
   }
 }

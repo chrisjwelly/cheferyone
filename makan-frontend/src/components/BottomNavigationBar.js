@@ -4,7 +4,7 @@ import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import SearchIcon from "@material-ui/icons/Search";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PersonIcon from "@material-ui/icons/Person";
@@ -28,8 +28,8 @@ export default function BottomNavigationBar({ className }) {
       className={clsx(className, classes.root)}
     >
       <BottomNavigationAction
-        label="Suggestions"
-        icon={<SearchIcon />}
+        label="Menus"
+        icon={<MenuBookIcon />}
         component={Link}
         to="/"
       />

@@ -9,29 +9,30 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: theme.breakpoints.values.sm,
-    maxWidth: "100%",
+    backgroundColor: "#fb5530",
   },
   title: {
     flexGrow: 1,
   },
 }));
 
-export default function TopAppBar() {
+export default function TopAppBar({ hasBell }) {
   const classes = useStyles();
 
   return (
     <>
-      <AppBar>
+      <AppBar className={classes.root}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Cheferyone
           </Typography>
-          <IconButton aria-label="notifications" color="inherit">
-            <Badge badgeContent={0} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          {hasBell && (
+            <IconButton aria-label="notifications" color="inherit">
+              <Badge badgeContent={0} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
       <Toolbar />
