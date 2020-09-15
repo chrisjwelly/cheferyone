@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -47,18 +47,16 @@ export default function ListMenu({ section }) {
 
 function MenuList({ title, apiPath }) {
   const classes = useStyles();
-
   const { data, isLoading, isEnd, loadNextPage } = useScroll(apiPath);
-
-  if (!data) {
-    return <LoadingCenter />;
-  }
-
   const requestNextPage = (isVisible) => {
     if (isVisible && !isEnd && !isLoading) {
       loadNextPage();
     }
   };
+
+  if (!data) {
+    return <LoadingCenter />;
+  }
 
   return (
     <div className={classes.root}>
