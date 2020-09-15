@@ -18,5 +18,7 @@ Rails.application.routes.draw do
     scope '/menus', controller: 'menus' do
       get 'recommended'
     end
+
+    resource '/your_restaurant', controller: :restaurants
   end
 end

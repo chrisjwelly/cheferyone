@@ -8,4 +8,8 @@ class User < ApplicationRecord
   has_many :menus, through: :restaurant
 
   acts_as_token_authenticatable
+
+  def chef?
+    not restaurant.nil?
+  end
 end
