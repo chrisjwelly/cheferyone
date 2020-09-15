@@ -21,12 +21,17 @@ export default function NumberInput({ value, setValue, ...rest }) {
   const updateValue = (newValue) => {
     if (newValue === "") {
       setValue(newValue);
-    } else if (newValue > 0 && !isNaN(newValue)) {
+    } else if (
+      newValue > 0 &&
+      !isNaN(newValue) &&
+      newValue <= Number.MAX_SAFE_INTEGER
+    ) {
       setValue(parseInt(newValue));
     }
   };
 
-  const isIncrementDisabled = () => value === "";
+  const isIncrementDisabled = () =>
+    value === "" || value >= Number.MAX_SAFE_INTEGER;
   const isDecrementDisabled = () => value === "" || value === 1;
 
   return (

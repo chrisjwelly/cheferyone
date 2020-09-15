@@ -3,32 +3,21 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import Drawer from "@material-ui/core/Drawer";
-import TextField from "@material-ui/core/TextField";
+import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import LinesEllipsis from "react-lines-ellipsis";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import RatingStars from "../components/RatingStars";
 import NumberInput from "../components/NumberInput";
+import MenuHeader from "../components/MenuHeader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingBottom: "40px",
-  },
-  header: {
-    paddingTop: "30px",
-  },
-  thumbnail: {
-    objectFit: "cover",
-    height: theme.breakpoints.values.sm / 5,
-    width: theme.breakpoints.values.sm / 5,
-    boxShadow: theme.shadows[1],
-  },
-  headerTextContainer: {
-    marginLeft: "10px",
-    overflow: "hidden",
   },
   showMoreButtonContainer: {
     textAlign: "center",
@@ -42,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "auto",
     marginLeft: "auto",
   },
-  orderNowButton: {
+  button: {
     backgroundColor: theme.palette.success.main,
     "&:hover": {
       backgroundColor: theme.palette.success.dark,
@@ -50,7 +39,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.white,
   },
   orderDrawerContent: {
-    padding: "10px",
+    overflowY: "hidden",
+    paddingTop: "8px",
+    paddingBottom: "8px",
+  },
+  orderDrawerHeaderContainer: {
+    width: "100%",
   },
   orderDrawerThumbnail: {
     objectFit: "cover",
@@ -63,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: "ellipsis",
     overflow: "hidden",
   },
+  addToCartButtonContainer: {
+    textAlign: "center",
+  },
 }));
 
 export default function Menu() {
@@ -72,18 +69,23 @@ export default function Menu() {
 
   return (
     <div className={classes.root}>
-      <Header />
+      <MenuHeader
+        name="Nsai Kang KangNsai Kang KangNsai Kang KangNsai Kang KangNsai Kang KangNsai Kang KangNsai Kang Kang"
+        homecook="Soo Yuen Jien"
+        image="/logan.jpg"
+        rating={3.2}
+      />
       <Details />
       <div className={classes.orderNowContainer}>
         <Button
           variant="contained"
-          className={classes.orderNowButton}
+          className={classes.button}
           onClick={() => setIsOrderOpen(true)}
         >
           Order Now!
         </Button>
       </div>
-      <OrderDrawer open={true} onClose={() => setIsOrderOpen(false)} />
+      <OrderDrawer open={isOrderOpen} onClose={() => setIsOrderOpen(false)} />
     </div>
   );
 }
@@ -159,67 +161,81 @@ function Details() {
   );
 }
 
-function OrderDrawer(props) {
+function OrderDrawer({ onClose, ...rest }) {
   const classes = useStyles();
 
   const [quantity, setQuantity] = useState(1);
 
   return (
-    <Drawer {...props} anchor="bottom">
-      <Grid
-        container
-        direction="column"
-        spacing={2}
-        className={classes.orderDrawerContent}
-      >
-        <Grid item>
-          <Grid container wrap="nowrap" alignItems="center">
-            <Grid item>
-              <img
-                className={classes.orderDrawerThumbnail}
-                src="/rectangle.png"
-              />
-            </Grid>
-            <Grid item className={classes.headerTextContainer}>
-              <Typography variant="body1" className={classes.orderDrawerTitle}>
-                Nasi Kang Kang
-              </Typography>
-              <Typography variant="body1" className={classes.orderDrawerTitle}>
-                S$10
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <NumberInput
-            required
-            label="Quantity"
-            value={quantity}
-            setValue={setQuantity}
-          />
-        </Grid>
-        <Grid item>
-          <Typography variant="body1">Delivery Details</Typography>
-          <Grid container alignItems="center" spacing={1}>
-            <Grid item>
-              <AccessTimeIcon />
-            </Grid>
-            <Grid item>
-              <Typography variant="caption">
-                26th September 2020 9:00AM - 5:00PM
-              </Typography>
+    <Drawer {...rest} onClose={onClose} anchor="bottom">
+      <Container maxWidth="sm" className={classes.orderDrawerContent}>
+        <Grid container direction="column" spacing={2}>
+          <Grid item className={classes.orderDrawerHeaderContainer}>
+            <Grid container wrap="nowrap" alignItems="center">
+              <Grid item>
+                <img
+                  className={classes.orderDrawerThumbnail}
+                  src="/rectangle.png"
+                />
+              </Grid>
+              <Grid item className={classes.headerTextContainer}>
+                <Typography
+                  variant="body1"
+                  className={classes.orderDrawerTitle}
+                >
+                  Nasi Kang Kang sosososososoosososososoososo looooong
+                </Typography>
+                <Typography
+                  variant="body1"
+                  className={classes.orderDrawerTitle}
+                >
+                  S$10
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid container alignItems="center" spacing={1}>
-            <Grid item>
-              <AttachMoneyIcon />
+          <Grid item>
+            <NumberInput
+              required
+              label="Quantity"
+              value={quantity}
+              setValue={setQuantity}
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="body1">Delivery Details</Typography>
+            <Grid container alignItems="center" spacing={1}>
+              <Grid item>
+                <AccessTimeIcon />
+              </Grid>
+              <Grid item>
+                <Typography variant="caption">
+                  26th September 2020 9:00AM - 5:00PM
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography variant="caption">S$3</Typography>
+            <Grid container alignItems="center" spacing={1}>
+              <Grid item>
+                <AttachMoneyIcon />
+              </Grid>
+              <Grid item>
+                <Typography variant="caption">S$3</Typography>
+              </Grid>
             </Grid>
           </Grid>
+          <Grid item className={classes.addToCartButtonContainer}>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.button}
+              startIcon={<ShoppingCartIcon />}
+              disabled={quantity <= 0 || quantity === ""}
+            >
+              Add To Cart
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </Container>
     </Drawer>
   );
 }
