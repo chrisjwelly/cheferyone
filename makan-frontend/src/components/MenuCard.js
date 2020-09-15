@@ -10,8 +10,10 @@ import RatingStars from "../components/RatingStars";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: theme.breakpoints.values.sm / 4,
     textDecoration: "none",
+  },
+  card: {
+    maxWidth: theme.breakpoints.values.sm / 4,
   },
   media: {
     height: 0,
@@ -30,7 +32,7 @@ export default function MenuCard({ name, price, rating, link, image }) {
 
   return (
     <Link to={link} className={classes.root}>
-      <Card>
+      <Card className={classes.card}>
         <CardMedia className={classes.media} image={image} title={name} />
         <CardContent>
           <Typography variant="subtitle1" className={classes.title}>
