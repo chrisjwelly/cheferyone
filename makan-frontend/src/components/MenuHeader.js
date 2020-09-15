@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.breakpoints.values.sm / 5,
     boxShadow: theme.shadows[1],
   },
-  headerTextContainer: {
+  nameContainer: {
     marginLeft: "10px",
     overflow: "hidden",
   },
@@ -30,7 +30,7 @@ export default function MenuHeader({ name, rating, homecook, image }) {
       <Grid item>
         <img alt={name} className={classes.thumbnail} src={image} />
       </Grid>
-      <Grid item className={classes.headerTextContainer}>
+      <Grid item className={classes.nameContainer}>
         <Typography variant="h6" component="div">
           <LinesEllipsis text={name} maxLine="2" basedOn="letters" />
         </Typography>
