@@ -64,6 +64,7 @@ function Authenticated() {
               price={obj.price}
               rating={obj.rating}
               title={obj.name}
+              link="/menu"
             />
           ))}
         </SuggestionsSectionContainer>
@@ -74,6 +75,7 @@ function Authenticated() {
               price={obj.price}
               rating={obj.rating}
               title={obj.name}
+              link="/menu"
             />
           ))}
         </SuggestionsSectionContainer>
@@ -84,6 +86,7 @@ function Authenticated() {
               price={obj.price}
               rating={obj.rating}
               title={obj.name}
+              link="/menu"
             />
           ))}
         </SuggestionsSectionContainer>

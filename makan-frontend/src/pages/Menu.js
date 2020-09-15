@@ -2,11 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
+import Drawer from "@material-ui/core/Drawer";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import LinesEllipsis from "react-lines-ellipsis";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 
 import RatingStars from "../components/RatingStars";
+import NumberInput from "../components/NumberInput";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,9 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   headerTextContainer: {
     marginLeft: "10px",
-  },
-  menuTitle: {
-    overflowWrap: "anywhere",
+    overflow: "hidden",
   },
   showMoreButtonContainer: {
     textAlign: "center",
@@ -46,19 +49,41 @@ const useStyles = makeStyles((theme) => ({
     },
     color: theme.palette.common.white,
   },
+  orderDrawerContent: {
+    padding: "10px",
+  },
+  orderDrawerThumbnail: {
+    objectFit: "cover",
+    height: theme.breakpoints.values.sm / 7,
+    width: theme.breakpoints.values.sm / 7,
+    boxShadow: theme.shadows[1],
+  },
+  orderDrawerTitle: {
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+  },
 }));
 
 export default function Menu() {
   const classes = useStyles();
+
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
+
   return (
     <div className={classes.root}>
       <Header />
       <Details />
       <div className={classes.orderNowContainer}>
-        <Button variant="contained" className={classes.orderNowButton}>
+        <Button
+          variant="contained"
+          className={classes.orderNowButton}
+          onClick={() => setIsOrderOpen(true)}
+        >
           Order Now!
         </Button>
       </div>
+      <OrderDrawer open={true} onClose={() => setIsOrderOpen(false)} />
     </div>
   );
 }
@@ -71,16 +96,15 @@ function Header() {
       container
       wrap="nowrap"
       alignItems="center"
-      justify="space-between"
       className={classes.header}
     >
-      <Grid item xs={6}>
-        <img className={classes.thumbnail} src="/rectangle.png" />
+      <Grid item>
+        <img className={classes.thumbnail} src="/logan.jpg" />
       </Grid>
       <Grid item className={classes.headerTextContainer}>
-        <Typography className={classes.menuTitle} variant="h6" component="div">
+        <Typography variant="h6" component="div">
           <LinesEllipsis
-            text="Nasi Kang Kang Name very very very very veryveryvery long"
+            text="Nasi Kang Kang name is ososososososoosos longlonglonglonglonglong"
             maxLine="2"
             basedOn="letters"
           />
@@ -102,13 +126,13 @@ function Details() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    if (descriptionRef.current) {
+    if (descriptionRef && descriptionRef.current) {
       setIsTooLong(descriptionRef.current.isClamped());
     }
   }, [descriptionRef]);
 
   return (
-    <>
+    <div>
       <Typography variant="h5">Details</Typography>
       <Typography variant="h6">S$10.00</Typography>
       <Typography variant="body1" component="div">
@@ -131,6 +155,71 @@ function Details() {
           </Button>
         </div>
       )}
-    </>
+    </div>
+  );
+}
+
+function OrderDrawer(props) {
+  const classes = useStyles();
+
+  const [quantity, setQuantity] = useState(1);
+
+  return (
+    <Drawer {...props} anchor="bottom">
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        className={classes.orderDrawerContent}
+      >
+        <Grid item>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item>
+              <img
+                className={classes.orderDrawerThumbnail}
+                src="/rectangle.png"
+              />
+            </Grid>
+            <Grid item className={classes.headerTextContainer}>
+              <Typography variant="body1" className={classes.orderDrawerTitle}>
+                Nasi Kang Kang
+              </Typography>
+              <Typography variant="body1" className={classes.orderDrawerTitle}>
+                S$10
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <NumberInput
+            required
+            label="Quantity"
+            value={quantity}
+            setValue={setQuantity}
+          />
+        </Grid>
+        <Grid item>
+          <Typography variant="body1">Delivery Details</Typography>
+          <Grid container alignItems="center" spacing={1}>
+            <Grid item>
+              <AccessTimeIcon />
+            </Grid>
+            <Grid item>
+              <Typography variant="caption">
+                26th September 2020 9:00AM - 5:00PM
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" spacing={1}>
+            <Grid item>
+              <AttachMoneyIcon />
+            </Grid>
+            <Grid item>
+              <Typography variant="caption">S$3</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Drawer>
   );
 }
