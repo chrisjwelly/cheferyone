@@ -1,19 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Collapse from "@material-ui/core/Collapse";
 import Drawer from "@material-ui/core/Drawer";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import LinesEllipsis from "react-lines-ellipsis";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import NumberInput from "../components/NumberInput";
-import MenuHeader from "../components/MenuHeader";
-import MenuDetails from "../components/MenuDetails";
 
 const useStyles = makeStyles((theme) => ({
   content: {

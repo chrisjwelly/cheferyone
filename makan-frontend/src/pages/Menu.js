@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
 import MenuDetails from "../components/MenuDetails";
