@@ -14,8 +14,8 @@ import NumberInput from "../components/NumberInput";
 const useStyles = makeStyles((theme) => ({
   content: {
     overflowY: "hidden",
-    paddingTop: "8px",
-    paddingBottom: "8px",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
   },
   headerContainer: {
     width: "100%",
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   nameContainer: {
-    marginLeft: "10px",
+    marginLeft: theme.spacing(1),
     overflow: "hidden",
   },
   button: {
@@ -100,7 +100,7 @@ export default function MenuOrderDrawer({
                 <AttachMoneyIcon />
               </Grid>
               <Grid item>
-                <Typography variant="caption">{`S${deliveryFee}`}</Typography>
+                <Typography variant="caption">{`S$${deliveryFee}`}</Typography>
               </Grid>
             </Grid>
           </Grid>

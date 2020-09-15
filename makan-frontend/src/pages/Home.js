@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 
 import MenuCard from "../components/MenuCard";
 import SuggestionsSectionContainer from "../components/SuggestionsSectionContainer";
@@ -57,36 +58,42 @@ function Authenticated() {
   } else {
     return (
       <>
-        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+        <SuggestionsSectionContainer
+          title="Recommended"
+          seeMorePath="/recommended"
+        >
           {recommended.map((obj, i) => (
             <MenuCard
               key={i}
               price={obj.price}
               rating={obj.rating}
-              title={obj.name}
-              link="/menu"
+              name={obj.name}
+              link={`/menu/${obj.id}`}
+              image="/logo512.png"
             />
           ))}
         </SuggestionsSectionContainer>
-        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+        <SuggestionsSectionContainer title="Near You" seeMorePath="/nearby">
           {recommended.map((obj, i) => (
             <MenuCard
               key={i}
               price={obj.price}
               rating={obj.rating}
-              title={obj.name}
-              link="/menu"
+              name={obj.name}
+              link={`/menu/${obj.id}`}
+              image="/logo512.png"
             />
           ))}
         </SuggestionsSectionContainer>
-        <SuggestionsSectionContainer title="Recommended" seeMorePath="/">
+        <SuggestionsSectionContainer title="New" seeMorePath="/new">
           {recommended.map((obj, i) => (
             <MenuCard
               key={i}
               price={obj.price}
               rating={obj.rating}
-              title={obj.name}
-              link="/menu"
+              name={obj.name}
+              link={`/menu/${obj.id}`}
+              image="/logo512.png"
             />
           ))}
         </SuggestionsSectionContainer>
@@ -113,7 +120,8 @@ function NotAuthenticated() {
           variant="contained"
           color="primary"
           classes={{ root: classes.loginButton }}
-          href="/login"
+          component={Link}
+          to="/login"
         >
           Login
         </Button>
@@ -123,7 +131,8 @@ function NotAuthenticated() {
           fullWidth
           variant="contained"
           color="secondary"
-          href="/register"
+          component={Link}
+          to="/register"
         >
           Register
         </Button>

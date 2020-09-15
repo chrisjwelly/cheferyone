@@ -15,6 +15,8 @@ import Register from "./pages/Register";
 import Restaurant from "./pages/Restaurant";
 import Menu from "./pages/Menu";
 import Login from "./pages/Login";
+import ListMenu from "./pages/ListMenu";
+import NotFound from "./pages/NotFound";
 import TopAppBar from "./components/TopAppBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import SuccessSnackbar from "./components/SuccessSnackbar";
@@ -23,16 +25,16 @@ import setAuthHeaders from "./utils/set-auth-headers";
 import PrivateRoute from "./components/PrivateRoute";
 import LoadingCenter from "./components/LoadingCenter";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: "60px",
+    marginBottom: theme.spacing(9),
   },
   bottomNavigationBar: {
     width: "100%",
     position: "fixed",
     bottom: 0,
   },
-});
+}));
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -96,20 +98,29 @@ function Main() {
           <PrivateRoute path="/profile">
             <Profile />
           </PrivateRoute>
+          <PrivateRoute exact path="/recommended">
+            <ListMenu section="recommended" />
+          </PrivateRoute>
+          <PrivateRoute exact path="/nearby">
+            <ListMenu section="nearby" />
+          </PrivateRoute>
+          <PrivateRoute exact path="/new">
+            <ListMenu section="new" />
+          </PrivateRoute>
           <Route exact path="/register">
             <Register />
           </Route>
           <Route exact path="/login">
             <Login />
           </Route>
-          <Route exact path="/menu">
+          <Route exact path="/menu/:id">
             <Menu />
           </Route>
           <Route exact path="/">
             <Home />
           </Route>
           <Route path="*">
-            {() => <p>Oh the sadness... This page does not exist.</p>}
+            <NotFound />
           </Route>
         </Switch>
       </Container>

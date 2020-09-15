@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import _ from "lodash";
+import { Link as LinkRouter } from "react-router-dom";
 
 import LoadingButton from "../components/LoadingButton";
 import {
@@ -136,7 +137,7 @@ export default function Register() {
           </LoadingButton>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/login" variant="body2">
+              <Link component={LinkRouter} to="/login" variant="body2">
                 Already have an account? Log in
               </Link>
             </Grid>

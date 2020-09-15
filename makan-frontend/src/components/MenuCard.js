@@ -25,23 +25,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuCard({ title, price, rating, link }) {
+export default function MenuCard({ name, price, rating, link, image }) {
   const classes = useStyles();
 
   return (
     <Link to={link} className={classes.root}>
       <Card>
-        <CardMedia
-          className={classes.media}
-          image="/logo512.png"
-          title="Paella dish"
-        />
+        <CardMedia className={classes.media} image={image} title={name} />
         <CardContent>
           <Typography variant="subtitle1" className={classes.title}>
-            {title}
+            {name}
           </Typography>
           <Typography variant="subtitle2" color="textSecondary">
-            {`S$${Number(price).toFixed(2)}`}
+            {`S$${price}`}
           </Typography>
           <RatingStars size="small" rating={rating} />
         </CardContent>

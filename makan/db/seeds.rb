@@ -14,6 +14,6 @@
   restaurant = chef.create_restaurant(description: "Chef's Kitchen #{i + 1}", location: "NUS PGPR Block #{i + 1}")
 
   3.times do |j|
-    restaurant.menus.create(name: "Menu ##{j + 1}", description: "A great menu.", price: 0.5 + i + j, rating: i + j + 0.5)
+    restaurant.menus.create(name: "Menu ##{j + 1}", description: "A great menu.", price: 0.5 + i + j, rating: i + 0.5)
   end
 end

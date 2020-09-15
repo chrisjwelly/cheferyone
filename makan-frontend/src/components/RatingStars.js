@@ -9,14 +9,14 @@ import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 const MAX_RATING = 5;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   star: {
     color: "#f9b403",
   },
   ratingText: {
-    marginLeft: "5px",
+    marginLeft: theme.spacing(1),
   },
-});
+}));
 
 export default function RatingStars({ rating, size }) {
   const classes = useStyles();
