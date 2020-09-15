@@ -15,8 +15,12 @@ Rails.application.routes.draw do
       put 'users', to: 'users/registrations#update'
     end
 
-    scope '/menus', controller: 'menus' do
-      get 'recommended'
+    resources :menus do
+      collection do
+        get 'recommended'
+        get 'near_you'
+        get 'recent'
+      end
     end
 
     resource '/your_restaurant', controller: :restaurants
