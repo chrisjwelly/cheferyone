@@ -15,7 +15,7 @@ export function useGet(url) {
   };
 }
 
-export function useScroll(url) {
+export function useInfinite(url) {
   const { data, size, setSize, error } = useSWRInfinite(
     (pageIndex, previousPageData) => {
       if (previousPageData && !previousPageData.length) {

@@ -10,7 +10,7 @@ import NotFound from "./NotFound";
 import MenuListCard from "../components/MenuListCard";
 import LoadingCenter from "../components/LoadingCenter";
 import { setTabIndex } from "../actions/bottombar-actions";
-import { useScroll } from "../utils/rest-utils";
+import { useInfinite } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +47,7 @@ export default function ListMenu({ section }) {
 
 function MenuList({ title, apiPath }) {
   const classes = useStyles();
-  const { data, isLoading, isEnd, loadNextPage } = useScroll(apiPath);
+  const { data, isLoading, isEnd, loadNextPage } = useInfinite(apiPath);
   const requestNextPage = (isVisible) => {
     if (isVisible && !isEnd && !isLoading) {
       loadNextPage();
