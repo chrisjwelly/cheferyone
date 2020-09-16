@@ -24,6 +24,7 @@ import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import setAuthHeaders from "./utils/set-auth-headers";
 import PrivateRoute from "./components/PrivateRoute";
 import LoadingCenter from "./components/LoadingCenter";
+import RootDialog from "./components/RootDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,6 +88,7 @@ function Main() {
     <>
       <ErrorSnackbar />
       <SuccessSnackbar />
+      <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
         <Switch>

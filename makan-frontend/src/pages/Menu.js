@@ -14,6 +14,7 @@ import MenuOrderDrawer from "../components/MenuOrderDrawer";
 import { useGet } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
 import LoadingButton from "../components/LoadingButton";
+import { openDialog, closeDialog } from "../actions/dialog-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -117,6 +118,7 @@ function EditMenu({ id }) {
   const history = useHistory();
   const classes = useStyles();
   const res = useGet(`/api/v1/menus/${id}`);
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     description: "",
@@ -146,13 +148,34 @@ function EditMenu({ id }) {
       [e.target.name]: e.target.value,
     });
   };
+  const cancel = () =>
+    dispatch(
+      openDialog(
+        "Cancel Edit?",
+        "Any unsaved changes will be lost.",
+        <>
+          <Button color="primary" onClick={() => dispatch(closeDialog())}>
+            Cancel
+          </Button>
+          <Button
+            color="primary"
+            onClick={() => {
+              dispatch(closeDialog());
+              history.push(`/menu/${id}`);
+            }}
+          >
+            Confirm
+          </Button>
+        </>
+      )
+    );
 
   return (
     <RenderResponse {...res}>
       {() => (
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
@@ -163,7 +186,7 @@ function EditMenu({ id }) {
                 value={formData.name}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
@@ -196,13 +219,13 @@ function EditMenu({ id }) {
             className={classes.submit}
             isLoading={isLoading}
           >
-            Confirm Changes
+            Save
           </LoadingButton>
           <Button
             variant="contained"
             fullWidth
             color="secondary"
-            onClick={() => history.push(`/menu/${id}`)}
+            onClick={cancel}
           >
             Cancel
           </Button>
