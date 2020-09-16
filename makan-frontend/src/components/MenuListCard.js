@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   cardContent: {
+    paddingTop: 0,
     "&:last-child": { paddingBottom: "0px" },
   },
   media: {
@@ -40,7 +41,7 @@ export default function MenuListCard({ name, link, image, children, ...rest }) {
   return (
     <Link to={link} className={classes.root}>
       <Card {...rest} className={clsx(classes.card, rest.className)}>
-        <Grid container wrap="nowrap">
+        <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <CardMedia className={classes.media} image={image} title={name} />
           </Grid>
