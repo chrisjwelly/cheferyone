@@ -8,7 +8,7 @@ import RatingStars from "./RatingStars";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: "30px",
+    paddingTop: theme.spacing(3),
   },
   thumbnail: {
     objectFit: "cover",
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[1],
   },
   nameContainer: {
-    marginLeft: "10px",
+    marginLeft: theme.spacing(1),
     overflow: "hidden",
   },
 }));

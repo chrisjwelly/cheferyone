@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import _ from "lodash";
+import { Link as LinkRouter } from "react-router-dom";
 
 import LoadingButton from "../components/LoadingButton";
 import { loginUser } from "../actions/auth-actions";
@@ -124,12 +125,12 @@ export default function Login() {
           </LoadingButton>
           <Grid container>
             <Grid item xs>
-              <Link href="/" variant="body2">
+              <Link component={LinkRouter} to="/" variant="body2">
                 Forgot Password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/register" variant="body2">
+              <Link component={LinkRouter} to="/register" variant="body2">
                 Don't have an account? Register
               </Link>
             </Grid>

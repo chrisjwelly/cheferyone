@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     borderTop: `1px solid ${theme.palette.grey[400]}`,
     textAlign: "center",
+    height: theme.spacing(8),
   },
 }));
 
