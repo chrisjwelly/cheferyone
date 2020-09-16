@@ -11,6 +11,7 @@ import MenuListCard from "../components/MenuListCard";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useInfinite } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
+import RatingStars from "../components/RatingStars";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,12 +68,17 @@ function MenuList({ title, apiPath }) {
                 className={classes.menuListCard}
                 key={menu.id}
                 name={menu.name}
-                price={menu.price}
-                rating={menu.rating}
                 link={`/menu/${menu.id}`}
                 image="/logan.jpg"
-                homecook="placeholder"
-              />
+              >
+                <Typography variant="subtitle2" color="textSecondary">
+                  {`S$${menu.price}`}
+                </Typography>
+                <Typography variant="subtitle2" color="textSecondary">
+                  placeholder
+                </Typography>
+                <RatingStars size="small" rating={menu.rating} />
+              </MenuListCard>
             ));
           })}
           <VisibilitySensor onChange={requestNextPage} delayedCall={true}>
