@@ -105,6 +105,9 @@ function Main() {
           <PrivateRoute exact path="/nearby">
             <ListMenu section="nearby" />
           </PrivateRoute>
+          <PrivateRoute exact path="/menu/:id/edit">
+            <Menu isEdit />
+          </PrivateRoute>
           <PrivateRoute exact path="/new">
             <ListMenu section="new" />
           </PrivateRoute>
