@@ -12,6 +12,8 @@ import LoadingCenter from "../components/LoadingCenter";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useGet } from "../utils/rest-utils";
 import { NUMBER_OF_SUGGESTIONS } from "../constants";
+import Offline from "../pages/Offline";
+import Error from "../pages/Error";
 
 const useStyles = makeStyles((theme) => ({
   signInContainer: {
@@ -45,16 +47,27 @@ export default function Home() {
 }
 
 function Authenticated() {
-  const {
-    data: recommended,
-    isLoading: isRecommendedLoading,
-    error: recommendedError,
-  } = useGet(
+  const recommended = useGet(
+    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+  );
+  const nearby = useGet(
+    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+  );
+  const recent = useGet(
     `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
   );
 
-  if (isRecommendedLoading) {
+  if (recommended.isLoading || nearby.isLoading || recent.isLoading) {
     return <LoadingCenter />;
+  } else if (
+    (recommended.error || nearby.error || recent.error) &&
+    !navigator.onLine
+  ) {
+    // placeholder
+    // Improve when we have more advanced offline features
+    return <Offline />;
+  } else if (recommended.error || nearby.error || recent.error) {
+    return <Error />;
   } else {
     return (
       <>
@@ -62,7 +75,7 @@ function Authenticated() {
           title="Recommended"
           seeMorePath="/recommended"
         >
-          {recommended.map((obj, i) => (
+          {recommended.data.map((obj, i) => (
             <MenuCard
               key={i}
               price={obj.price}
@@ -74,7 +87,7 @@ function Authenticated() {
           ))}
         </SuggestionsSectionContainer>
         <SuggestionsSectionContainer title="Near You" seeMorePath="/nearby">
-          {recommended.map((obj, i) => (
+          {nearby.data.map((obj, i) => (
             <MenuCard
               key={i}
               price={obj.price}
@@ -86,7 +99,7 @@ function Authenticated() {
           ))}
         </SuggestionsSectionContainer>
         <SuggestionsSectionContainer title="New" seeMorePath="/new">
-          {recommended.map((obj, i) => (
+          {recent.data.map((obj, i) => (
             <MenuCard
               key={i}
               price={obj.price}

@@ -12,6 +12,9 @@ export function useGet(url) {
     data,
     isLoading: !data && !error,
     error,
+    isUnauthorized: error && error.response && error.response.status === 401,
+    isForbidden: error && error.response && error.response.status === 403,
+    isNotFound: error && error.response && error.response.status === 404,
   };
 }
 
@@ -32,13 +35,18 @@ export function useInfinite(url) {
     (data && data[data.length - 1] && data[data.length - 1].length < PAGE_SIZE);
 
   const isLoadingInitialData = !data && !error;
-  const isLoading =
+  const isLoadingNextPage =
     isLoadingInitialData ||
     (size > 0 && data && typeof data[size - 1] === "undefined");
 
   return {
     data,
-    isLoading,
+    isLoading: !data && !error,
+    error,
+    isUnauthorized: error && error.response && error.response.status === 401,
+    isForbidden: error && error.response && error.response.status === 403,
+    isNotFound: error && error.response && error.response.status === 404,
+    isLoadingNextPage,
     isEnd,
     loadNextPage: () => setSize(size + 1),
   };
