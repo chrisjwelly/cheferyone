@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useSelector, useDispatch } from "react-redux";
+import MenuListCard from "../components/MenuListCard";
 
 import {
   setRestaurantTabState,
@@ -20,4 +21,8 @@ export default function YourRestaurant() {
   }, [dispatch]);
 
   return <Typography variant="h6">Restaurant</Typography>;
+}
+
+function MenuTab() {
+
 }
