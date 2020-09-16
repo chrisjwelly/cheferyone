@@ -66,7 +66,7 @@ function MenuList({ title, apiPath }) {
               <MenuListCard
                 className={classes.menuListCard}
                 key={menu.id}
-                name={menu.name + " " + menu.id}
+                name={menu.name}
                 price={menu.price}
                 rating={menu.rating}
                 link={`/menu/${menu.id}`}

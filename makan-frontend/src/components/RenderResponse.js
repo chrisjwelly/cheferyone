@@ -19,6 +19,7 @@ export default function RenderResponse({
   children,
 }) {
   const dispatch = useDispatch();
+
   if (isLoading) {
     return <LoadingCenter />;
   } else if (isUnauthorized) {
@@ -45,6 +46,8 @@ export default function RenderResponse({
     // 404
     return <NotFound />;
   } else if (error && !navigator.onLine) {
+    // placeholder
+    // Improve when we have more advanced offline features
     // No internet access
     return <Offline />;
   } else if (error) {
