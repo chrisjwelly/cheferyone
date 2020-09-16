@@ -8,9 +8,9 @@ import VisibilitySensor from "react-visibility-sensor";
 
 import NotFound from "./NotFound";
 import MenuListCard from "../components/MenuListCard";
-import LoadingCenter from "../components/LoadingCenter";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useInfinite } from "../utils/rest-utils";
+import RenderResponse from "../components/RenderResponse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,49 +47,51 @@ export default function ListMenu({ section }) {
 
 function MenuList({ title, apiPath }) {
   const classes = useStyles();
-  const { data, isLoading, isEnd, loadNextPage } = useInfinite(apiPath);
+  const res = useInfinite(apiPath);
+  const { isLoadingNextPage, isEnd, loadNextPage } = res;
+
   const requestNextPage = (isVisible) => {
-    if (isVisible && !isEnd && !isLoading) {
+    if (isVisible && !isEnd && !isLoadingNextPage) {
       loadNextPage();
     }
   };
 
-  if (!data) {
-    return <LoadingCenter />;
-  }
-
   return (
-    <div className={classes.root}>
-      <Typography variant="h6">{title}</Typography>
-      {data.map((menus) => {
-        return menus.map((menu) => (
-          <MenuListCard
-            className={classes.menuListCard}
-            key={menu.id}
-            name={menu.name + " " + menu.id}
-            price={menu.price}
-            rating={menu.rating}
-            link={`/menu/${menu.id}`}
-            image="/logan.jpg"
-            homecook="placeholder"
-          />
-        ));
-      })}
-      <VisibilitySensor onChange={requestNextPage} delayedCall={true}>
-        <div className={classes.bottomContainer}>
-          {isLoading && !isEnd ? (
-            <CircularProgress color="secondary" />
-          ) : !isEnd ? (
-            <Button color="primary" onClick={requestNextPage}>
-              Load More
-            </Button>
-          ) : (
-            <Typography variant="caption">
-              When you are at rock bottom... the only way is up :')
-            </Typography>
-          )}
+    <RenderResponse {...res}>
+      {(data) => (
+        <div className={classes.root}>
+          <Typography variant="h6">{title}</Typography>
+          {data.map((menus) => {
+            return menus.map((menu) => (
+              <MenuListCard
+                className={classes.menuListCard}
+                key={menu.id}
+                name={menu.name + " " + menu.id}
+                price={menu.price}
+                rating={menu.rating}
+                link={`/menu/${menu.id}`}
+                image="/logan.jpg"
+                homecook="placeholder"
+              />
+            ));
+          })}
+          <VisibilitySensor onChange={requestNextPage} delayedCall={true}>
+            <div className={classes.bottomContainer}>
+              {isLoadingNextPage && !isEnd ? (
+                <CircularProgress color="secondary" />
+              ) : !isEnd ? (
+                <Button color="primary" onClick={() => requestNextPage(true)}>
+                  Load More
+                </Button>
+              ) : (
+                <Typography variant="caption">
+                  When you are at rock bottom... the only way is up :')
+                </Typography>
+              )}
+            </div>
+          </VisibilitySensor>
         </div>
-      </VisibilitySensor>
-    </div>
+      )}
+    </RenderResponse>
   );
 }

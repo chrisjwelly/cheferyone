@@ -53,11 +53,11 @@ function App() {
           const userObj = JSON.parse(user);
           setAuthHeaders(userObj);
           dispatch(setCurrentUser(userObj));
-          if (navigator.onLine) {
-            try {
-              await axios.get("/api/v1/authenticated");
-            } catch {
-              // Logout if not authenticated anymore
+          try {
+            await axios.get("/api/v1/authenticated");
+          } catch (err) {
+            if (err.response && err.response.status === 401) {
+              // Is online and unauthorized
               dispatch(logoutUser());
             }
           }

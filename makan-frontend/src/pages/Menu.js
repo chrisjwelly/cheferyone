@@ -9,9 +9,8 @@ import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
 import MenuDetails from "../components/MenuDetails";
 import MenuOrderDrawer from "../components/MenuOrderDrawer";
-import NotFound from "./NotFound";
-import LoadingCenter from "../components/LoadingCenter";
 import { useGet } from "../utils/rest-utils";
+import RenderResponse from "../components/RenderResponse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,7 +38,7 @@ export default function Menu() {
   const { id } = useParams();
   const history = useHistory();
 
-  const { data, error, isLoading } = useGet(`/api/v1/menus/${id}`);
+  const res = useGet(`/api/v1/menus/${id}`);
   const currUser = useSelector((store) => store.auth.user);
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -57,39 +56,37 @@ export default function Menu() {
     }
   };
 
-  if (isLoading) {
-    return <LoadingCenter />;
-  } else if (error) {
-    return <NotFound />;
-  } else {
-    return (
-      <div className={classes.root}>
-        <MenuHeader
-          name={data.name}
-          homecook="placeholder"
-          image="/logan.jpg"
-          rating={data.rating}
-        />
-        <MenuDetails description={data.description} price={data.price} />
-        <div className={classes.buttonContainer}>
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={orderButtonOnClick}
-          >
-            Order Now!
-          </Button>
+  return (
+    <RenderResponse {...res}>
+      {(data) => (
+        <div className={classes.root}>
+          <MenuHeader
+            name={data.name}
+            homecook="placeholder"
+            image="/logan.jpg"
+            rating={data.rating}
+          />
+          <MenuDetails description={data.description} price={data.price} />
+          <div className={classes.buttonContainer}>
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={orderButtonOnClick}
+            >
+              Order Now!
+            </Button>
+          </div>
+          <MenuOrderDrawer
+            open={isOrderOpen}
+            onClose={() => setIsOrderOpen(false)}
+            name={data.name}
+            image="/logan.jpg"
+            price={data.price}
+            deliveryFee="3 (placeholder)"
+            deliveryDate="26th September 2020 9:00AM to 5:00PM (placeholder)"
+          />
         </div>
-        <MenuOrderDrawer
-          open={isOrderOpen}
-          onClose={() => setIsOrderOpen(false)}
-          name={data.name}
-          image="/logan.jpg"
-          price={data.price}
-          deliveryFee="3 (placeholder)"
-          deliveryDate="26th September 2020 9:00AM to 5:00PM (placeholder)"
-        />
-      </div>
-    );
-  }
+      )}
+    </RenderResponse>
+  );
 }
