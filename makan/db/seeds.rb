@@ -7,6 +7,9 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # Create Users
+5.times do |i|
+  User.create(email: "user#{i + 1}@example.com", password: "123456", username: "user#{i+1}", authentication_token: "user#{i + 1}")
+end
 
 # Create Home Chefs, Restaurants and Menus
 5.times do |i|
