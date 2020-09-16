@@ -10,9 +10,6 @@ import RatingStars from "../components/RatingStars";
 import InfiniteScroll from "../components/InfiniteScroll";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: theme.spacing(3),
-  },
   menuListCard: {
     marginBottom: theme.spacing(2),
   },
@@ -43,7 +40,7 @@ function MenuList({ title, apiPath }) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div>
       <Typography variant="h6">{title}</Typography>
       <InfiniteScroll apiPath={apiPath}>
         {(data) =>

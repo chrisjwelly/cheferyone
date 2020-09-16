@@ -27,6 +27,7 @@ import LoadingCenter from "./components/LoadingCenter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(9),
   },
   bottomNavigationBar: {
