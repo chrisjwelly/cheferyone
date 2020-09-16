@@ -9,4 +9,11 @@ class Restaurant < ApplicationRecord
   def get_logo_url
     url_for(self.logo)
   end
+
+  # Append logo to JSON
+  def as_json(options)
+    super(options).merge({
+      "logo_url" => get_logo_url
+    })
+  end
 end
