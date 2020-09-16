@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :chefs, only: [:index, :show]
     resource '/your_restaurant', controller: :restaurants
   end
 end

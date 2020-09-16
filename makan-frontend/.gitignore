@@ -13,6 +13,8 @@
 
 # misc
 .DS_Store
+.dbeaver/
+.project
 .env.local
 .env.development.local
 .env.test.local

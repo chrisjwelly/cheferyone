@@ -49,6 +49,7 @@ export default function Register() {
 
   const [inputs, setInputs] = useState({
     email: "",
+    username: "",
     password: "",
     password_confirmation: "",
   });
@@ -98,6 +99,21 @@ export default function Register() {
                 value={inputs.email}
               />
             </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                onChange={onChange}
+                value={inputs.username}
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 variant="outlined"

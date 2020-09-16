@@ -9,7 +9,7 @@ import {
 
 // Login - get user token
 export const loginUser = (
-  email,
+  login,
   password,
   isRemember,
   setLoadingDone,
@@ -19,7 +19,7 @@ export const loginUser = (
     .post(
       "/api/v1/users/sign_in",
       JSON.stringify({
-        user: { email, password },
+        user: { login, password },
       })
     )
     .then((res) => {

@@ -45,7 +45,7 @@ export default function Login() {
   });
 
   const [inputs, setInputs] = useState({
-    email: "",
+    login: "",
     password: "",
     isRemember: false,
   });
@@ -62,7 +62,7 @@ export default function Login() {
     e.preventDefault();
     dispatch(
       loginUser(
-        inputs.email,
+        inputs.login,
         inputs.password,
         inputs.isRemember,
         () => setIsLoading(false),
@@ -84,12 +84,11 @@ export default function Login() {
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="login"
+                label="Email or Username"
+                name="login"
                 onChange={onChange}
-                value={inputs.email}
+                value={inputs.login}
               />
             </Grid>
             <Grid item xs={12}>
