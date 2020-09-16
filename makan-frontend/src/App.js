@@ -12,8 +12,8 @@ import Home from "./pages/Home";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
-import Restaurant from "./pages/Restaurant";
 import Menu from "./pages/Menu";
+import YourRestaurant from "./pages/YourRestaurant";
 import Login from "./pages/Login";
 import ListMenu from "./pages/ListMenu";
 import NotFound from "./pages/NotFound";
@@ -89,8 +89,8 @@ function Main() {
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
         <Switch>
-          <PrivateRoute path="/your-restaurant">
-            <Restaurant />
+          <PrivateRoute exact path="/your-restaurant">
+            <YourRestaurant />
           </PrivateRoute>
           <PrivateRoute path="/orders">
             <Orders />

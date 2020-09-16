@@ -6,10 +6,22 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import { useSelector, useDispatch } from "react-redux";
+import clsx from "clsx";
+
+import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fb5530",
+  },
+  noShadow: {
+    boxShadow: "none",
+  },
+  tabBar: {
+    transform: "translateY(-1px)", // hack to remove some weird 1px high white border
   },
   title: {
     flexGrow: 1,
@@ -18,10 +30,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TopAppBar({ hasBell }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const { index, isShown: isTabsShown } = useSelector(
+    (store) => store.restaurantTab
+  );
 
   return (
     <>
-      <AppBar className={classes.root}>
+      <AppBar className={clsx(classes.root, isTabsShown && classes.noShadow)}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Cheferyone
@@ -36,6 +53,27 @@ export default function TopAppBar({ hasBell }) {
         </Toolbar>
       </AppBar>
       <Toolbar />
+      
+      {/* Tabs for restaurant page */}
+      {isTabsShown && (
+        <>
+          <AppBar
+            className={clsx(classes.root, classes.tabBar)}
+            position="static"
+          >
+            <Tabs
+              centered
+              indicatorColor="primary"
+              value={index}
+              onChange={(_, index) => dispatch(setRestaurantTabIndex(index))}
+              aria-label="your restaurant tabs"
+            >
+              <Tab label="Menus" />
+              <Tab label="Orders" />
+            </Tabs>
+          </AppBar>
+        </>
+      )}
     </>
   );
 }

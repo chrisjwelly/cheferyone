@@ -16,6 +16,7 @@ const initialState = {
     },
   },
   activeTab: null,
+  restaurantTab: { isShown: false, index: 0 },
 };
 
 const middleware = [thunk];
