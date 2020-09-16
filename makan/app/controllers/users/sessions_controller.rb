@@ -52,11 +52,14 @@ class Users::SessionsController < Devise::SessionsController
 
   private
   def sign_in_params
-    params.require(:user).permit :email, :password
+    params.require(:user).permit(
+    :password,
+    :login
+  )
   end
 
   def load_user
-    @user = User.find_for_database_authentication(email: sign_in_params[:email])
+    @user = User.find_for_database_authentication(login: sign_in_params[:login])
     if @user
       return @user
     else
