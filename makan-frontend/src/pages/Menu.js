@@ -6,6 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
@@ -60,10 +67,11 @@ export default function Menu({ isEdit }) {
     );
   }
 
-  return <MenuView id={id} />;
+  return <MenuView id={id} isOwner={!res.isLoading && !res.error} />;
 }
 
-function MenuView({ id }) {
+function MenuView({ id, isOwner }) {
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const res = useGet(`/api/v1/menus/${id}`);
@@ -79,6 +87,33 @@ function MenuView({ id }) {
     }
   };
 
+  const edit = () => {
+    history.push(`/menu/${id}/edit`);
+  };
+
+  const remove = () => {
+    dispatch(
+      openDialog(
+        "Delete Menu?",
+        "This action is irreversible!",
+        <>
+          <Button color="primary" onClick={() => dispatch(closeDialog())}>
+            No
+          </Button>
+          <Button
+            color="primary"
+            onClick={() => {
+              dispatch(closeDialog());
+              console.log("placeholder");
+            }}
+          >
+            Yes
+          </Button>
+        </>
+      )
+    );
+  };
+
   return (
     <RenderResponse {...res}>
       {(data) => (
@@ -89,6 +124,20 @@ function MenuView({ id }) {
             image="/logan.jpg"
             rating={data.rating}
           />
+          {isOwner && (
+            <Grid container>
+              <Grid item>
+                <IconButton onClick={edit}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton onClick={remove}>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Grid>
+            </Grid>
+          )}
           <MenuDetails description={data.description} price={data.price} />
           <div className={classes.buttonContainer}>
             <Button
@@ -141,6 +190,7 @@ function EditMenu({ id }) {
     e.preventDefault();
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 1000);
+    console.log("placeholder");
   };
   const onChange = (e) => {
     setFormData({
@@ -155,16 +205,16 @@ function EditMenu({ id }) {
         "Any unsaved changes will be lost.",
         <>
           <Button color="primary" onClick={() => dispatch(closeDialog())}>
-            Cancel
+            No
           </Button>
           <Button
             color="primary"
             onClick={() => {
               dispatch(closeDialog());
-              history.push(`/menu/${id}`);
+              history.goBack();
             }}
           >
-            Confirm
+            Yes
           </Button>
         </>
       )
@@ -187,15 +237,25 @@ function EditMenu({ id }) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
+              <FormControl
+                fullWidth
                 variant="outlined"
                 required
-                fullWidth
-                label="Price"
-                name="price"
-                onChange={onChange}
-                value={formData.price}
-              />
+              >
+                <InputLabel>
+                  Price
+                </InputLabel>
+                <OutlinedInput
+                  type="number"
+                  value={formData.price}
+                  name="price"
+                  onChange={onChange}
+                  startAdornment={
+                    <InputAdornment position="start">$</InputAdornment>
+                  }
+                  labelWidth={60}
+                />
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
