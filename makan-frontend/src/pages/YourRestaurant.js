@@ -13,7 +13,9 @@ import { useHistory } from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import clsx from "clsx";
+import TextField from "@material-ui/core/TextField";
 
+import LoadingButton from "../components/LoadingButton";
 import InfiniteScroll from "../components/InfiniteScroll";
 import RenderResponse from "../components/RenderResponse";
 import NotFound from "../pages/NotFound";
@@ -44,7 +46,7 @@ export default function YourRestaurant() {
   const currTab = useSelector((state) => state.restaurantTab.index);
 
   const res = useGet("/api/v1/your_restaurant");
-  const isExist = res && !res.isLoading && !res.isUnauthorized;
+  const isExist = res && !res.isLoading && !res.error;
 
   useEffect(() => {
     dispatch(setTabIndex(1));
@@ -80,7 +82,53 @@ function RenderTab({ index, isExist }) {
 }
 
 function CreateRestaurant() {
-  return <h1>Create Restaurant</h1>;
+  const formData = {};
+  const onChange = () => null;
+  const onSubmit = () => null;
+  const classes = {};
+  const isLoading = false;
+  return (
+    <>
+      <form className={classes.form} noValidate onSubmit={onSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              label="Location"
+              name="location"
+              onChange={onChange}
+              value={formData.name}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="description"
+              label="Description"
+              onChange={onChange}
+              value={formData.description}
+              multiline
+              rows={4}
+            />
+          </Grid>
+        </Grid>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          isLoading={isLoading}
+        >
+          Save
+        </LoadingButton>
+      </form>
+    </>
+  );
 }
 
 function MenuTab() {
