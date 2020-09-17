@@ -17,7 +17,10 @@ Rails.application.routes.draw do
 
     resources :menus, only: [:index, :show] do
       collection do
-        get 'recommended', 'near_you', 'recent'
+        get 'search'
+        get 'recommended'
+        get 'near_you'
+        get 'recent'
       end
 
       member do
