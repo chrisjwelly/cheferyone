@@ -16,9 +16,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <SWRConfig
-          value={{ shouldRetryOnError: false }}
-        >
+        <SWRConfig value={{ shouldRetryOnError: false }}>
           <App />
         </SWRConfig>
       </Router>

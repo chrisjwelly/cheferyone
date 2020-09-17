@@ -51,10 +51,10 @@ function Authenticated() {
     `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
   );
   const nearby = useGet(
-    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+    `/api/v1/menus/near_you?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
   );
   const recent = useGet(
-    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+    `/api/v1/menus/recent?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
   );
 
   if (recommended.isLoading || nearby.isLoading || recent.isLoading) {
@@ -82,7 +82,7 @@ function Authenticated() {
               rating={obj.rating}
               name={obj.name}
               link={`/menu/${obj.id}`}
-              image="/logo512.png"
+              image={obj.image_url}
             />
           ))}
         </SuggestionsSectionContainer>
@@ -94,7 +94,7 @@ function Authenticated() {
               rating={obj.rating}
               name={obj.name}
               link={`/menu/${obj.id}`}
-              image="/logo512.png"
+              image={obj.image_url}
             />
           ))}
         </SuggestionsSectionContainer>
@@ -106,7 +106,7 @@ function Authenticated() {
               rating={obj.rating}
               name={obj.name}
               link={`/menu/${obj.id}`}
-              image="/logo512.png"
+              image={obj.image_url}
             />
           ))}
         </SuggestionsSectionContainer>

@@ -178,7 +178,7 @@ function MenuTab() {
                 key={menu.id}
                 name={menu.name}
                 link={`/menu/${menu.id}`}
-                image="/logan.jpg"
+                image={menu.image_url}
               >
                 <Typography variant="subtitle2" color="textSecondary">
                   {`S$${menu.price}`}

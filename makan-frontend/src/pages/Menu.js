@@ -9,10 +9,14 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import Badge from "@material-ui/core/Badge";
+import Avatar from "@material-ui/core/Avatar";
+import ImageIcon from "@material-ui/icons/Image";
+import { v4 as uuidv4 } from "uuid";
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
@@ -22,6 +26,7 @@ import { useGet } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
 import LoadingButton from "../components/LoadingButton";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
+import storage from "../utils/firebase-storage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +55,22 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  editPictureContainer: {
+    textAlign: "center",
+  },
+  editPicture: {
+    objectFit: "cover",
+    height: theme.breakpoints.values.sm / 3,
+    width: theme.breakpoints.values.sm / 3,
+    boxShadow: theme.shadows[1],
+  },
+  editPictureButton: {
+    boxShadow: theme.shadows[24],
+    backgroundColor: theme.palette.secondary.main + "!important",
+  },
+  editPictureInput: {
+    display: "none",
+  },
 }));
 
 export default function Menu({ isEdit }) {
@@ -60,7 +81,7 @@ export default function Menu({ isEdit }) {
     dispatch(setTabIndex(0));
   }, [dispatch]);
 
-  const res = useGet(`/api/v1/menus/${id}`); // placeholder: should check for edit rights
+  const res = useGet(`/api/v1/menus/${id}/belongs`);
   if (isEdit) {
     return (
       <RenderResponse {...res}>{() => <EditMenu id={id} />}</RenderResponse>
@@ -121,7 +142,7 @@ function MenuView({ id, isOwner }) {
           <MenuHeader
             name={data.name}
             homecook="placeholder"
-            image="/logan.jpg"
+            image={data.image_url}
             rating={data.rating}
           />
           {isOwner && (
@@ -152,7 +173,7 @@ function MenuView({ id, isOwner }) {
             open={isOrderOpen}
             onClose={() => setIsOrderOpen(false)}
             name={data.name}
-            image="/logan.jpg"
+            image={data.image_url}
             price={data.price}
             deliveryFee="3 (placeholder)"
             deliveryDate="26th September 2020 9:00AM to 5:00PM (placeholder)"
@@ -173,6 +194,7 @@ function EditMenu({ id }) {
     description: "",
     name: "",
     price: "",
+    image: { link: "", toUpload: null },
   });
 
   useEffect(() => {
@@ -181,15 +203,23 @@ function EditMenu({ id }) {
         description: res.data.description,
         name: res.data.name,
         price: res.data.price,
+        image: { link: res.data.image_url, toUpload: null },
       });
     }
   }, [res.data]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1000);
+    if (formData.image.toUpload) {
+      const snapshot = await storage
+        .child(uuidv4() + formData.image.toUpload.name)
+        .put(formData.image.toUpload);
+      const image_url = await snapshot.ref.getDownloadURL();
+      console.log(image_url);
+    }
+    setIsLoading(false);
     console.log("placeholder");
   };
   const onChange = (e) => {
@@ -225,6 +255,52 @@ function EditMenu({ id }) {
       {() => (
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <Grid container spacing={2}>
+            <Grid item xs={12} className={classes.editPictureContainer}>
+              <Badge
+                overlap="circle"
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                badgeContent={
+                  <>
+                    <input
+                      accept="image/*"
+                      className={classes.editPictureInput}
+                      id="icon-button-file"
+                      type="file"
+                      onChange={(e) => {
+                        if (e.target.files.length === 1) {
+                          setFormData({
+                            ...formData,
+                            image: {
+                              link: URL.createObjectURL(e.target.files[0]),
+                              toUpload: e.target.files[0],
+                            },
+                          });
+                        }
+                      }}
+                    />
+                    <label htmlFor="icon-button-file">
+                      <IconButton
+                        className={classes.editPictureButton}
+                        component="span"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </label>
+                  </>
+                }
+              >
+                <Avatar
+                  variant="square"
+                  className={classes.editPicture}
+                  src={formData.image.link}
+                >
+                  <ImageIcon fontSize="large" />
+                </Avatar>
+              </Badge>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
@@ -237,14 +313,8 @@ function EditMenu({ id }) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl
-                fullWidth
-                variant="outlined"
-                required
-              >
-                <InputLabel>
-                  Price
-                </InputLabel>
+              <FormControl fullWidth variant="outlined" required>
+                <InputLabel>Price</InputLabel>
                 <OutlinedInput
                   type="number"
                   value={formData.price}

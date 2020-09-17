@@ -12,6 +12,7 @@
     "axios": "^0.20.0",
     "clsx": "^1.1.1",
     "cra-append-sw": "^2.7.0",
+    "firebase": "^7.20.0",
     "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -22,7 +23,8 @@
     "react-visibility-sensor": "^5.1.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "swr": "^0.3.2"
+    "swr": "^0.3.2",
+    "uuid": "^8.3.0"
   },
   "scripts": {
     "start": "PORT=3001 react-scripts start",
