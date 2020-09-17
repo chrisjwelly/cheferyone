@@ -30,6 +30,7 @@ export default function InfiniteScroll({ apiPath, children }) {
   useEffect(() => {
     const setOnline = () => setIsOnline(true);
     const setOffline = () => setIsOnline(false);
+    
     window.addEventListener("online", setOnline);
     window.addEventListener("offline", setOffline);
     return () => {
