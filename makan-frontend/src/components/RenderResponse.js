@@ -1,9 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { useDispatch } from "react-redux";
 
 import LoadingCenter from "../components/LoadingCenter";
-import { logoutUser } from "../actions/auth-actions";
 import Offline from "../pages/Offline";
 import NotFound from "../pages/NotFound";
 import Error from "../pages/Error";
@@ -18,8 +16,6 @@ export default function RenderResponse({
   isNotFound,
   children,
 }) {
-  const dispatch = useDispatch();
-
   if (isLoading) {
     return <LoadingCenter />;
   } else if (isUnauthorized) {
@@ -34,7 +30,6 @@ export default function RenderResponse({
     );
   } else if (isForbidden) {
     // No permission
-    dispatch(logoutUser());
     return (
       <Redirect
         to={{

@@ -8,8 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 
-import RatingStars from "../components/RatingStars";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: theme.breakpoints.values.sm / 4,
@@ -19,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   cardContent: {
+    paddingTop: 0,
     "&:last-child": { paddingBottom: "0px" },
   },
   media: {
@@ -36,21 +35,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuListCard({
-  name,
-  homecook,
-  price,
-  rating,
-  link,
-  image,
-  ...rest
-}) {
+export default function MenuListCard({ name, link, image, children, ...rest }) {
   const classes = useStyles();
 
   return (
     <Link to={link} className={classes.root}>
       <Card {...rest} className={clsx(classes.card, rest.className)}>
-        <Grid container wrap="nowrap">
+        <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
             <CardMedia className={classes.media} image={image} title={name} />
           </Grid>
@@ -59,13 +50,7 @@ export default function MenuListCard({
               <Typography variant="subtitle1" className={classes.title}>
                 {name}
               </Typography>
-              <Typography variant="subtitle2" color="textSecondary">
-                {`S$${price}`}
-              </Typography>
-              <Typography variant="subtitle2" color="textSecondary">
-                {homecook}
-              </Typography>
-              <RatingStars size="small" rating={rating} />
+              {children}
             </CardContent>
           </Grid>
         </Grid>
