@@ -15,10 +15,12 @@ export default function RenderResponse({
   isForbidden,
   isNotFound,
   children,
+  skipNotFound,
+  skipUnauthorized,
 }) {
   if (isLoading) {
     return <LoadingCenter />;
-  } else if (isUnauthorized) {
+  } else if (isUnauthorized && !skipUnauthorized) {
     // Not logged in
     // Implement history for redirects next time
     return (
@@ -37,7 +39,7 @@ export default function RenderResponse({
         }}
       />
     );
-  } else if (isNotFound) {
+  } else if (isNotFound && !skipNotFound) {
     // 404
     return <NotFound />;
   } else if (error && !navigator.onLine) {
@@ -45,7 +47,13 @@ export default function RenderResponse({
     // Improve when we have more advanced offline features
     // No internet access
     return <Offline />;
-  } else if (error) {
+  } else if (
+    error &&
+    !isForbidden &&
+    !isLoading &&
+    !isUnauthorized &&
+    !isNotFound
+  ) {
     // Other unspecified errors
     return <Error />;
   } else {

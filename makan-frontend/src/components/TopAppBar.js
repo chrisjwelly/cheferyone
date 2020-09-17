@@ -54,6 +54,7 @@ export default function TopAppBar({ hasBell }) {
           >
             <Tab label="Menus" />
             <Tab label="Orders" />
+            <Tab label="Edit" />
           </Tabs>
         )}
       </AppBar>

@@ -12,11 +12,15 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import clsx from "clsx";
 
 import InfiniteScroll from "../components/InfiniteScroll";
+import RenderResponse from "../components/RenderResponse";
+import NotFound from "../pages/NotFound";
 import { setRestaurantTabState } from "../actions/restaurant-tab-actions";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
+import { useGet } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -39,18 +43,44 @@ export default function YourRestaurant() {
   const dispatch = useDispatch();
   const currTab = useSelector((state) => state.restaurantTab.index);
 
+  const res = useGet("/api/v1/your_restaurant");
+  const isExist = res && !res.isLoading && !res.isUnauthorized;
+
   useEffect(() => {
     dispatch(setTabIndex(1));
-    dispatch(setRestaurantTabState(true)); // show tabs
+
+    if (isExist) {
+      dispatch(setRestaurantTabState(true)); // show tabs
+    }
 
     return () => dispatch(setRestaurantTabState(false)); // hide tabs
-  }, [dispatch]);
+  }, [dispatch, isExist]);
 
   return (
-    <div className={classes.root}>
-      {currTab === 0 ? <MenuTab /> : <h1>Tab 1</h1>}
+    <div className={clsx(isExist && classes.root)}>
+      <RenderResponse {...res} skipUnauthorized>
+        {() => <RenderTab index={currTab} isExist={isExist} />}
+      </RenderResponse>
     </div>
   );
+}
+
+function RenderTab({ index, isExist }) {
+  if (!isExist) {
+    return <CreateRestaurant />;
+  } else if (index === 0) {
+    return <MenuTab />;
+  } else if (index === 1) {
+    return <h1>Tab 1</h1>;
+  } else if (index === 2) {
+    return <h1>Tab 2</h1>;
+  } else {
+    return <NotFound />;
+  }
+}
+
+function CreateRestaurant() {
+  return <h1>Create Restaurant</h1>;
 }
 
 function MenuTab() {
