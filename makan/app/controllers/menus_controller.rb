@@ -1,6 +1,6 @@
 class MenusController < ApplicationController
-  before_action :set_menu, only: [:show, :update, :destroy]
-  acts_as_token_authentication_handler_for User
+  before_action :set_menu, only: [:show, :belongs]
+  acts_as_token_authentication_handler_for User, except: [:show, :recent, :index]
 
   DEFAULT_OFFSET = 0
   DEFAULT_LIMIT = 10
@@ -44,32 +44,15 @@ class MenusController < ApplicationController
     render json: @menu
   end
 
-  # POST /menus
-  def create
-    @menu = current_user.restaurant.menus.create(menu_params)
-
-    if @menu.save
-      render json: @menu, status: :created, location: @menu
+  # GET /menus/1/belongs
+  def belongs
+    if current_user.restaurant.id == @menu.restaurant_id
+      # 200 OK
+      render body: nil, status: :ok
     else
-      # Status code: 422
-      render json: @menu.errors, status: :unprocessable_entity
+      # 403 Forbidden
+      render body: nil, status: :forbidden
     end
-  end
-
-  # PATCH/PUT /menus/1
-  def update
-    if @menu.update(menu_params)
-      render json: @menu
-    else
-      # Status code: 422
-      render json: @menu.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /menus/1
-  def destroy
-    @menu.destroy
-    render body: nil, status: :no_content
   end
 
   private

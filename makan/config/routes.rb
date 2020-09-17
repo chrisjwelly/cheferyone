@@ -15,15 +15,22 @@ Rails.application.routes.draw do
       put 'users', to: 'users/registrations#update'
     end
 
-    resources :menus do
+    resources :menus, only: [:index, :show] do
       collection do
-        get 'recommended'
-        get 'near_you'
-        get 'recent'
+        get 'recommended', 'near_you', 'recent'
+      end
+
+      member do
+        get 'belongs'
       end
     end
 
     resources :chefs, only: [:index, :show]
-    resource '/your_restaurant', controller: :restaurants
+
+    resource '/your_restaurant', controller: :restaurants do
+      collection do
+        resources 'menus', :controller => "your_restaurant/menus"
+      end
+    end
   end
 end
