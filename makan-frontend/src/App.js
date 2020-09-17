@@ -12,8 +12,8 @@ import Home from "./pages/Home";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
-import Restaurant from "./pages/Restaurant";
 import Menu from "./pages/Menu";
+import YourRestaurant from "./pages/YourRestaurant";
 import Login from "./pages/Login";
 import ListMenu from "./pages/ListMenu";
 import NotFound from "./pages/NotFound";
@@ -24,9 +24,11 @@ import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import setAuthHeaders from "./utils/set-auth-headers";
 import PrivateRoute from "./components/PrivateRoute";
 import LoadingCenter from "./components/LoadingCenter";
+import RootDialog from "./components/RootDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(9),
   },
   bottomNavigationBar: {
@@ -86,11 +88,12 @@ function Main() {
     <>
       <ErrorSnackbar />
       <SuccessSnackbar />
+      <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
         <Switch>
-          <PrivateRoute path="/your-restaurant">
-            <Restaurant />
+          <PrivateRoute exact path="/your-restaurant">
+            <YourRestaurant />
           </PrivateRoute>
           <PrivateRoute path="/orders">
             <Orders />
@@ -103,6 +106,9 @@ function Main() {
           </PrivateRoute>
           <PrivateRoute exact path="/nearby">
             <ListMenu section="nearby" />
+          </PrivateRoute>
+          <PrivateRoute exact path="/menu/:id/edit">
+            <Menu isEdit />
           </PrivateRoute>
           <PrivateRoute exact path="/new">
             <ListMenu section="new" />

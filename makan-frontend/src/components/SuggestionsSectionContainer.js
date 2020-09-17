@@ -9,7 +9,7 @@ import MenuCardContainer from "./MenuCardContainer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
   },
 }));
 

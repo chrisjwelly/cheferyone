@@ -7,9 +7,6 @@ import LinesEllipsis from "react-lines-ellipsis";
 import RatingStars from "./RatingStars";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: theme.spacing(3),
-  },
   thumbnail: {
     objectFit: "cover",
     height: theme.breakpoints.values.sm / 5,
@@ -26,7 +23,7 @@ export default function MenuHeader({ name, rating, homecook, image }) {
   const classes = useStyles();
 
   return (
-    <Grid container wrap="nowrap" alignItems="center" className={classes.root}>
+    <Grid container wrap="nowrap" alignItems="center">
       <Grid item>
         <img alt={name} className={classes.thumbnail} src={image} />
       </Grid>
