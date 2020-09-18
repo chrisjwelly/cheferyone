@@ -2,7 +2,12 @@ class Menu < ApplicationRecord
   include Rails.application.routes.url_helpers
 
   belongs_to :restaurant, touch: true
-
+  include AlgoliaSearch
+  
+  algoliasearch do
+    attributes :name, :description, :price, :rating, :restaurant_id, :created_at, :updated_at, :restaurant_id
+  end
+  
   has_one_attached :image
 
   def get_image_url

@@ -5,6 +5,14 @@ class MenusController < ApplicationController
   DEFAULT_OFFSET = 0
   DEFAULT_LIMIT = 10
 
+  # GET /menus/search?query=Menu
+  def search
+    word = params[:query]
+    data = Menu.search(word).raw_answer
+    @menus = data['hits']
+    render json: @menus
+  end
+
   # GET /menus/recommended
   def recommended
     offset = params[:offset] || DEFAULT_OFFSET
