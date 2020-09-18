@@ -4,26 +4,24 @@ import { makeStyles } from "@material-ui/core/styles";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
 import MenuDetails from "../components/MenuDetails";
 import MenuOrderDrawer from "../components/MenuOrderDrawer";
-import { useGet } from "../utils/rest-utils";
+import { useGet, usePost } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
-import LoadingButton from "../components/LoadingButton";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
 import { uploadImage } from "../utils/rest-utils";
-import ImageUpload from "../components/ImageUpload";
+import MenuForm from "../components/MenuForm";
+import {
+  openSuccessSnackBar,
+  openErrorSnackBar,
+} from "../actions/snackbar-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,29 +42,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.success.dark,
     },
     color: theme.palette.common.white,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-  editPictureContainer: {
-    textAlign: "center",
-  },
-  editPicture: {
-    objectFit: "cover",
-    height: theme.breakpoints.values.sm / 3,
-    width: theme.breakpoints.values.sm / 3,
-    boxShadow: theme.shadows[1],
-  },
-  editPictureButton: {
-    boxShadow: theme.shadows[24],
-    backgroundColor: theme.palette.secondary.main + "!important",
-  },
-  editPictureInput: {
-    display: "none",
   },
 }));
 
@@ -183,132 +158,91 @@ function MenuView({ id, isOwner }) {
 
 function EditMenu({ id }) {
   const history = useHistory();
-  const classes = useStyles();
-  const res = useGet(`/api/v1/menus/${id}`);
   const dispatch = useDispatch();
+  const res = useGet(`/api/v1/menus/${id}`);
 
-  const [textFields, setTextFields] = useState({
-    description: "",
+  const [fields, setFields] = useState({
     name: "",
+    description: "",
     price: "",
   });
   const [imageBlob, setImageBlob] = useState(null);
 
   useEffect(() => {
     if (res.data) {
-      setTextFields({
-        description: res.data.description,
+      setFields({
         name: res.data.name,
+        description: res.data.description,
         price: res.data.price,
       });
     }
   }, [res.data]);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [errors, post, resetErrors] = usePost(
+    {
+      menu: fields,
+    },
+    {
+      name: undefined,
+      description: undefined,
+      price: undefined,
+    },
+    "/api/v1/your_restaurant/menus/"
+  );
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setIsLoading(false);
-    console.log("placeholder");
+
+    if (imageBlob === null) {
+      // User did not upload image
+      submitText();
+    } else {
+      const imageRes = await uploadImage(imageBlob);
+
+      if (imageRes.hasErrors) {
+        setIsLoading(false);
+        dispatch(openErrorSnackBar(imageRes.payload));
+      } else {
+        setFields({ ...fields, image_url: imageRes.payload });
+      }
+    }
   };
-  const onChange = (e) => {
-    setTextFields({
-      ...textFields,
-      [e.target.name]: e.target.value,
-    });
+
+  // If image_url is filled in
+  useEffect(() => {
+    if (fields.image_url) {
+      submitText();
+    }
+  }, [fields]);
+
+  const submitText = async () => {
+    const res = await post();
+    if (res) {
+      dispatch(openSuccessSnackBar("Menu updated!"));
+      history.goBack();
+    } else {
+      setIsLoading(false);
+    }
   };
-  const cancel = () =>
-    dispatch(
-      openDialog(
-        "Cancel Edit?",
-        "Any unsaved changes will be lost.",
-        <>
-          <Button color="primary" onClick={() => dispatch(closeDialog())}>
-            No
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              dispatch(closeDialog());
-              history.goBack();
-            }}
-          >
-            Yes
-          </Button>
-        </>
-      )
-    );
 
   return (
     <RenderResponse {...res}>
       {(data) => (
-        <form className={classes.form} noValidate onSubmit={onSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} className={classes.editPictureContainer}>
-              <ImageUpload
-                initialImage={data.image_url}
-                setImageBlob={setImageBlob}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                label="Name"
-                name="name"
-                onChange={onChange}
-                value={textFields.name}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth variant="outlined" required>
-                <InputLabel>Price</InputLabel>
-                <OutlinedInput
-                  type="number"
-                  value={textFields.price}
-                  name="price"
-                  onChange={onChange}
-                  startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
-                  }
-                  labelWidth={60}
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="description"
-                label="Description"
-                onChange={onChange}
-                value={textFields.description}
-                multiline
-                rows={4}
-              />
-            </Grid>
-          </Grid>
-          <LoadingButton
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            isLoading={isLoading}
-          >
-            Save
-          </LoadingButton>
-          <Button
-            variant="contained"
-            fullWidth
-            color="secondary"
-            onClick={cancel}
-          >
-            Cancel
-          </Button>
-        </form>
+        <MenuForm
+          fields={fields}
+          setFields={(e) => {
+            resetErrors();
+            setFields(e);
+          }}
+          initialImage={data.image_url}
+          setImageBlob={setImageBlob}
+          errors={errors}
+          isLoading={isLoading}
+          onSubmit={onSubmit}
+        />
       )}
     </RenderResponse>
   );

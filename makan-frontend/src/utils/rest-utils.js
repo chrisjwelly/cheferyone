@@ -61,17 +61,11 @@ export function useInfinite(url) {
 
 export async function uploadImage(imageBlob) {
   // Basic client side checks, should be done for server side too!
-  let errors = {};
-
   if (imageBlob.size >= 5 * 1024 * 1024) {
-    errors.size = "Image uploaded should not exceed 5MB";
+    return { hasErrors: true, payload: "Image uploaded should not exceed 5MB" };
   }
   if (!/image\/.*/g.test(imageBlob.type)) {
-    errors.type = "Make sure you uploaded a valid image";
-  }
-
-  if (!_.isEmpty(errors)) {
-    return { hasErrors: true, payload: errors };
+    return { hasErrors: true, payload: "Make sure you uploaded a valid image" };
   }
 
   try {
@@ -81,8 +75,10 @@ export async function uploadImage(imageBlob) {
     const image_url = await snapshot.ref.getDownloadURL();
     return { hasErrors: false, payload: image_url };
   } catch {
-    errors.unknown = "Action failed, please try again";
-    return { hasErrors: true, payload: errors };
+    return {
+      hasErrors: true,
+      payload: "There was a problem uploading the picture, please try again",
+    };
   }
 }
 
