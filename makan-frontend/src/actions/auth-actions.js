@@ -1,28 +1,13 @@
-import axios from "axios";
 import setAuthHeaders from "../utils/set-auth-headers";
 import { SET_CURRENT_USER } from "./types";
-import {
-  openErrorSnackBar,
-  openSuccessSnackBar,
-  closeErrorSnackBar,
-} from "./snackbar-actions";
+import { openSuccessSnackBar, closeErrorSnackBar } from "./snackbar-actions";
 
 // Login - get user token
-export const loginUser = (
-  login,
-  password,
-  isRemember,
-  setLoadingDone,
-  history
-) => (dispatch) => {
-  axios
-    .post(
-      "/api/v1/users/sign_in",
-      JSON.stringify({
-        user: { login, password },
-      })
-    )
-    .then((res) => {
+export const loginUser = (post, isRemember, setLoadingDone, history) => (
+  dispatch
+) => {
+  post().then((res) => {
+    if (res) {
       dispatch(closeErrorSnackBar());
       const { user } = res.data.data;
       // Set token to Auth header
@@ -35,11 +20,10 @@ export const loginUser = (
       }
       dispatch(openSuccessSnackBar("Login successful!"));
       history.push("/");
-    })
-    .catch((err) => {
-      dispatch(openErrorSnackBar("Log In Failed"));
+    } else {
       setLoadingDone();
-    });
+    }
+  });
 };
 
 // Set logged in user

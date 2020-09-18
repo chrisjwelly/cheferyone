@@ -12,11 +12,17 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import clsx from "clsx";
+import TextField from "@material-ui/core/TextField";
 
+import LoadingButton from "../components/LoadingButton";
 import InfiniteScroll from "../components/InfiniteScroll";
+import RenderResponse from "../components/RenderResponse";
+import NotFound from "../pages/NotFound";
 import { setRestaurantTabState } from "../actions/restaurant-tab-actions";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
+import { useGet } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -39,17 +45,89 @@ export default function YourRestaurant() {
   const dispatch = useDispatch();
   const currTab = useSelector((state) => state.restaurantTab.index);
 
+  const res = useGet("/api/v1/your_restaurant");
+  const isExist = res && !res.isLoading && !res.error;
+
   useEffect(() => {
     dispatch(setTabIndex(1));
-    dispatch(setRestaurantTabState(true)); // show tabs
+
+    if (isExist) {
+      dispatch(setRestaurantTabState(true)); // show tabs
+    }
 
     return () => dispatch(setRestaurantTabState(false)); // hide tabs
-  }, [dispatch]);
+  }, [dispatch, isExist]);
 
   return (
-    <div className={classes.root}>
-      {currTab === 0 ? <MenuTab /> : <h1>Tab 1</h1>}
+    <div className={clsx(isExist && classes.root)}>
+      <RenderResponse {...res} skipUnauthorized>
+        {() => <RenderTab index={currTab} isExist={isExist} />}
+      </RenderResponse>
     </div>
+  );
+}
+
+function RenderTab({ index, isExist }) {
+  if (!isExist) {
+    return <CreateRestaurant />;
+  } else if (index === 0) {
+    return <MenuTab />;
+  } else if (index === 1) {
+    return <h1>Tab 1</h1>;
+  } else if (index === 2) {
+    return <h1>Tab 2</h1>;
+  } else {
+    return <NotFound />;
+  }
+}
+
+function CreateRestaurant() {
+  const formData = {};
+  const onChange = () => null;
+  const onSubmit = () => null;
+  const classes = {};
+  const isLoading = false;
+  return (
+    <>
+      <form className={classes.form} noValidate onSubmit={onSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              label="Location"
+              name="location"
+              onChange={onChange}
+              value={formData.name}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="description"
+              label="Description"
+              onChange={onChange}
+              value={formData.description}
+              multiline
+              rows={4}
+            />
+          </Grid>
+        </Grid>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          isLoading={isLoading}
+        >
+          Save
+        </LoadingButton>
+      </form>
+    </>
   );
 }
 
@@ -100,7 +178,7 @@ function MenuTab() {
                 key={menu.id}
                 name={menu.name}
                 link={`/menu/${menu.id}`}
-                image="/logan.jpg"
+                image={menu.image_url}
               >
                 <Typography variant="subtitle2" color="textSecondary">
                   {`S$${menu.price}`}

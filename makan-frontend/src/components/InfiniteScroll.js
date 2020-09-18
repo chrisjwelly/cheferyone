@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -25,17 +25,42 @@ export default function InfiniteScroll({ apiPath, children }) {
     }
   };
 
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const setOnline = () => setIsOnline(true);
+    const setOffline = () => setIsOnline(false);
+    
+    window.addEventListener("online", setOnline);
+    window.addEventListener("offline", setOffline);
+    return () => {
+      window.removeEventListener("online", setOnline);
+      window.removeEventListener("offline", setOffline);
+    };
+  }, []);
+
   return (
     <RenderResponse {...res}>
       {(data) => (
         <>
           {children(data)}
-          <VisibilitySensor onChange={requestNextPage} delayedCall={true}>
+          <VisibilitySensor
+            onChange={(isVisible) => {
+              if (isOnline) {
+                requestNextPage(isVisible);
+              }
+            }}
+            delayedCall={true}
+          >
             <div className={classes.bottomContainer}>
               {isLoadingNextPage && !isEnd ? (
                 <CircularProgress color="secondary" />
               ) : !isEnd ? (
-                <Button color="primary" onClick={() => requestNextPage(true)}>
+                <Button
+                  disabled={!isOnline}
+                  color="primary"
+                  onClick={() => requestNextPage(true)}
+                >
                   Load More
                 </Button>
               ) : (

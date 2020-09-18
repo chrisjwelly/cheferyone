@@ -4,15 +4,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
@@ -20,7 +15,6 @@ import MenuDetails from "../components/MenuDetails";
 import MenuOrderDrawer from "../components/MenuOrderDrawer";
 import { useGet } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
-import LoadingButton from "../components/LoadingButton";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,16 +37,9 @@ const useStyles = makeStyles((theme) => ({
     },
     color: theme.palette.common.white,
   },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
 }));
 
-export default function Menu({ isEdit }) {
+export default function Menu() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -60,12 +47,7 @@ export default function Menu({ isEdit }) {
     dispatch(setTabIndex(0));
   }, [dispatch]);
 
-  const res = useGet(`/api/v1/menus/${id}`); // placeholder: should check for edit rights
-  if (isEdit) {
-    return (
-      <RenderResponse {...res}>{() => <EditMenu id={id} />}</RenderResponse>
-    );
-  }
+  const res = useGet(`/api/v1/menus/${id}/belongs`);
 
   return <MenuView id={id} isOwner={!res.isLoading && !res.error} />;
 }
@@ -121,7 +103,7 @@ function MenuView({ id, isOwner }) {
           <MenuHeader
             name={data.name}
             homecook="placeholder"
-            image="/logan.jpg"
+            image={data.image_url}
             rating={data.rating}
           />
           {isOwner && (
@@ -152,144 +134,12 @@ function MenuView({ id, isOwner }) {
             open={isOrderOpen}
             onClose={() => setIsOrderOpen(false)}
             name={data.name}
-            image="/logan.jpg"
+            image={data.image_url}
             price={data.price}
             deliveryFee="3 (placeholder)"
             deliveryDate="26th September 2020 9:00AM to 5:00PM (placeholder)"
           />
         </div>
-      )}
-    </RenderResponse>
-  );
-}
-
-function EditMenu({ id }) {
-  const history = useHistory();
-  const classes = useStyles();
-  const res = useGet(`/api/v1/menus/${id}`);
-  const dispatch = useDispatch();
-
-  const [formData, setFormData] = useState({
-    description: "",
-    name: "",
-    price: "",
-  });
-
-  useEffect(() => {
-    if (res.data) {
-      setFormData({
-        description: res.data.description,
-        name: res.data.name,
-        price: res.data.price,
-      });
-    }
-  }, [res.data]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1000);
-    console.log("placeholder");
-  };
-  const onChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const cancel = () =>
-    dispatch(
-      openDialog(
-        "Cancel Edit?",
-        "Any unsaved changes will be lost.",
-        <>
-          <Button color="primary" onClick={() => dispatch(closeDialog())}>
-            No
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              dispatch(closeDialog());
-              history.goBack();
-            }}
-          >
-            Yes
-          </Button>
-        </>
-      )
-    );
-
-  return (
-    <RenderResponse {...res}>
-      {() => (
-        <form className={classes.form} noValidate onSubmit={onSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                label="Name"
-                name="name"
-                onChange={onChange}
-                value={formData.name}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl
-                fullWidth
-                variant="outlined"
-                required
-              >
-                <InputLabel>
-                  Price
-                </InputLabel>
-                <OutlinedInput
-                  type="number"
-                  value={formData.price}
-                  name="price"
-                  onChange={onChange}
-                  startAdornment={
-                    <InputAdornment position="start">$</InputAdornment>
-                  }
-                  labelWidth={60}
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="description"
-                label="Description"
-                onChange={onChange}
-                value={formData.description}
-                multiline
-                rows={4}
-              />
-            </Grid>
-          </Grid>
-          <LoadingButton
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            isLoading={isLoading}
-          >
-            Save
-          </LoadingButton>
-          <Button
-            variant="contained"
-            fullWidth
-            color="secondary"
-            onClick={cancel}
-          >
-            Cancel
-          </Button>
-        </form>
       )}
     </RenderResponse>
   );

@@ -28,9 +28,9 @@ export default function ListMenu({ section }) {
         <MenuList title="Recommended" apiPath="/api/v1/menus/recommended" />
       );
     case "nearby":
-      return <MenuList title="Near You" apiPath="/api/v1/menus/recommended" />;
+      return <MenuList title="Near You" apiPath="/api/v1/menus/near_you" />;
     case "new":
-      return <MenuList title="New" apiPath="/api/v1/menus/recommended" />;
+      return <MenuList title="New" apiPath="/api/v1/menus/recent" />;
     default:
       return <NotFound />;
   }
@@ -41,29 +41,31 @@ function MenuList({ title, apiPath }) {
 
   return (
     <div>
-      <Typography variant="h6">{title}</Typography>
       <InfiniteScroll apiPath={apiPath}>
-        {(data) =>
-          data.map((menus) => {
-            return menus.map((menu) => (
-              <MenuListCard
-                className={classes.menuListCard}
-                key={menu.id}
-                name={menu.name}
-                link={`/menu/${menu.id}`}
-                image="/logan.jpg"
-              >
-                <Typography variant="subtitle2" color="textSecondary">
-                  {`S$${menu.price}`}
-                </Typography>
-                <Typography variant="subtitle2" color="textSecondary">
-                  placeholder
-                </Typography>
-                <RatingStars size="small" rating={menu.rating} />
-              </MenuListCard>
-            ));
-          })
-        }
+        {(data) => (
+          <>
+            <Typography variant="h6">{title}</Typography>
+            {data.map((menus) => {
+              return menus.map((menu) => (
+                <MenuListCard
+                  className={classes.menuListCard}
+                  key={menu.id}
+                  name={menu.name}
+                  link={`/menu/${menu.id}`}
+                  image={menu.image_url}
+                >
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {`S$${menu.price}`}
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    placeholder
+                  </Typography>
+                  <RatingStars size="small" rating={menu.rating} />
+                </MenuListCard>
+              ));
+            })}
+          </>
+        )}
       </InfiniteScroll>
     </div>
   );
