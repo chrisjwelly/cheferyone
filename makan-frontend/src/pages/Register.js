@@ -7,7 +7,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import _ from "lodash";
 import { Link as LinkRouter } from "react-router-dom";
 
@@ -17,6 +16,7 @@ import {
   closeErrorSnackBar,
   openSuccessSnackBar,
 } from "../actions/snackbar-actions";
+import { usePost } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,7 +45,7 @@ export default function Register() {
     if (!_.isEmpty(currUser)) {
       history.push("/");
     }
-  });
+  }, [currUser, history]);
 
   const [inputs, setInputs] = useState({
     email: "",
@@ -54,28 +54,45 @@ export default function Register() {
     password_confirmation: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, post, resetErrors] = usePost(
+    {
+      user: inputs,
+    },
+    {
+      email: undefined,
+      username: undefined,
+      password: undefined,
+      password_confirmation: (value) => {
+        if (value !== inputs.password) {
+          return { isValid: false, message: "Passwords do not match" };
+        }
+
+        return { isValid: true };
+      },
+    },
+    "/api/v1/users"
+  );
 
   const onChange = (e) => {
+    resetErrors();
     setInputs({
       ...inputs,
-      [e.target.id]: e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    axios
-      .post("/api/v1/users", JSON.stringify({ user: inputs }))
-      .then((res) => {
+    post().then((res) => {
+      if (res) {
         dispatch(closeErrorSnackBar());
         dispatch(openSuccessSnackBar("Registration successful!"));
-        history.push("/login");
-      }) // re-direct to login on successful register
-      .catch((err) => {
-        dispatch(openErrorSnackBar("Registration Failed"));
+        history.push("/login"); // re-direct to login on successful register
+      } else {
         setIsLoading(false);
-      });
+      }
+    });
   };
 
   return (
@@ -94,6 +111,7 @@ export default function Register() {
                 id="email"
                 label="Email Address"
                 name="email"
+                error={errors.email !== undefined}
                 autoComplete="email"
                 onChange={onChange}
                 value={inputs.email}
@@ -108,6 +126,7 @@ export default function Register() {
                 id="username"
                 label="Username"
                 name="username"
+                error={errors.username !== undefined}
                 autoComplete="username"
                 onChange={onChange}
                 value={inputs.username}
@@ -120,6 +139,7 @@ export default function Register() {
                 required
                 fullWidth
                 name="password"
+                error={errors.password !== undefined}
                 label="Password"
                 type="password"
                 id="password"
@@ -133,6 +153,7 @@ export default function Register() {
                 required
                 fullWidth
                 name="password_confirmation"
+                error={errors.password_confirmation !== undefined}
                 label="Confirm Password"
                 type="password"
                 id="password_confirmation"

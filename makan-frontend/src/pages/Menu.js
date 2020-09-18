@@ -13,10 +13,6 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import Badge from "@material-ui/core/Badge";
-import Avatar from "@material-ui/core/Avatar";
-import ImageIcon from "@material-ui/icons/Image";
-import { v4 as uuidv4 } from "uuid";
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
@@ -26,7 +22,8 @@ import { useGet } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
 import LoadingButton from "../components/LoadingButton";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
-import storage from "../utils/firebase-storage";
+import { uploadImage } from "../utils/rest-utils";
+import ImageUpload from "../components/ImageUpload";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -190,20 +187,20 @@ function EditMenu({ id }) {
   const res = useGet(`/api/v1/menus/${id}`);
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({
+  const [textFields, setTextFields] = useState({
     description: "",
     name: "",
     price: "",
-    image: { link: "", toUpload: null },
   });
+  const [imageBlob, setImageBlob] = useState(null);
+  console.log(imageBlob);
 
   useEffect(() => {
     if (res.data) {
-      setFormData({
+      setTextFields({
         description: res.data.description,
         name: res.data.name,
         price: res.data.price,
-        image: { link: res.data.image_url, toUpload: null },
       });
     }
   }, [res.data]);
@@ -212,19 +209,12 @@ function EditMenu({ id }) {
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (formData.image.toUpload) {
-      const snapshot = await storage
-        .child(uuidv4() + formData.image.toUpload.name)
-        .put(formData.image.toUpload);
-      const image_url = await snapshot.ref.getDownloadURL();
-      console.log(image_url);
-    }
     setIsLoading(false);
     console.log("placeholder");
   };
   const onChange = (e) => {
-    setFormData({
-      ...formData,
+    setTextFields({
+      ...textFields,
       [e.target.name]: e.target.value,
     });
   };
@@ -252,54 +242,14 @@ function EditMenu({ id }) {
 
   return (
     <RenderResponse {...res}>
-      {() => (
+      {(data) => (
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} className={classes.editPictureContainer}>
-              <Badge
-                overlap="circle"
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                badgeContent={
-                  <>
-                    <input
-                      accept="image/*"
-                      className={classes.editPictureInput}
-                      id="icon-button-file"
-                      type="file"
-                      onChange={(e) => {
-                        if (e.target.files.length === 1) {
-                          setFormData({
-                            ...formData,
-                            image: {
-                              link: URL.createObjectURL(e.target.files[0]),
-                              toUpload: e.target.files[0],
-                            },
-                          });
-                        }
-                      }}
-                    />
-                    <label htmlFor="icon-button-file">
-                      <IconButton
-                        className={classes.editPictureButton}
-                        component="span"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </label>
-                  </>
-                }
-              >
-                <Avatar
-                  variant="square"
-                  className={classes.editPicture}
-                  src={formData.image.link}
-                >
-                  <ImageIcon fontSize="large" />
-                </Avatar>
-              </Badge>
+              <ImageUpload
+                initialImage={data.image_url}
+                setImageBlob={setImageBlob}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -309,7 +259,7 @@ function EditMenu({ id }) {
                 label="Name"
                 name="name"
                 onChange={onChange}
-                value={formData.name}
+                value={textFields.name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -317,7 +267,7 @@ function EditMenu({ id }) {
                 <InputLabel>Price</InputLabel>
                 <OutlinedInput
                   type="number"
-                  value={formData.price}
+                  value={textFields.price}
                   name="price"
                   onChange={onChange}
                   startAdornment={
@@ -335,7 +285,7 @@ function EditMenu({ id }) {
                 name="description"
                 label="Description"
                 onChange={onChange}
-                value={formData.description}
+                value={textFields.description}
                 multiline
                 rows={4}
               />
