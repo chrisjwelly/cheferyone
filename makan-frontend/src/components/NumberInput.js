@@ -35,15 +35,15 @@ export default function NumberInput({ value, setValue, ...rest }) {
   const isDecrementDisabled = () => value === "" || value === 1;
 
   return (
-    <Grid container alignItems="center" wrap="nowrap">
+    <Grid container alignItems="center" wrap="nowrap" spacing={1}>
       <Grid item>
         <IconButton
           aria-label="decrement"
           disabled={isDecrementDisabled()}
           onClick={() => updateValue(value - 1)}
+          size="small"
         >
           <RemoveCircleIcon
-            fontSize="large"
             className={
               isDecrementDisabled() ? classes.buttonDisabled : classes.button
             }
@@ -54,7 +54,6 @@ export default function NumberInput({ value, setValue, ...rest }) {
         <TextField
           {...rest}
           value={value}
-          variant="outlined"
           onChange={(e) => updateValue(e.target.value)}
         />
       </Grid>
@@ -63,9 +62,9 @@ export default function NumberInput({ value, setValue, ...rest }) {
           disabled={isIncrementDisabled()}
           aria-label="increment"
           onClick={() => updateValue(value + 1)}
+          size="small"
         >
           <AddCircleIcon
-            fontSize="large"
             className={
               isIncrementDisabled() ? classes.buttonDisabled : classes.button
             }

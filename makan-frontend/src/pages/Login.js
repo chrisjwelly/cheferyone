@@ -51,7 +51,7 @@ export default function Login() {
     isRemember: false,
   });
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [errors, post, resetErrors] = usePost(
     {
       user: inputs,
@@ -133,9 +133,9 @@ export default function Login() {
           </LoadingButton>
           <Grid container>
             <Grid item xs>
-              <Link component={LinkRouter} to="/" variant="body2">
+              {/* <Link component={LinkRouter} to="/" variant="body2">
                 Forgot Password?
-              </Link>
+              </Link> */}
             </Grid>
             <Grid item>
               <Link component={LinkRouter} to="/register" variant="body2">

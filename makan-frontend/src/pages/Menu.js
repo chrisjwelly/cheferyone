@@ -193,7 +193,6 @@ function EditMenu({ id }) {
     price: "",
   });
   const [imageBlob, setImageBlob] = useState(null);
-  console.log(imageBlob);
 
   useEffect(() => {
     if (res.data) {
