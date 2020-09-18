@@ -10,7 +10,6 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
   image: {
-    objectFit: "cover",
     height: theme.breakpoints.values.sm / 3,
     width: theme.breakpoints.values.sm / 3,
     boxShadow: theme.shadows[1],
