@@ -12,7 +12,6 @@ import { Link as LinkRouter } from "react-router-dom";
 
 import LoadingButton from "../components/LoadingButton";
 import {
-  openErrorSnackBar,
   closeErrorSnackBar,
   openSuccessSnackBar,
 } from "../actions/snackbar-actions";

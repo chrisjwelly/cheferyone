@@ -81,7 +81,7 @@ export async function uploadImage(imageBlob) {
     const image_url = await snapshot.ref.getDownloadURL();
     return { hasErrors: false, payload: image_url };
   } catch {
-    errors.unknown = "An unspecified error occurred, please try again";
+    errors.unknown = "Action failed, please try again";
     return { hasErrors: true, payload: errors };
   }
 }
@@ -102,7 +102,7 @@ export function usePost(dataToPost, fieldsToValidate, path) {
       return res;
     } catch {
       const err = {
-        unknown: "An unspecified error occurred, please try again",
+        unknown: "Action failed, please try again",
       };
       setErrors(err);
       dispatch(openErrorSnackBar(parseErrors(err)));
@@ -150,7 +150,9 @@ function isValid(fieldValue, validator) {
 function parseErrors(err) {
   let result = [];
   for (const key in err) {
-    result.push(<p key={key}>{key + ": " + err[key]}</p>);
+    result.push(
+      <p key={key}>{(key !== "unknown" ? key + ": " : "") + err[key]}</p>
+    );
   }
 
   return result;

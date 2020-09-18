@@ -14,6 +14,7 @@ import { Link as LinkRouter } from "react-router-dom";
 
 import LoadingButton from "../components/LoadingButton";
 import { loginUser } from "../actions/auth-actions";
+import { usePost } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,24 +51,30 @@ export default function Login() {
     isRemember: false,
   });
   const [isLoading, setIsLoading] = useState(false);
+  
+  const [errors, post, resetErrors] = usePost(
+    {
+      user: inputs,
+    },
+    {
+      login: undefined,
+      password: undefined,
+    },
+    "/api/v1/users/sign_in"
+  );
 
   const onChange = (e) => {
+    resetErrors();
     setInputs({
       ...inputs,
-      [e.target.id]: e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(
-      loginUser(
-        inputs.login,
-        inputs.password,
-        inputs.isRemember,
-        () => setIsLoading(false),
-        history
-      )
+      loginUser(post, inputs.isRemember, () => setIsLoading(false), history)
     );
   };
 
@@ -87,6 +94,7 @@ export default function Login() {
                 id="login"
                 label="Email or Username"
                 name="login"
+                error={errors.login !== undefined}
                 onChange={onChange}
                 value={inputs.login}
               />
@@ -97,6 +105,7 @@ export default function Login() {
                 required
                 fullWidth
                 name="password"
+                error={errors.password !== undefined}
                 label="Password"
                 type="password"
                 id="password"
