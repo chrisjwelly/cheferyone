@@ -7,24 +7,26 @@ import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import axios from "axios";
 
-import BottomNavigationBar from "./components/BottomNavigationBar";
 import Home from "./pages/Home";
+import ListMenu from "./pages/ListMenu";
+import Login from "./pages/Login";
+import Menu from "./pages/Menu";
+import NotFound from "./pages/NotFound";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
-import Menu from "./pages/Menu";
 import YourRestaurant from "./pages/YourRestaurant";
-import Login from "./pages/Login";
-import ListMenu from "./pages/ListMenu";
-import NotFound from "./pages/NotFound";
-import TopAppBar from "./components/TopAppBar";
+import EditMenu from "./pages/EditMenu";
+
+import BottomNavigationBar from "./components/BottomNavigationBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
-import SuccessSnackbar from "./components/SuccessSnackbar";
-import { setCurrentUser, logoutUser } from "./actions/auth-actions";
-import setAuthHeaders from "./utils/set-auth-headers";
-import PrivateRoute from "./components/PrivateRoute";
 import LoadingCenter from "./components/LoadingCenter";
+import PrivateRoute from "./components/PrivateRoute";
 import RootDialog from "./components/RootDialog";
+import SuccessSnackbar from "./components/SuccessSnackbar";
+import TopAppBar from "./components/TopAppBar";
+import setAuthHeaders from "./utils/set-auth-headers";
+import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,7 +110,7 @@ function Main() {
             <ListMenu section="nearby" />
           </PrivateRoute>
           <PrivateRoute exact path="/menu/:id/edit">
-            <Menu isEdit />
+            <EditMenu />
           </PrivateRoute>
           <PrivateRoute exact path="/new">
             <ListMenu section="new" />
