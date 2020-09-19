@@ -111,6 +111,20 @@ export default function MenuForm({
             collection_date: "2020-10-21T10:57:14.445+08:00",
             quota: 10,
           },
+          {
+            id: 2,
+            start_date: "2020-10-19T10:57:14.445+08:00",
+            end_date: "2020-10-20T10:57:14.445+08:00",
+            collection_date: "2020-10-21T10:57:14.445+08:00",
+            quota: 10,
+          },
+          {
+            id: 3,
+            start_date: "2020-10-19T10:57:14.445+08:00",
+            end_date: "2020-10-20T10:57:14.445+08:00",
+            collection_date: "2020-10-21T10:57:14.445+08:00",
+            quota: 10,
+          },
         ]}
       />
       <LoadingButton

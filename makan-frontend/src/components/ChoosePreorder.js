@@ -21,6 +21,14 @@ import { v4 as uuidv4 } from "uuid";
 import NumberInput from "./NumberInput";
 
 const FORMAT = "dd/MMM/yy hh:mma";
+const NEW = "NEW";
+const getEmptyPreorder = () => ({
+  id: uuidv4(),
+  start_date: new Date().toString(),
+  end_date: new Date().toString(),
+  collection_date: new Date().toString(),
+  quota: 1,
+});
 
 const useStyles = makeStyles((theme) => ({
   marginRight: {
@@ -45,18 +53,81 @@ export default function MaterialUIPickers({ existingPreorders }) {
   const [deleted_preorders, setDeletedPreorders] = useState([]);
 
   const [editing, setEditing] = useState({});
-
+  const [adding, setAdding] = useState(getEmptyPreorder());
+  const [editingNew, setEditingNew] = useState({});
   const closeEdit = (preorder) => {
-    const newEditing = { ...editing };
-    delete newEditing[preorder.id];
-    setEditing(newEditing);
+    if (preorder.status === NEW) {
+      const newEditingNew = { ...editingNew };
+      delete newEditingNew[preorder.id];
+      setEditing(newEditingNew);
+    } else {
+      const newEditing = { ...editing };
+      delete newEditing[preorder.id];
+      setEditing(newEditing);
+    }
   };
   const doneEdit = (preorder) => {
-    const oldEditsRemoved = edited_preorders.filter(
-      (p) => p.id !== preorder.id
-    );
-    setEditedPreorders([...oldEditsRemoved, preorder]);
+    if (preorder.status === NEW) {
+      const oldAddsRemoved = new_preorders.filter((p) => p.id !== preorder.id);
+      setNewPreorders([...oldAddsRemoved, preorder]);
+    } else {
+      const oldEditsRemoved = edited_preorders.filter(
+        (p) => p.id !== preorder.id
+      );
+      setEditedPreorders([...oldEditsRemoved, preorder]);
+    }
+
     closeEdit(preorder);
+  };
+
+  const genCard = (preorder, i) => {
+    if (preorder.status === NEW && preorder.id in editingNew) {
+      return (
+        <Grid item key={i} xs={12} sm={6}>
+          <PreorderEdit
+            className={classes.marginTop}
+            preorder={editingNew[preorder.id]}
+            setPreorder={(p) =>
+              setEditingNew({ ...editingNew, [preorder.id]: p })
+            }
+            index={i}
+            onDone={doneEdit}
+            onClose={closeEdit}
+            preorders={displayedPreorders}
+          />
+        </Grid>
+      );
+    } else if (preorder.id in editing) {
+      return (
+        <Grid item key={i} xs={12} sm={6}>
+          <PreorderEdit
+            className={classes.marginTop}
+            preorder={editing[preorder.id]}
+            setPreorder={(p) => setEditing({ ...editing, [preorder.id]: p })}
+            index={i}
+            onDone={doneEdit}
+            onClose={closeEdit}
+            preorders={displayedPreorders}
+          />
+        </Grid>
+      );
+    }
+    return (
+      <Grid item key={i} xs={12} sm={6}>
+        <PreorderCard
+          index={i}
+          className={classes.marginTop}
+          preorder={preorder}
+          onEdit={() => {
+            if (preorder.status === NEW) {
+              setEditingNew({ ...editingNew, [preorder.id]: preorder });
+            } else {
+              setEditing({ ...editing, [preorder.id]: preorder });
+            }
+          }}
+        />
+      </Grid>
+    );
   };
 
   useEffect(() => {
@@ -87,32 +158,18 @@ export default function MaterialUIPickers({ existingPreorders }) {
             <AddCircleIcon />
           </IconButton>
         </Grid>
-        <Grid item container>
-          {displayedPreorders.map((preorder, i) => (
-            <Grid item key={i} xs={12}>
-              {preorder.id in editing ? (
-                <PreorderEdit
-                  className={classes.marginTop}
-                  preorder={editing[preorder.id]}
-                  setPreorder={(p) =>
-                    setEditing({ ...editing, [preorder.id]: p })
-                  }
-                  index={i}
-                  onDone={doneEdit}
-                  onClose={closeEdit}
-                />
-              ) : (
-                <PreorderCard
-                  index={i}
-                  className={classes.marginTop}
-                  preorder={preorder}
-                  onEdit={() =>
-                    setEditing({ ...editing, [preorder.id]: preorder })
-                  }
-                />
-              )}
-            </Grid>
-          ))}
+        <Grid item xs={12}>
+          <PreorderEdit
+            className={classes.marginTop}
+            preorder={adding}
+            setPreorder={(p) => setAdding({ ...p })}
+            onDone={doneEdit}
+            onClose={closeEdit}
+            preorders={displayedPreorders}
+          />
+        </Grid>
+        <Grid item container spacing={2}>
+          {displayedPreorders.map(genCard)}
         </Grid>
       </Grid>
     </MuiPickersUtilsProvider>
@@ -160,7 +217,7 @@ function PreorderCard({ preorder, index, onEdit, onDelete, ...rest }) {
               Collect on
             </Typography>
             <Typography variant="body2">
-              {format(new Date(preorder.start_date), FORMAT)}
+              {format(new Date(preorder.collection_date), FORMAT)}
             </Typography>
           </Grid>
         </Grid>
@@ -206,19 +263,19 @@ function PreorderEdit({
   const setStart = (date) => {
     setPreorder({
       ...preorder,
-      start_date: date,
+      start_date: date.toString(),
     });
   };
   const setEnd = (date) => {
     setPreorder({
       ...preorder,
-      end_date: date,
+      end_date: date.toString(),
     });
   };
   const setCollection = (date) => {
     setPreorder({
       ...preorder,
-      collection_date: date,
+      collection_date: date.toString(),
     });
   };
   const setQuota = (quota) => {
@@ -231,9 +288,11 @@ function PreorderEdit({
   return (
     <Card {...rest}>
       <CardContent>
-        <Typography color="textSecondary" gutterBottom>
-          {`Pre-order #${index + 1}`}
-        </Typography>
+        {index !== undefined && (
+          <Typography color="textSecondary" gutterBottom>
+            {`Pre-order #${index + 1}`}
+          </Typography>
+        )}
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className={classes.marginRight}>
             <AccessTimeIcon color="disabled" />
@@ -305,7 +364,15 @@ function PreorderEdit({
         <IconButton onClick={() => onClose(preorder)}>
           <CloseIcon />
         </IconButton>
-        <IconButton onClick={() => onDone(preorder)}>
+        <IconButton
+          onClick={() => onDone(preorder)}
+          disabled={
+            new Date(preorder.start_date) >= new Date(preorder.end_date) ||
+            new Date(preorder.collection_date) <= new Date(preorder.end_date) ||
+            new Date(preorder.start_date) < new Date() ||
+            preorder.quota === ""
+          }
+        >
           <DoneIcon />
         </IconButton>
       </CardActions>
