@@ -7,14 +7,14 @@ import LoadingButton from "../components/LoadingButton";
 import CancelButton from "../components/CancelButton";
 import ImageUpload from "../components/ImageUpload";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   creationTextContainer: {
     textAlign: "center",
   },
   editPictureContainer: {
     textAlign: "center",
   },
-}));
+});
 
 export default function RestaurantForm({
   fields,
@@ -53,7 +53,7 @@ export default function RestaurantForm({
               name="location"
               error={errors.location !== undefined}
               onChange={onChange}
-              value={fields.name}
+              value={fields.location}
             />
           </Grid>
           <Grid item xs={12}>

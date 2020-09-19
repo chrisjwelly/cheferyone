@@ -95,7 +95,13 @@ function Main() {
       <Container className={classes.root} maxWidth="sm">
         <Switch>
           <PrivateRoute exact path="/your-restaurant">
-            <YourRestaurant />
+            <YourRestaurant currTab={0} />
+          </PrivateRoute>
+          <PrivateRoute exact path="/your-restaurant/orders">
+            <YourRestaurant currTab={1} />
+          </PrivateRoute>
+          <PrivateRoute exact path="/your-restaurant/edit">
+            <YourRestaurant currTab={2} />
           </PrivateRoute>
           <PrivateRoute path="/orders">
             <Orders />

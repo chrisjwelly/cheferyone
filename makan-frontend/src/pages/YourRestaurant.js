@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import MenuListCard from "../components/MenuListCard";
 import LinesEllipsis from "react-lines-ellipsis";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,10 +18,14 @@ import InfiniteScroll from "../components/InfiniteScroll";
 import RenderResponse from "../components/RenderResponse";
 import NotFound from "./NotFound";
 import CreateRestaurant from "./CreateRestaurant";
-import { setRestaurantTabState } from "../actions/restaurant-tab-actions";
+import EditRestaurant from "./EditRestaurant";
+import {
+  setRestaurantTabState,
+  setRestaurantTabIndex,
+} from "../actions/restaurant-tab-actions";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
-import { useGet, usePost } from "../utils/rest-utils";
+import { useGet } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -39,23 +43,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function YourRestaurant() {
+export default function YourRestaurant({ currTab }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const currTab = useSelector((state) => state.restaurantTab.index);
+  const history = useHistory();
 
   const res = useGet("/api/v1/your_restaurant");
   const isExist = res && !res.isLoading && !res.error;
 
   useEffect(() => {
     dispatch(setTabIndex(1));
+    dispatch(setRestaurantTabIndex(currTab, history));
 
     if (isExist) {
       dispatch(setRestaurantTabState(true)); // show tabs
     }
 
     return () => dispatch(setRestaurantTabState(false)); // hide tabs
-  }, [dispatch, isExist]);
+  }, [dispatch, isExist, currTab, history]);
 
   return (
     <div className={clsx(isExist && classes.root)}>
@@ -74,7 +79,7 @@ function RenderTab({ index, isExist }) {
   } else if (index === 1) {
     return <h1>Tab 1</h1>;
   } else if (index === 2) {
-    return <h1>Tab 2</h1>;
+    return <EditRestaurant />;
   } else {
     return <NotFound />;
   }
