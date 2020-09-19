@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start_date: 2020-09-19 00:01:26
+  end_date: 2020-09-19 00:01:26
+  quota: 1
+  collection_date: 2020-09-19 00:01:26
+  menu: one
+
+two:
+  start_date: 2020-09-19 00:01:26
+  end_date: 2020-09-19 00:01:26
+  quota: 1
+  collection_date: 2020-09-19 00:01:26
+  menu: two
