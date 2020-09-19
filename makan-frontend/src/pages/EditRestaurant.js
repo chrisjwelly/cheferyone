@@ -78,7 +78,7 @@ export default function EditRestaurant() {
 
               if (res) {
                 dispatch(openSuccessSnackBar("Restaurant deleted!"));
-                history.push("/");
+                window.location.reload();
               }
             }}
           >

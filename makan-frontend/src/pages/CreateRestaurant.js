@@ -46,9 +46,7 @@ export default function CreateRestaurant() {
     if (res) {
       dispatch(openSuccessSnackBar("Restaurant created!"));
 
-      // Hack to refresh page with router
-      history.push("/");
-      history.push("/your-restaurant");
+      window.location.reload();
     } else {
       setIsLoading(false);
     }
