@@ -79,7 +79,7 @@ export default function RestaurantForm({
               className={classes.submit}
               isLoading={isLoading}
             >
-              Create
+              Submit
             </LoadingButton>
           </Grid>
           <Grid item xs={12}>
