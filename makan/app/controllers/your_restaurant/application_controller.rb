@@ -13,6 +13,6 @@ class YourRestaurant::ApplicationController < ApplicationController
     rescue
       render json: {
         error: "You have to register your-restaurant before accessing those endpoints"
-      }, status: :unauthorized
+      }, status: :forbidden
     end
 end
