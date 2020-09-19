@@ -74,18 +74,20 @@ function EditMenu({ id }) {
   return (
     <RenderResponse {...res}>
       {(data) => (
-        <MenuForm
-          fields={fields}
-          setFields={(e) => {
-            resetErrors();
-            setFields(e);
-          }}
-          initialImage={data.image_url}
-          setImageBlob={setImageBlob}
-          errors={errors}
-          isLoading={isLoading}
-          onSubmit={onSubmit}
-        />
+        <>
+          <MenuForm
+            fields={fields}
+            setFields={(e) => {
+              resetErrors();
+              setFields(e);
+            }}
+            initialImage={data.image_url}
+            setImageBlob={setImageBlob}
+            errors={errors}
+            isLoading={isLoading}
+            onSubmit={onSubmit}
+          />
+        </>
       )}
     </RenderResponse>
   );

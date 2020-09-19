@@ -64,7 +64,7 @@ export default function YourRestaurant({ currTab }) {
     }
 
     return () => dispatch(setRestaurantTabState(false)); // hide tabs
-  }, [dispatch, isExist, currTab, history]);
+  }, [dispatch, isExist, currTab, history, currTabInStore]);
 
   return (
     <div className={clsx(isExist && classes.root)}>

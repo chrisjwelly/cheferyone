@@ -10,6 +10,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import LoadingButton from "./LoadingButton";
 import ImageUpload from "./ImageUpload";
 import CancelButton from "./CancelButton";
+import ChoosePreorder from "./ChoosePreorder";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,6 +95,24 @@ export default function MenuForm({
           />
         </Grid>
       </Grid>
+      <ChoosePreorder
+        existingPreorders={[
+          {
+            id: 0,
+            start_date: "2020-09-19T10:57:14.445+08:00",
+            end_date: "2020-09-20T10:57:14.445+08:00",
+            collection_date: "2020-09-21T10:57:14.445+08:00",
+            quota: 10,
+          },
+          {
+            id: 1,
+            start_date: "2020-10-19T10:57:14.445+08:00",
+            end_date: "2020-10-20T10:57:14.445+08:00",
+            collection_date: "2020-10-21T10:57:14.445+08:00",
+            quota: 10,
+          },
+        ]}
+      />
       <LoadingButton
         type="submit"
         fullWidth

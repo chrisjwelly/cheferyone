@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
@@ -17,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateRestaurant() {
   const dispatch = useDispatch();
-  const history = useHistory();
   const classes = useStyles();
 
   const [isLoading, setIsLoading] = useState(false);
