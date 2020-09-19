@@ -67,7 +67,9 @@ export default function MenuOrderDrawer({
           <Grid item className={classes.headerContainer}>
             <Grid container wrap="nowrap" alignItems="center">
               <Grid item>
-                <img alt={name} className={classes.thumbnail} src={image} />
+                {image && (
+                  <img alt={name} className={classes.thumbnail} src={image} />
+                )}
               </Grid>
               <Grid item className={classes.nameContainer}>
                 <Typography variant="body1" className={classes.name}>

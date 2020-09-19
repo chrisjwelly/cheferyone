@@ -60,7 +60,8 @@ export default function Login() {
       login: undefined,
       password: undefined,
     },
-    "/api/v1/users/sign_in"
+    "/api/v1/users/sign_in",
+    "POST"
   );
 
   const onChange = (e) => {

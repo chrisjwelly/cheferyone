@@ -42,9 +42,11 @@ export default function MenuListCard({ name, link, image, children, ...rest }) {
     <Link to={link} className={classes.root}>
       <Card {...rest} className={clsx(classes.card, rest.className)}>
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item>
-            <CardMedia className={classes.media} image={image} title={name} />
-          </Grid>
+          {image && (
+            <Grid item>
+              <CardMedia className={classes.media} image={image} title={name} />
+            </Grid>
+          )}
           <Grid item className={classes.detailsContainer}>
             <CardContent className={classes.cardContent}>
               <Typography variant="subtitle1" className={classes.title}>
