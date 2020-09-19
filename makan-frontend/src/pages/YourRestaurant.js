@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MenuListCard from "../components/MenuListCard";
 import LinesEllipsis from "react-lines-ellipsis";
 import IconButton from "@material-ui/core/IconButton";
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function YourRestaurant({ currTab }) {
+  const currTabInStore = useSelector((store) => store.restaurantTab.index);
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -53,7 +54,10 @@ export default function YourRestaurant({ currTab }) {
 
   useEffect(() => {
     dispatch(setTabIndex(1));
-    dispatch(setRestaurantTabIndex(currTab, history));
+
+    if (currTabInStore !== currTab) {
+      dispatch(setRestaurantTabIndex(currTab, history));
+    }
 
     if (isExist) {
       dispatch(setRestaurantTabState(true)); // show tabs

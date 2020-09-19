@@ -86,6 +86,7 @@ export default function RestaurantForm({
             <CancelButton
               description="Any unsaved changes will be lost"
               header="Cancel Creation?"
+              gotoAfterCancel="/your-restaurant"
               fullWidth
             >
               Cancel

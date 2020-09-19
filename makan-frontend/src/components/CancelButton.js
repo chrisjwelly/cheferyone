@@ -9,6 +9,7 @@ export default function CancelButton({
   children,
   header,
   description,
+  gotoAfterCancel,
   ...rest
 }) {
   const dispatch = useDispatch();
@@ -27,7 +28,11 @@ export default function CancelButton({
             color="primary"
             onClick={() => {
               dispatch(closeDialog());
-              history.goBack();
+              if (!gotoAfterCancel) {
+                history.goBack();
+              } else {
+                history.push(gotoAfterCancel);
+              }
             }}
           >
             Yes
@@ -37,12 +42,7 @@ export default function CancelButton({
     );
 
   return (
-    <Button
-      variant="contained"
-      color="secondary"
-      onClick={cancel}
-      {...rest}
-    >
+    <Button variant="contained" color="secondary" onClick={cancel} {...rest}>
       {children}
     </Button>
   );
