@@ -69,7 +69,8 @@ export default function Register() {
         return { isValid: true };
       },
     },
-    "/api/v1/users"
+    "/api/v1/users",
+    "POST"
   );
 
   const onChange = (e) => {

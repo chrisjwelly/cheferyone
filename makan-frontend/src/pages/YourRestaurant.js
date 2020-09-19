@@ -115,17 +115,19 @@ function CreateRestaurant() {
               rows={4}
             />
           </Grid>
+          <Grid item>
+            <LoadingButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              isLoading={isLoading}
+            >
+              Save
+            </LoadingButton>
+          </Grid>
         </Grid>
-        <LoadingButton
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-          isLoading={isLoading}
-        >
-          Save
-        </LoadingButton>
       </form>
     </>
   );
