@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,13 +16,16 @@ import clsx from "clsx";
 import TextField from "@material-ui/core/TextField";
 
 import LoadingButton from "../components/LoadingButton";
+import CancelButton from "../components/CancelButton";
+import ImageUpload from "../components/ImageUpload";
 import InfiniteScroll from "../components/InfiniteScroll";
 import RenderResponse from "../components/RenderResponse";
 import NotFound from "../pages/NotFound";
 import { setRestaurantTabState } from "../actions/restaurant-tab-actions";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
-import { useGet } from "../utils/rest-utils";
+import { openSuccessSnackBar } from "../actions/snackbar-actions";
+import { useGet, usePost } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -37,6 +40,12 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     bottom: theme.spacing(10),
     right: theme.spacing(3),
+  },
+  creationTextContainer: {
+    textAlign: "center",
+  },
+  editPictureContainer: {
+    textAlign: "center",
   },
 }));
 
@@ -82,15 +91,64 @@ function RenderTab({ index, isExist }) {
 }
 
 function CreateRestaurant() {
-  const formData = {};
-  const onChange = () => null;
-  const onSubmit = () => null;
-  const classes = {};
-  const isLoading = false;
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageBlob, setImageBlob] = useState(null);
+  const [fields, setFields] = useState({
+    location: "",
+    description: "",
+  });
+
+  const [errors, post, resetErrors] = usePost(
+    { restaurant: fields },
+    {
+      location: undefined,
+      description: undefined,
+    },
+    `/api/v1/your_restaurant`,
+    "POST",
+    imageBlob
+  );
+
+  const onChange = (e) => {
+    resetErrors();
+    setFields({ ...fields, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const res = await post();
+    if (res) {
+      dispatch(openSuccessSnackBar("Restaurant created!"));
+      history.push("/your-restaurant");
+    } else {
+      setIsLoading(false);
+    }
+  };
+  const classes = useStyles();
+
   return (
     <>
       <form className={classes.form} noValidate onSubmit={onSubmit}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} className={classes.creationTextContainer}>
+          <Grid item xs={12}>
+            <Typography variant="h6" color="textSecondary">
+              In this app, anyone can create their dream restaurant.
+            </Typography>
+            <Typography variant="h6" color="textSecondary">
+              Including you.
+            </Typography>
+            <Typography variant="h6" color="textSecondary">
+              Start your journey today!
+            </Typography>
+          </Grid>
+          <Grid item xs={12} className={classes.editPictureContainer}>
+            <ImageUpload setImageBlob={setImageBlob} />
+          </Grid>
           <Grid item xs={12}>
             <TextField
               variant="outlined"
@@ -98,8 +156,9 @@ function CreateRestaurant() {
               fullWidth
               label="Location"
               name="location"
+              error={errors.location !== undefined}
               onChange={onChange}
-              value={formData.name}
+              value={fields.name}
             />
           </Grid>
           <Grid item xs={12}>
@@ -108,14 +167,15 @@ function CreateRestaurant() {
               required
               fullWidth
               name="description"
+              error={errors.description !== undefined}
               label="Description"
               onChange={onChange}
-              value={formData.description}
+              value={fields.description}
               multiline
               rows={4}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <LoadingButton
               type="submit"
               fullWidth
@@ -124,8 +184,17 @@ function CreateRestaurant() {
               className={classes.submit}
               isLoading={isLoading}
             >
-              Save
+              Create
             </LoadingButton>
+          </Grid>
+          <Grid item xs={12}>
+            <CancelButton
+              description="Any unsaved changes will be lost"
+              header="Cancel Creation?"
+              fullWidth
+            >
+              Cancel
+            </CancelButton>
           </Grid>
         </Grid>
       </form>
@@ -171,7 +240,7 @@ function MenuTab() {
       <Fab className={classes.fab} color="secondary" aria-label="add">
         <AddIcon />
       </Fab>
-      <InfiniteScroll apiPath={"/api/v1/menus/recommended"}>
+      <InfiniteScroll apiPath={"/api/v1/your_restaurant/menus"}>
         {(data) =>
           data.map((menus) => {
             return menus.map((menu) => (

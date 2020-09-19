@@ -1,8 +1,5 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
@@ -10,9 +7,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 
-import LoadingButton from "../components/LoadingButton";
-import { openDialog, closeDialog } from "../actions/dialog-actions";
-import ImageUpload from "../components/ImageUpload";
+import LoadingButton from "./LoadingButton";
+import ImageUpload from "./ImageUpload";
+import CancelButton from "./CancelButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,8 +34,6 @@ export default function MenuForm({
   onSubmit,
 }) {
   const classes = useStyles();
-  const history = useHistory();
-  const dispatch = useDispatch();
 
   const onChange = (e) => {
     setFields({
@@ -46,28 +41,6 @@ export default function MenuForm({
       [e.target.name]: e.target.value,
     });
   };
-
-  const cancel = () =>
-    dispatch(
-      openDialog(
-        "Cancel Edit?",
-        "Any unsaved changes will be lost.",
-        <>
-          <Button color="primary" onClick={() => dispatch(closeDialog())}>
-            No
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              dispatch(closeDialog());
-              history.goBack();
-            }}
-          >
-            Yes
-          </Button>
-        </>
-      )
-    );
 
   return (
     <form className={classes.root} noValidate onSubmit={onSubmit}>
@@ -131,9 +104,13 @@ export default function MenuForm({
       >
         Submit
       </LoadingButton>
-      <Button variant="contained" fullWidth color="secondary" onClick={cancel}>
+      <CancelButton
+        description="Any unsaved changes will be lost"
+        header="Cancel Edit?"
+        fullWidth
+      >
         Cancel
-      </Button>
+      </CancelButton>
     </form>
   );
 }
