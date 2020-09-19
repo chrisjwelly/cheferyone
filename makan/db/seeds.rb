@@ -52,8 +52,15 @@ restaurant_urls = [
   )
 
   3.times do |j|
-    restaurant.menus.create(
+    menu = restaurant.menus.create(
       name: menus[j], description: "A great menu.", price: 0.5 + i + j, rating: i + 0.5, image_url: menu_urls[j]
     )
+    # Create a more jumbled-up order, with preorder dates that has ended before now
+    [2, -2, 0].each { |x|
+      menu.preorders.create(start_date: DateTime.now + x,
+        end_date: DateTime.now + x + 1,
+        collection_date: DateTime.now + x + 2,
+        quota: 10)
+    }
   end
 end

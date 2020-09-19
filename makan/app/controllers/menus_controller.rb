@@ -1,5 +1,7 @@
 class MenusController < ApplicationController
   acts_as_token_authentication_handler_for User, except: [:show, :recent, :index]
+
+  before_action :ensure_chef!, only: [:belongs]
   before_action :set_menu, only: [:show, :belongs]
   before_action :set_offset_and_limit, only: [:recommended, :near_you, :recent, :index]
 
@@ -60,5 +62,13 @@ class MenusController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def menu_params
       params.require(:menu).permit(:name, :price, :description, :image_url)
+    end
+
+    def ensure_chef!
+      raise ActionController::RoutingError.new('Not Found') unless !current_user.nil? && current_user.chef?
+    rescue
+      render json: {
+        error: "You have to register your-restaurant before accessing those endpoints"
+      }, status: :forbidden
     end
 end

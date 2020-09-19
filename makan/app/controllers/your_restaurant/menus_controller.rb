@@ -22,6 +22,11 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
     @menu = current_user.restaurant.menus.create(menu_params)
 
     if @menu.save
+      is_create_success = create_preorders?
+      if (!is_create_success)
+        return
+      end
+
       render json: @menu, status: :created, location: @menu
     else
       # Status code: 422
@@ -32,6 +37,21 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
   # PATCH/PUT /your_restaurant/menus/1
   def update
     if @menu.update(menu_params)
+      is_create_success = create_preorders?
+      if (!is_create_success)
+        return
+      end
+
+      is_update_success = update_preorders?
+      if (!is_update_success)
+        return
+      end
+
+      is_destroy_success = destroy_preorders? # This should always be true but it's here for consistency
+      if (!is_destroy_success)
+        return
+      end
+
       render json: @menu
     else
       # Status code: 422
@@ -59,4 +79,73 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
     def menu_params
       params.require(:menu).permit(:name, :price, :description, :image_url)
     end
+
+    # ----- START OF Creating preorders -----
+    def get_new_preorders
+      params.require(:menu).delete(:new_preorders)
+    end
+
+    def permitted_create_preorder_params(preorder_params)
+      preorder_params.permit(:start_date, :end_date, :collection_date, :quota)
+    end
+
+    # Returns boolean to indicate the success
+    def create_preorders?
+      get_new_preorders.each { |unpermitted_params|
+        permitted_params = permitted_create_preorder_params(unpermitted_params)
+        @preorder = @menu.preorders.create(permitted_params)
+
+        if @preorder.save
+          # If successful, no need to give response
+        else
+          # Status code: 422
+          render json: @preorder.errors, status: :unprocessable_entity and return false
+        end
+      }
+
+      return true
+    end
+    # ----- END OF Creating preorders -----
+
+    # ----- START OF Updating preorders -----
+    def get_edited_preorders
+      params.require(:menu).delete(:edited_preorders)
+    end
+
+    def permitted_update_preorder_params(preorder_params)
+      preorder_params.permit(:id, :start_date, :end_date, :collection_date, :quota)
+    end
+
+    # Returns boolean to indicate the success
+    def update_preorders?
+      get_edited_preorders.each { |unpermitted_params|
+        permitted_params = permitted_update_preorder_params(unpermitted_params)
+        @preorder = @menu.preorders.find(permitted_params[:id])
+        if @preorder.update(permitted_params)
+          # If successful, no need to give response
+        else
+          # Status code: 422
+          render json: @preorder.errors, status: :unprocessable_entity and return false
+        end
+      }
+
+      return true
+    end
+    # ----- END OF Updating preorders -----
+
+    # ----- START OF Deleting preorders -----
+    def get_deleted_preorders
+      params.require(:menu).delete(:deleted_preorders)
+    end
+
+    # Returns boolean to indicate the success
+    def destroy_preorders?
+      get_deleted_preorders.each { |id|
+        @preorder = @menu.preorders.find(id)
+        @preorder.destroy
+      }
+
+      return true
+    end
+    # ----- END OF Deleting preorders -----
 end
