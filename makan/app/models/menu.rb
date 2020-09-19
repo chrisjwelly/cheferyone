@@ -1,5 +1,5 @@
 class Menu < ApplicationRecord
-  include Rails.application.routes.url_helpers
+  validate :image_url_security
 
   belongs_to :restaurant, touch: true
   include AlgoliaSearch
@@ -7,17 +7,10 @@ class Menu < ApplicationRecord
   algoliasearch do
     attributes :name, :description, :price, :rating, :restaurant_id, :created_at, :updated_at, :restaurant_id
   end
-  
-  has_one_attached :image
 
-  def get_image_url
-    url_for(self.image)
-  end
-
-  # Append logo to JSON
-  def as_json(options)
-    super(options).merge({
-      "image_url" => get_image_url
-    })
+  private
+  def image_url_security
+    image_source =  'https://firebasestorage.googleapis.com/v0/b/makan-a9ad2.appspot.com/o/'
+    errors.add(:image_url, 'untrusted image source') unless image_url.nil? || image_url.start_with?(image_source)
   end
 end

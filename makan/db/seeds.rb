@@ -28,27 +28,32 @@ end
 restaurant_logos = ["DinTaiFung.png", "KFC.png", "McDonalds.png", "PizzaHut.png", "Subway.png"]
 
 menus = ["Chicken Wing", "Egg Fried Rice", "Pizza"]
-menu_images = ["ChickenWing.jpeg", "EggFriedRice.jpg", "Pizza.jpg"]
+# links are ordered based on the menus
+menu_urls = [
+  "https://firebasestorage.googleapis.com/v0/b/makan-a9ad2.appspot.com/o/2c27d230-91a3-4b8f-a53e-8b3469838dfaPizza.jpg?alt=media&token=528618d1-c5b4-448e-b5f7-1ab6fe088a7f",
+  "https://firebasestorage.googleapis.com/v0/b/makan-a9ad2.appspot.com/o/653e925d-bbe3-4d7c-b8a9-a4c62bf29a53EggFriedRice.jpg?alt=media&token=49d8a14e-edc1-4b26-80ad-574db11bc8a1",
+  "https://firebasestorage.googleapis.com/v0/b/makan-a9ad2.appspot.com/o/0e93b7f5-ba00-4102-8318-c5cc07ca74d1ChickenWing.jpeg?alt=media&token=a4bdbccd-c759-4c13-84c9-12f1c5856a83"
+]
+
+# to be filled with better images
+restaurant_urls = [
+  nil,
+  nil,
+  nil,
+  nil,
+  nil
+]
+
 # Create Home Chefs, Restaurants and Menus
 5.times do |i|
   chef = User.create(email: "chef#{i + 1}@example.com", password: "123456", username: "chef#{i+1}", authentication_token: "chef#{i + 1}")
-  restaurant = chef.create_restaurant(description: "Chef's Kitchen #{i + 1}", location: "NUS PGPR Block #{i + 1}")
-
-  filename = restaurant_logos[i]
-  restaurant.logo.attach({
-    io: get_restaurant_file(filename),
-    filename: filename,
-    content_type: get_image_content_type(filename)
-  })
+  restaurant = chef.create_restaurant(
+    description: "Chef's Kitchen #{i + 1}", location: "NUS PGPR Block #{i + 1}", image_url: restaurant_urls[i]
+  )
 
   3.times do |j|
-    menu = restaurant.menus.create(name: menus[j], description: "A great menu.", price: 0.5 + i + j, rating: i + 0.5)
-
-    filename = menu_images[j]
-    menu.image.attach({
-      io: get_menu_file(filename),
-      filename: filename,
-      content_type: get_image_content_type(filename)
-    })
+    restaurant.menus.create(
+      name: menus[j], description: "A great menu.", price: 0.5 + i + j, rating: i + 0.5, image_url: menu_urls[j]
+    )
   end
 end

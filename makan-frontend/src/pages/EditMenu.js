@@ -1,16 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useGet, usePost } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
-import { uploadImage } from "../utils/rest-utils";
 import MenuForm from "../components/MenuForm";
-import {
-  openSuccessSnackBar,
-  openErrorSnackBar,
-} from "../actions/snackbar-actions";
+import { openSuccessSnackBar } from "../actions/snackbar-actions";
 
 export default function EditMenuWrapper() {
   const dispatch = useDispatch();
@@ -57,29 +53,15 @@ function EditMenu({ id }) {
       description: undefined,
       price: undefined,
     },
-    "/api/v1/your_restaurant/menus/"
+    `/api/v1/your_restaurant/menus/${id}`,
+    "PATCH",
+    imageBlob
   );
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (imageBlob === null) {
-      // User did not upload image
-      submitText();
-    } else {
-      const imageRes = await uploadImage(imageBlob);
-
-      if (imageRes.hasErrors) {
-        setIsLoading(false);
-        dispatch(openErrorSnackBar(imageRes.payload));
-      } else {
-        setFields({ ...fields, image_url: imageRes.payload });
-      }
-    }
-  };
-
-  const submitText = async () => {
     const res = await post();
     if (res) {
       dispatch(openSuccessSnackBar("Menu updated!"));
@@ -88,14 +70,6 @@ function EditMenu({ id }) {
       setIsLoading(false);
     }
   };
-
-  const memoizedCallback = useCallback(submitText, [fields]);
-  // If image_url is filled in
-  useEffect(() => {
-    if (fields.image_url) {
-      memoizedCallback();
-    }
-  }, [fields, memoizedCallback]);
 
   return (
     <RenderResponse {...res}>

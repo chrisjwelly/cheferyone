@@ -22,7 +22,7 @@ export default function MenuDetails({ description, price }) {
     if (descriptionRef && descriptionRef.current) {
       setIsTooLong(descriptionRef.current.isClamped());
     }
-  }, [descriptionRef]);
+  }, [descriptionRef, description]);
 
   return (
     <div>

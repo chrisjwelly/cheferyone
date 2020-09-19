@@ -1,19 +1,12 @@
 class Restaurant < ApplicationRecord
-  include Rails.application.routes.url_helpers
-
-  has_one_attached :logo
+  validate :image_url_security
 
   belongs_to :user, touch: true
   has_many :menus, dependent: :destroy
 
-  def get_logo_url
-    url_for(self.logo)
-  end
-
-  # Append logo to JSON
-  def as_json(options)
-    super(options).merge({
-      "logo_url" => get_logo_url
-    })
+  private
+  def image_url_security
+    image_source =  'https://firebasestorage.googleapis.com/v0/b/makan-a9ad2.appspot.com/o/'
+    errors.add(:image_url, 'untrusted image source') unless image_url.nil? || image_url.start_with?(image_source)
   end
 end

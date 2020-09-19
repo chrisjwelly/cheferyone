@@ -11,6 +11,8 @@ import store from "./store";
 
 // Set all post requests to contain json payload
 axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.headers.patch["Content-Type"] = "application/json";
+axios.defaults.headers.delete["Content-Type"] = "application/json";
 
 ReactDOM.render(
   <React.StrictMode>

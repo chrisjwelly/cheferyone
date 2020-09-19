@@ -59,42 +59,49 @@ export function useInfinite(url) {
   };
 }
 
-export async function uploadImage(imageBlob) {
-  // Basic client side checks, should be done for server side too!
-  if (imageBlob.size >= 5 * 1024 * 1024) {
-    return { hasErrors: true, payload: "Image uploaded should not exceed 5MB" };
-  }
-  if (!/image\/.*/g.test(imageBlob.type)) {
-    return { hasErrors: true, payload: "Make sure you uploaded a valid image" };
-  }
-
-  try {
-    const snapshot = await storage
-      .child(uuidv4() + imageBlob.name)
-      .put(imageBlob);
-    const image_url = await snapshot.ref.getDownloadURL();
-    return { hasErrors: false, payload: image_url };
-  } catch {
-    return {
-      hasErrors: true,
-      payload: "There was a problem uploading the picture, please try again",
-    };
-  }
-}
-
-export function usePost(dataToPost, fieldsToValidate, path) {
+export function usePost(
+  dataToPost,
+  fieldsToValidate,
+  path,
+  method,
+  imageBlob = null
+) {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
 
   const post = async () => {
-    const err = findErrors(dataToPost, fieldsToValidate);
+    let err = findErrors(dataToPost, fieldsToValidate);
+    if (imageBlob) {
+      if (imageBlob.size >= 5 * 1024 * 1024) {
+        err.image = "Image uploaded should not exceed 5MB";
+      } else if (!/image\/.*/g.test(imageBlob.type)) {
+        err.image = "Make sure you uploaded a valid image";
+      }
+    }
+
     setErrors(err);
+
     if (!_.isEmpty(err)) {
       dispatch(openErrorSnackBar(parseErrors(err)));
       return false;
     }
+
     try {
-      const res = await axios.post(path, JSON.stringify(dataToPost));
+      if (imageBlob) {
+        const snapshot = await storage
+          .child(uuidv4() + imageBlob.name)
+          .put(imageBlob);
+        const image_url = await snapshot.ref.getDownloadURL();
+
+        dataToPost.menu.image_url = image_url;
+      }
+
+      const res = await axios({
+        method,
+        url: path,
+        data: JSON.stringify(dataToPost),
+      });
+
       return res;
     } catch {
       const err = {
