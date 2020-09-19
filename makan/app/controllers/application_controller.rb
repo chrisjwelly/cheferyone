@@ -6,6 +6,13 @@ class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
+    DEFAULT_OFFSET = 0
+    DEFAULT_LIMIT = 10
+
+    def set_offset_and_limit
+      @offset = params[:offset] || DEFAULT_OFFSET
+      @limit = params[:limit] || DEFAULT_LIMIT
+    end
 
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up,

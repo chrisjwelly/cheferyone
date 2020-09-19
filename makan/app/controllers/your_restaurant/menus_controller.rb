@@ -1,11 +1,13 @@
-class YourRestaurant::MenusController < ApplicationController
+class YourRestaurant::MenusController < YourRestaurant::ApplicationController
   acts_as_token_authentication_handler_for User
+
+  before_action :ensure_chef!
+  before_action :set_offset_and_limit, only: :index
   before_action :set_menu, only: [:show, :update, :destroy]
 
   # GET /your_restaurant/menus
   def index
-    @menus = Menu.all
-
+    @menus = current_user.restaurant.menus.limit(@limit).offset(@offset)
     render json: @menus
   end
 
