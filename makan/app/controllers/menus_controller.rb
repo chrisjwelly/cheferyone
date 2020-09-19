@@ -1,9 +1,7 @@
 class MenusController < ApplicationController
-  before_action :set_menu, only: [:show, :belongs]
   acts_as_token_authentication_handler_for User, except: [:show, :recent, :index]
-
-  DEFAULT_OFFSET = 0
-  DEFAULT_LIMIT = 10
+  before_action :set_menu, only: [:show, :belongs]
+  before_action :set_offset_and_limit, only: [:recommended, :near_you, :recent, :index]
 
   # GET /menus/search?query=Menu
   def search
@@ -15,35 +13,25 @@ class MenusController < ApplicationController
 
   # GET /menus/recommended
   def recommended
-    offset = params[:offset] || DEFAULT_OFFSET
-    limit = params[:limit] || DEFAULT_LIMIT
-
-    @menus = Menu.limit(limit).offset(offset)
+    @menus = Menu.limit(@limit).offset(@offset)
     render json: @menus
   end
 
   # GET /menus/near_you
   def near_you
-    offset = params[:offset] || DEFAULT_OFFSET
-    limit = params[:limit] || DEFAULT_LIMIT
-
-    @menus = Menu.limit(limit).offset(offset)
+    @menus = Menu.limit(@limit).offset(@offset)
     render json: @menus
   end
 
   # GET /menus/recent
   def recent
-    offset = params[:offset] || DEFAULT_OFFSET
-    limit = params[:limit] || DEFAULT_LIMIT
-
-    @menus = Menu.limit(limit).offset(offset)
+    @menus = Menu.limit(@limit).offset(@offset)
     render json: @menus
   end
 
   # GET /menus
   def index
-    @menus = Menu.all
-
+    @menus = Menu.limit(@limit).offset(@offset)
     render json: @menus
   end
 

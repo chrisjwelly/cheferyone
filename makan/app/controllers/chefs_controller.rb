@@ -1,7 +1,4 @@
 class ChefsController < ApplicationController
-  DEFAULT_OFFSET = 0
-  DEFAULT_LIMIT = 10
-
   # GET /chefs
   def index
     offset = params[:offset] || DEFAULT_OFFSET
