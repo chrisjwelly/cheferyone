@@ -5,6 +5,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
+import ImageIcon from "@material-ui/icons/Image";
 
 import RatingStars from "../components/RatingStars";
 
@@ -33,7 +34,11 @@ export default function MenuCard({ name, price, rating, link, image }) {
   return (
     <Link to={link} className={classes.root}>
       <Card className={classes.card}>
-        <CardMedia className={classes.media} image={image} title={name} />
+        <CardMedia
+          className={classes.media}
+          image={!image ? "/insert_photo-24px.svg" : image}
+          title={name}
+        />
         <CardContent>
           <Typography variant="subtitle1" className={classes.title}>
             {name}
