@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MenuDetails({ tags, description, price }) {
   const classes = useStyles();
 
-  const descriptionRef = useRef(null);
+  const descriptionRef = useRef();
   const [isTooLong, setIsTooLong] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
