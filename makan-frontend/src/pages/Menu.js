@@ -13,10 +13,11 @@ import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
 import MenuDetails from "../components/MenuDetails";
 import MenuOrderDrawer from "../components/MenuOrderDrawer";
-import { useGet } from "../utils/rest-utils";
+import { useGet, usePost } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
 import MenuPreorders from "../components/MenuPreorders";
+import { openSuccessSnackBar } from "../actions/snackbar-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +75,13 @@ function MenuView({ id, isOwner }) {
     history.push(`/menu/${id}/edit`);
   };
 
+  const deletePost = usePost(
+    {},
+    {},
+    `/api/v1/your_restaurant/menus/${id}`,
+    "DELETE"
+  )[1];
+
   const remove = () => {
     dispatch(
       openDialog(
@@ -85,9 +93,14 @@ function MenuView({ id, isOwner }) {
           </Button>
           <Button
             color="primary"
-            onClick={() => {
+            onClick={async () => {
               dispatch(closeDialog());
-              console.log("placeholder");
+              const res = await deletePost();
+
+              if (res) {
+                dispatch(openSuccessSnackBar("Menu deleted!"));
+                history.push("/your-restaurant");
+              }
             }}
           >
             Yes
