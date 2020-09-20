@@ -145,7 +145,7 @@ function MenuView({ id, isOwner }) {
             image={data.image_url}
             price={data.price}
             deliveryFee="3 (placeholder)"
-            deliveryDate="26th September 2020 9:00AM to 5:00PM (placeholder)"
+            collectionDate={data.current_preorder.collection_date}
           />
         </div>
       )}

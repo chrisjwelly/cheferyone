@@ -6,8 +6,8 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import { format } from "date-fns";
 
 import NumberInput from "../components/NumberInput";
 
@@ -53,7 +53,7 @@ export default function MenuOrderDrawer({
   price,
   deliveryFee,
   onClose,
-  deliveryDate,
+  collectionDate,
   ...rest
 }) {
   const classes = useStyles();
@@ -88,21 +88,15 @@ export default function MenuOrderDrawer({
             />
           </Grid>
           <Grid item>
-            <Typography variant="body1">Delivery Details</Typography>
+            <Typography variant="body1">Collection Details</Typography>
             <Grid container alignItems="center" spacing={1}>
               <Grid item>
                 <AccessTimeIcon />
               </Grid>
               <Grid item>
-                <Typography variant="caption">{deliveryDate}</Typography>
-              </Grid>
-            </Grid>
-            <Grid container alignItems="center" spacing={1}>
-              <Grid item>
-                <AttachMoneyIcon />
-              </Grid>
-              <Grid item>
-                <Typography variant="caption">{`S$${deliveryFee}`}</Typography>
+                <Typography variant="caption">
+                  {format(new Date(collectionDate), "dd MMMM yyyy hh:mma")}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
