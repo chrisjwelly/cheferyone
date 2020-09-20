@@ -98,7 +98,7 @@ function MenuTab() {
     e.preventDefault();
     history.push(`/menu/${id}/edit`);
   };
-  const remove = (e, id) => {
+  const remove = (e) => {
     e.preventDefault();
     dispatch(
       openDialog(

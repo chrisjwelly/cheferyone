@@ -18,8 +18,11 @@ import DoneIcon from "@material-ui/icons/Done";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
 import { v4 as uuidv4 } from "uuid";
+import { useDispatch } from "react-redux";
+import Button from "@material-ui/core/Button";
 
 import NumberInput from "./NumberInput";
+import { openDialog, closeDialog } from "../actions/dialog-actions";
 
 const FORMAT = "dd/MMM/yy hh:mma";
 const NEW = "NEW";
@@ -53,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ChoosePreorder({ existingPreorders }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [displayedPreorders, setDisplayedPreorders] = useState([
     ...existingPreorders,
@@ -77,13 +81,35 @@ export default function ChoosePreorder({ existingPreorders }) {
     }
   };
   const onDelete = (preorder) => {
-    if (preorder.status === NEW) {
-      setNewPreorders(new_preorders.filter((p) => p.id !== preorder.id));
-    } else if (preorder.status === EDIT) {
-      setEditedPreorders(edited_preorders.filter((p) => p.id !== preorder.id));
-    } else {
-      setDeletedPreorders([...deleted_preorders, preorder.id]);
-    }
+    dispatch(
+      openDialog(
+        "",
+        "Delete Pre-order?",
+        <>
+          <Button color="primary" onClick={() => dispatch(closeDialog())}>
+            No
+          </Button>
+          <Button
+            color="primary"
+            onClick={() => {
+              if (preorder.status === NEW) {
+                setNewPreorders(
+                  new_preorders.filter((p) => p.id !== preorder.id)
+                );
+              } else if (preorder.status === EDIT) {
+                setEditedPreorders(
+                  edited_preorders.filter((p) => p.id !== preorder.id)
+                );
+              } else {
+                setDeletedPreorders([...deleted_preorders, preorder.id]);
+              }
+            }}
+          >
+            Yes
+          </Button>
+        </>
+      )
+    );
   };
 
   const closeEdit = (preorder) => {
