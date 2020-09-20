@@ -69,6 +69,7 @@ function Authenticated() {
   } else if (recommended.error || nearby.error || recent.error) {
     return <Error />;
   } else {
+    console.log(recommended.data)
     return (
       <>
         <SuggestionsSectionContainer
@@ -83,6 +84,7 @@ function Authenticated() {
               name={obj.name}
               link={`/menu/${obj.id}`}
               image={obj.image_url}
+              tags={obj.tags}
             />
           ))}
         </SuggestionsSectionContainer>
@@ -95,6 +97,7 @@ function Authenticated() {
               name={obj.name}
               link={`/menu/${obj.id}`}
               image={obj.image_url}
+              tags={obj.tags}
             />
           ))}
         </SuggestionsSectionContainer>
@@ -107,6 +110,7 @@ function Authenticated() {
               name={obj.name}
               link={`/menu/${obj.id}`}
               image={obj.image_url}
+              tags={obj.tags}
             />
           ))}
         </SuggestionsSectionContainer>

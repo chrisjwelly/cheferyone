@@ -10,6 +10,8 @@ class Menu < ApplicationRecord
     attributes :name, :description, :price, :rating, :restaurant_id, :created_at, :updated_at, :restaurant_id
   end
 
+  has_many :connections, as: :taggable
+  has_many :tags, through: :connections
   has_many :subscribers, through: :subscriptions, class_name: "User"
 
   # Append logo to JSON
@@ -24,6 +26,7 @@ class Menu < ApplicationRecord
     sorted_preorders = self.preorders.order(:start_date)
 
     super(options).merge({
+      "tags" => tags,
       "preorders" => sorted_preorders.select { |preorder| preorder.end_date >= now },
       "current_preorder" => current_preorder,
     })

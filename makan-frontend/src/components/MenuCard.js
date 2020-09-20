@@ -28,9 +28,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuCard({ name, price, rating, link, image }) {
+export default function MenuCard({ name, price, rating, link, image, tags }) {
   const classes = useStyles();
-
   return (
     <Link to={link} className={classes.root}>
       <Card className={classes.card}>
@@ -45,6 +44,9 @@ export default function MenuCard({ name, price, rating, link, image }) {
           </Typography>
           <Typography variant="subtitle2" color="textSecondary">
             {`S$${price}`}
+          </Typography>
+          <Typography variant="subtitle2" className={classes.title} component="div">
+            {tags.map(t => t.name + " ")}
           </Typography>
           <RatingStars size="small" rating={rating} />
         </CardContent>
