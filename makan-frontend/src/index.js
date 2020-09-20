@@ -20,7 +20,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Router>
         <SWRConfig value={{ shouldRetryOnError: false }}>
-          <ActionCableProvider url="ws://localhost:3000/cable">
+          <ActionCableProvider url="ws://localhost:3000/cable?token=chef1">
             <App />
           </ActionCableProvider>
         </SWRConfig>
