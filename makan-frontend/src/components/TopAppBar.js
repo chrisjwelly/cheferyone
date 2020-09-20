@@ -12,8 +12,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
+import { setSearchTerm, setSearchState } from "../actions/search-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,9 +68,13 @@ export default function TopAppBar({ hasBell }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
+  const isNarrow = useMediaQuery("(max-width:500px)");
 
   const { index, isShown: isTabsShown } = useSelector(
     (store) => store.restaurantTab
+  );
+  const { term: searchTerm, isActive: isSearchActive } = useSelector(
+    (store) => store.search
   );
 
   return (
@@ -76,7 +82,7 @@ export default function TopAppBar({ hasBell }) {
       <AppBar className={classes.root}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Cheferyone
+            {isNarrow && isSearchActive ? "" : "Cheferyone"}
           </Typography>
           {hasBell && (
             <>
@@ -84,10 +90,16 @@ export default function TopAppBar({ hasBell }) {
                 <div className={classes.searchIcon}>
                   <SearchIcon />
                 </div>
-                <form onSubmit={() => console.log("hello")}>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    console.log("hello");
+                  }}
+                >
                   <InputBase
-                    onFocus={() => console.log("LOL")}
-                    onBlur={() => console.log("blur")}
+                    onFocus={() => dispatch(setSearchState(true))}
+                    onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+                    value={searchTerm}
                     placeholder="Search…"
                     classes={{
                       root: classes.inputRoot,

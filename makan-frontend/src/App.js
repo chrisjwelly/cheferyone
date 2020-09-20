@@ -87,6 +87,7 @@ function App() {
 function Main() {
   const classes = useStyles();
   const currUser = useSelector((store) => store.auth.user);
+  const isSearchActive = useSelector((store) => store.search.isActive);
 
   return (
     <>
@@ -95,54 +96,57 @@ function Main() {
       <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
-        <SearchPage />
-        {/* <Switch>
-          <PrivateRoute exact path="/your-restaurant">
-            <YourRestaurant currTab={0} />
-          </PrivateRoute>
-          <PrivateRoute exact path="/your-restaurant/orders">
-            <YourRestaurant currTab={1} />
-          </PrivateRoute>
-          <PrivateRoute exact path="/your-restaurant/edit">
-            <YourRestaurant currTab={2} />
-          </PrivateRoute>
-          <PrivateRoute exact path="/your-restaurant/create">
-            <CreateMenu />
-          </PrivateRoute>
-          <PrivateRoute path="/orders">
-            <Orders />
-          </PrivateRoute>
-          <PrivateRoute path="/profile">
-            <Profile />
-          </PrivateRoute>
-          <PrivateRoute exact path="/recommended">
-            <ListMenu section="recommended" />
-          </PrivateRoute>
-          <PrivateRoute exact path="/nearby">
-            <ListMenu section="nearby" />
-          </PrivateRoute>
-          <PrivateRoute exact path="/menu/:id/edit">
-            <EditMenu />
-          </PrivateRoute>
-          <PrivateRoute exact path="/new">
-            <ListMenu section="new" />
-          </PrivateRoute>
-          <Route exact path="/register">
-            <Register />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/menu/:id">
-            <Menu />
-          </Route>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="*">
-            <NotFound />
-          </Route>
-        </Switch> */}
+        {isSearchActive ? (
+          <SearchPage />
+        ) : (
+          <Switch>
+            <PrivateRoute exact path="/your-restaurant">
+              <YourRestaurant currTab={0} />
+            </PrivateRoute>
+            <PrivateRoute exact path="/your-restaurant/orders">
+              <YourRestaurant currTab={1} />
+            </PrivateRoute>
+            <PrivateRoute exact path="/your-restaurant/edit">
+              <YourRestaurant currTab={2} />
+            </PrivateRoute>
+            <PrivateRoute exact path="/your-restaurant/create">
+              <CreateMenu />
+            </PrivateRoute>
+            <PrivateRoute path="/orders">
+              <Orders />
+            </PrivateRoute>
+            <PrivateRoute path="/profile">
+              <Profile />
+            </PrivateRoute>
+            <PrivateRoute exact path="/recommended">
+              <ListMenu section="recommended" />
+            </PrivateRoute>
+            <PrivateRoute exact path="/nearby">
+              <ListMenu section="nearby" />
+            </PrivateRoute>
+            <PrivateRoute exact path="/menu/:id/edit">
+              <EditMenu />
+            </PrivateRoute>
+            <PrivateRoute exact path="/new">
+              <ListMenu section="new" />
+            </PrivateRoute>
+            <Route exact path="/register">
+              <Register />
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/menu/:id">
+              <Menu />
+            </Route>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="*">
+              <NotFound />
+            </Route>
+          </Switch>
+        )}
       </Container>
       {!_.isEmpty(currUser) && (
         <BottomNavigationBar className={classes.bottomNavigationBar} />
