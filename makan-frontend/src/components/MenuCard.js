@@ -3,9 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import ImageIcon from "@material-ui/icons/Image";
+import Chip from '@material-ui/core/Chip';
 
 import RatingStars from "../components/RatingStars";
 
@@ -45,9 +47,9 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
           <Typography variant="subtitle2" color="textSecondary">
             {`S$${price}`}
           </Typography>
-          <Typography variant="subtitle2" className={classes.title} component="div">
-            {tags.map(t => t.name + " ")}
-          </Typography>
+          <Grid container wrap="nowrap" spacing={1}>
+            {tags.map(t => <Grid item><Chip size="small" label={t.name + " "}/></Grid>)}
+          </Grid>
           <RatingStars size="small" rating={rating} />
         </CardContent>
       </Card>

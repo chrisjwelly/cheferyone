@@ -7,7 +7,7 @@ class Menu < ApplicationRecord
   has_many :preorders, dependent: :destroy
 
   algoliasearch do
-    attributes :name, :description, :price, :rating, :restaurant_id, :created_at, :updated_at, :restaurant_id
+    attributes :name, :description
   end
 
   has_many :connections, as: :taggable
@@ -27,6 +27,7 @@ class Menu < ApplicationRecord
 
     super(options).merge({
       "tags" => tags,
+      "username" => restaurant.user.username,
       "preorders" => sorted_preorders.select { |preorder| preorder.end_date >= now },
       "current_preorder" => current_preorder,
     })
