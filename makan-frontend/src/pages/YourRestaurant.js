@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,8 @@ import {
 } from "../actions/restaurant-tab-actions";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
-import { useGet } from "../utils/rest-utils";
+import { useGet, usePost } from "../utils/rest-utils";
+import { openSuccessSnackBar } from "../actions/snackbar-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -94,33 +95,65 @@ function MenuTab() {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [id, setId] = useState(null);
+  const [isDelete, setIsDelete] = useState(false);
+
   const edit = (e, id) => {
     e.preventDefault();
     history.push(`/menu/${id}/edit`);
   };
-  const remove = (e) => {
+
+  const deletePost = usePost(
+    {},
+    {},
+    `/api/v1/your_restaurant/menus/${id}`,
+    "DELETE"
+  )[1];
+
+  const remove = (e, id) => {
     e.preventDefault();
-    dispatch(
-      openDialog(
-        "Delete Menu?",
-        "This action is irreversible!",
-        <>
-          <Button color="primary" onClick={() => dispatch(closeDialog())}>
-            No
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              dispatch(closeDialog());
-              console.log("placeholder");
-            }}
-          >
-            Yes
-          </Button>
-        </>
-      )
-    );
+    setId(id);
+    setIsDelete(true);
   };
+
+  useEffect(() => {
+    if (id && isDelete) {
+      dispatch(
+        openDialog(
+          "Delete Menu?",
+          "This action is irreversible!",
+          <>
+            <Button
+              color="primary"
+              onClick={() => {
+                setId(null);
+                setIsDelete(false);
+                dispatch(closeDialog());
+              }}
+            >
+              No
+            </Button>
+            <Button
+              color="primary"
+              onClick={async () => {
+                dispatch(closeDialog());
+                const res = await deletePost();
+
+                if (res) {
+                  dispatch(openSuccessSnackBar("Menu deleted!"));
+                  window.location.reload();
+                }
+                setId(null);
+                setIsDelete(false);
+              }}
+            >
+              Yes
+            </Button>
+          </>
+        )
+      );
+    }
+  }, [id, isDelete, deletePost, dispatch]);
 
   return (
     <div>
