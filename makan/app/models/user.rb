@@ -9,6 +9,8 @@ class User < ApplicationRecord
 
   has_one :restaurant, dependent: :destroy
   has_many :menus, through: :restaurant
+  has_many :subscriptions
+  has_many :notifications, as: :notifiable 
 
   acts_as_token_authenticatable
 

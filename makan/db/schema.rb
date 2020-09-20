@@ -24,6 +24,16 @@ ActiveRecord::Schema.define(version: 2020_09_18_160126) do
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer "recipient_id"
+    t.datetime "read_at"
+    t.string "content"
+    t.integer "notifiable_id"
+    t.string "notifiable_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "preorders", force: :cascade do |t|
     t.datetime "start_date"
     t.datetime "end_date"
@@ -45,6 +55,30 @@ ActiveRecord::Schema.define(version: 2020_09_18_160126) do
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "subscribable_type", null: false
+    t.integer "subscribable_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["subscribable_type", "subscribable_id"], name: "index_subscriptions_on_subscribable_type_and_subscribable_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
+  create_table "taggables_tags", id: false, force: :cascade do |t|
+    t.string "taggable_type"
+    t.integer "taggable_id"
+    t.integer "tag_id"
+    t.index ["tag_id"], name: "index_taggables_tags_on_tag_id"
+    t.index ["taggable_type", "taggable_id"], name: "index_taggables_tags_on_taggable_type_and_taggable_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -64,4 +98,5 @@ ActiveRecord::Schema.define(version: 2020_09_18_160126) do
   add_foreign_key "menus", "restaurants"
   add_foreign_key "preorders", "menus"
   add_foreign_key "restaurants", "users"
+  add_foreign_key "subscriptions", "users"
 end
