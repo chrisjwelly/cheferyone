@@ -121,7 +121,11 @@ function MenuView({ id, isOwner }) {
               </Grid>
             </Grid>
           )}
-          <MenuDetails description={data.description} price={data.price} />
+          <MenuDetails
+            tags={data.tags}
+            description={data.description}
+            price={data.price}
+          />
           <MenuPreorders preorders={data.preorders} />
           {data.current_preorder && (
             <div className={classes.buttonContainer}>

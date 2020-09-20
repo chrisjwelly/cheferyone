@@ -4,17 +4,23 @@ import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import LinesEllipsis from "react-lines-ellipsis";
+import Chip from "@material-ui/core/Chip";
+import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   showMoreButtonContainer: {
     textAlign: "center",
   },
   description: {
     wordBreak: "break-all",
   },
-});
+  tagsContainer: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+}));
 
-export default function MenuDetails({ description, price }) {
+export default function MenuDetails({ tags, description, price }) {
   const classes = useStyles();
 
   const descriptionRef = useRef(null);
@@ -55,6 +61,15 @@ export default function MenuDetails({ description, price }) {
           </Button>
         </div>
       )}
+      <Grid container className={classes.tagsContainer} spacing={1}>
+        {tags.map(
+          (tag, i) => (
+            <Grid item key={i}>
+              <Chip size="small" key={i} label={tag.name} />
+            </Grid>
+          )
+        )}
+      </Grid>
     </div>
   );
 }
