@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MenuForm({
   fields,
   setFields,
+  preorders,
   initialImage,
   setImageBlob,
   errors,
@@ -35,6 +36,14 @@ export default function MenuForm({
   onSubmit,
 }) {
   const classes = useStyles();
+
+  const { new_preorders, edited_preorders, deleted_preorders } = fields;
+  const setNewPreorders = (orders) =>
+    setFields({ ...fields, new_preorders: orders });
+  const setEditedPreorders = (orders) =>
+    setFields({ ...fields, edited_preorders: orders });
+  const setDeletedPreorders = (ids) =>
+    setFields({ ...fields, deleted_preorders: ids });
 
   const onChange = (e) => {
     setFields({
@@ -96,36 +105,13 @@ export default function MenuForm({
         </Grid>
       </Grid>
       <ChoosePreorder
-        existingPreorders={[
-          {
-            id: 0,
-            start_date: "2020-09-25T10:57:14.445+08:00",
-            end_date: "2020-09-30T10:57:14.445+08:00",
-            collection_date: "2020-09-30T11:57:14.445+08:00",
-            quota: 10,
-          },
-          {
-            id: 1,
-            start_date: "2020-10-19T10:57:14.445+08:00",
-            end_date: "2020-10-20T10:57:14.445+08:00",
-            collection_date: "2020-10-21T10:57:14.445+08:00",
-            quota: 10,
-          },
-          {
-            id: 2,
-            start_date: "2020-10-19T10:57:14.445+08:00",
-            end_date: "2020-10-20T10:57:14.445+08:00",
-            collection_date: "2020-10-21T10:57:14.445+08:00",
-            quota: 10,
-          },
-          {
-            id: 3,
-            start_date: "2020-10-19T10:57:14.445+08:00",
-            end_date: "2020-10-20T10:57:14.445+08:00",
-            collection_date: "2020-10-21T10:57:14.445+08:00",
-            quota: 10,
-          },
-        ]}
+        existingPreorders={preorders}
+        new_preorders={new_preorders}
+        setNewPreorders={setNewPreorders}
+        edited_preorders={edited_preorders}
+        setEditedPreorders={setEditedPreorders}
+        deleted_preorders={deleted_preorders}
+        setDeletedPreorders={setDeletedPreorders}
       />
       <LoadingButton
         type="submit"

@@ -54,16 +54,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ChoosePreorder({ existingPreorders }) {
+export default function ChoosePreorder({
+  existingPreorders,
+  new_preorders,
+  setNewPreorders,
+  edited_preorders,
+  setEditedPreorders,
+  deleted_preorders,
+  setDeletedPreorders,
+}) {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const [displayedPreorders, setDisplayedPreorders] = useState([
     ...existingPreorders,
   ]);
-  const [new_preorders, setNewPreorders] = useState([]);
-  const [edited_preorders, setEditedPreorders] = useState([]);
-  const [deleted_preorders, setDeletedPreorders] = useState([]);
 
   const [editing, setEditing] = useState({});
   const [adding, setAdding] = useState(getEmptyPreorder());
@@ -84,7 +89,7 @@ export default function ChoosePreorder({ existingPreorders }) {
     dispatch(
       openDialog(
         "",
-        "Delete Pre-order?",
+        "Delete pre-order?",
         <>
           <Button color="primary" onClick={() => dispatch(closeDialog())}>
             No
@@ -100,9 +105,12 @@ export default function ChoosePreorder({ existingPreorders }) {
                 setEditedPreorders(
                   edited_preorders.filter((p) => p.id !== preorder.id)
                 );
+                setDeletedPreorders([...deleted_preorders, preorder.id]);
               } else {
                 setDeletedPreorders([...deleted_preorders, preorder.id]);
               }
+
+              dispatch(closeDialog());
             }}
           >
             Yes

@@ -29,16 +29,26 @@ function EditMenu({ id }) {
     name: "",
     description: "",
     price: "",
+    new_preorders: [],
+    edited_preorders: [],
+    deleted_preorders: [],
+    tags: [],
   });
+  const [preorders, setPreorders] = useState([]);
+
   const [imageBlob, setImageBlob] = useState(null);
 
   useEffect(() => {
     if (res.data) {
       setFields({
+        ...fields,
         name: res.data.name,
         description: res.data.description,
         price: res.data.price,
+        tags: res.data.tags.map((tag) => tag.name),
       });
+
+      setPreorders(res.data.preorders);
     }
   }, [res.data]);
 
@@ -46,7 +56,11 @@ function EditMenu({ id }) {
 
   const [errors, post, resetErrors] = usePost(
     {
-      menu: fields,
+      menu: {
+        ...fields,
+        new_preorders: fields.new_preorders.map((p) => removeStatusAndId(p)),
+        edited_preorders: fields.edited_preorders.map((p) => removeStatus(p)),
+      },
     },
     {
       name: undefined,
@@ -77,6 +91,7 @@ function EditMenu({ id }) {
         <>
           <MenuForm
             fields={fields}
+            preorders={preorders}
             setFields={(e) => {
               resetErrors();
               setFields(e);
@@ -91,4 +106,17 @@ function EditMenu({ id }) {
       )}
     </RenderResponse>
   );
+}
+
+function removeStatus(preorder) {
+  const removed = { ...preorder };
+  delete removed["status"];
+  return removed;
+}
+
+function removeStatusAndId(preorder) {
+  const removed = { ...preorder };
+  delete removed["status"];
+  delete removed["id"];
+  return removed;
 }

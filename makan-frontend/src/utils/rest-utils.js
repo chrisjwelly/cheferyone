@@ -107,7 +107,8 @@ export function usePost(
       });
 
       return res;
-    } catch {
+    } catch (e) {
+      console.log(e.response.data);
       const err = {
         unknown: "Action failed, please try again",
       };
