@@ -11,6 +11,7 @@ import LoadingButton from "./LoadingButton";
 import ImageUpload from "./ImageUpload";
 import CancelButton from "./CancelButton";
 import ChoosePreorder from "./ChoosePreorder";
+import SelectTag from "./SelectTag";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,6 +105,10 @@ export default function MenuForm({
           />
         </Grid>
       </Grid>
+      <SelectTag
+        selected={fields.tags}
+        setSelected={(tags) => setFields({ ...fields, tags })}
+      />
       <ChoosePreorder
         existingPreorders={preorders}
         new_preorders={new_preorders}

@@ -45,7 +45,7 @@ function EditMenu({ id }) {
         name: res.data.name,
         description: res.data.description,
         price: res.data.price,
-        tags: res.data.tags.map((tag) => tag.name),
+        tags: res.data.tags,
       }));
 
       setPreorders(res.data.preorders);
