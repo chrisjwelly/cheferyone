@@ -190,6 +190,7 @@ export default function ChoosePreorder({ existingPreorders }) {
           <IconButton
             className={classes.addButton}
             onClick={() => setIsAdding(true)}
+            size="small"
             disabled={isAdding}
           >
             <AddCircleIcon />
@@ -206,9 +207,17 @@ export default function ChoosePreorder({ existingPreorders }) {
             />
           </Grid>
         </Collapse>
-        <Grid item container spacing={2}>
-          {displayedPreorders.map(genCard)}
-        </Grid>
+        {displayedPreorders.length > 0 ? (
+          <Grid item container spacing={2}>
+            {displayedPreorders.map(genCard)}
+          </Grid>
+        ) : (
+          <Grid item>
+            <Typography variant="caption" color="textSecondary">
+              It seems a little lonely here...
+            </Typography>
+          </Grid>
+        )}
       </Grid>
     </MuiPickersUtilsProvider>
   );
@@ -277,10 +286,10 @@ function PreorderCard({ preorder, index, onEdit, onDelete, ...rest }) {
         </Grid>
       </CardContent>
       <CardActions>
-        <IconButton onClick={(preorder) => onEdit(preorder)}>
+        <IconButton onClick={() => onEdit(preorder)}>
           <EditIcon />
         </IconButton>
-        <IconButton onClick={(preorder) => onDelete(preorder)}>
+        <IconButton onClick={() => onDelete(preorder)}>
           <DeleteIcon />
         </IconButton>
       </CardActions>
@@ -322,6 +331,12 @@ function PreorderEdit({
       quota,
     });
   };
+
+  const isDisabled =
+    new Date(preorder.start_date) >= new Date(preorder.end_date) ||
+    new Date(preorder.collection_date) <= new Date(preorder.end_date) ||
+    new Date(preorder.start_date) < new Date() ||
+    preorder.quota === "";
 
   return (
     <Card {...rest}>
@@ -403,18 +418,19 @@ function PreorderEdit({
         <IconButton onClick={() => onClose(preorder)}>
           <CloseIcon />
         </IconButton>
-        <IconButton
-          onClick={() => onDone(preorder)}
-          disabled={
-            new Date(preorder.start_date) >= new Date(preorder.end_date) ||
-            new Date(preorder.collection_date) <= new Date(preorder.end_date) ||
-            new Date(preorder.start_date) < new Date() ||
-            preorder.quota === ""
-          }
-        >
+        <IconButton onClick={() => onDone(preorder)} disabled={isDisabled}>
           <DoneIcon />
         </IconButton>
       </CardActions>
+      {isDisabled && (
+        <CardContent>
+          <Typography variant="caption" color="textSecondary">
+            Input dates are invalid. Make sure that start date is earlier than
+            end date, and collection date is later than end date. Ensure
+            quantity is more than 0.
+          </Typography>
+        </CardContent>
+      )}
     </Card>
   );
 }
