@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import YourRestaurant from "./pages/YourRestaurant";
 import EditMenu from "./pages/EditMenu";
+import Notifications from "./pages/Notifications";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
@@ -114,6 +115,9 @@ function Main() {
           </PrivateRoute>
           <PrivateRoute exact path="/new">
             <ListMenu section="new" />
+          </PrivateRoute>
+          <PrivateRoute exact path="/notifications">
+            <Notifications />
           </PrivateRoute>
           <Route exact path="/register">
             <Register />
