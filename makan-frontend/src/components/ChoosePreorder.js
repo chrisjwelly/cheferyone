@@ -23,6 +23,7 @@ import NumberInput from "./NumberInput";
 
 const FORMAT = "dd/MMM/yy hh:mma";
 const NEW = "NEW";
+const EDIT = "EDIT";
 const getEmptyPreorder = () => ({
   status: NEW,
   id: uuidv4(),
@@ -64,6 +65,26 @@ export default function ChoosePreorder({ existingPreorders }) {
   const [adding, setAdding] = useState(getEmptyPreorder());
   const [isAdding, setIsAdding] = useState(false);
   const [editingNew, setEditingNew] = useState({});
+
+  const onEdit = (preorder) => {
+    if (preorder.status === NEW) {
+      setEditingNew({ ...editingNew, [preorder.id]: preorder });
+    } else {
+      setEditing({
+        ...editing,
+        [preorder.id]: { status: EDIT, ...preorder },
+      });
+    }
+  };
+  const onDelete = (preorder) => {
+    if (preorder.status === NEW) {
+      setNewPreorders(new_preorders.filter((p) => p.id !== preorder.id));
+    } else if (preorder.status === EDIT) {
+      setEditedPreorders(edited_preorders.filter((p) => p.id !== preorder.id));
+    } else {
+      setDeletedPreorders([...deleted_preorders, preorder.id]);
+    }
+  };
 
   const closeEdit = (preorder) => {
     if (preorder.status === NEW) {
@@ -132,13 +153,8 @@ export default function ChoosePreorder({ existingPreorders }) {
         <PreorderCard
           index={i}
           preorder={preorder}
-          onEdit={() => {
-            if (preorder.status === NEW) {
-              setEditingNew({ ...editingNew, [preorder.id]: preorder });
-            } else {
-              setEditing({ ...editing, [preorder.id]: preorder });
-            }
-          }}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
       </Grid>
     );
@@ -261,10 +277,10 @@ function PreorderCard({ preorder, index, onEdit, onDelete, ...rest }) {
         </Grid>
       </CardContent>
       <CardActions>
-        <IconButton onClick={onEdit}>
+        <IconButton onClick={(preorder) => onEdit(preorder)}>
           <EditIcon />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={(preorder) => onDelete(preorder)}>
           <DeleteIcon />
         </IconButton>
       </CardActions>
