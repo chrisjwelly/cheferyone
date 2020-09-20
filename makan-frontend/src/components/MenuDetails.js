@@ -9,6 +9,9 @@ const useStyles = makeStyles({
   showMoreButtonContainer: {
     textAlign: "center",
   },
+  description: {
+    wordBreak: "break-all",
+  },
 });
 
 export default function MenuDetails({ description, price }) {
@@ -28,7 +31,11 @@ export default function MenuDetails({ description, price }) {
     <div>
       <Typography variant="h5">Details</Typography>
       <Typography variant="h6">{`S$${price}`}</Typography>
-      <Typography variant="body1" component="div">
+      <Typography
+        className={classes.description}
+        variant="body1"
+        component="div"
+      >
         {!isExpanded && (
           <LinesEllipsis
             text={description}

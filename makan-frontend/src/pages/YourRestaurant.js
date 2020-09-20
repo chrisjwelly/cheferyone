@@ -124,7 +124,12 @@ function MenuTab() {
 
   return (
     <div>
-      <Fab className={classes.fab} color="secondary" aria-label="add">
+      <Fab
+        onClick={() => history.push("/your-restaurant/create")}
+        className={classes.fab}
+        color="secondary"
+        aria-label="add"
+      >
         <AddIcon />
       </Fab>
       <InfiniteScroll apiPath={"/api/v1/your_restaurant/menus"}>

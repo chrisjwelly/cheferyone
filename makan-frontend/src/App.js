@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import YourRestaurant from "./pages/YourRestaurant";
 import EditMenu from "./pages/EditMenu";
+import CreateMenu from "./pages/CreateMenu";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
@@ -102,6 +103,9 @@ function Main() {
           </PrivateRoute>
           <PrivateRoute exact path="/your-restaurant/edit">
             <YourRestaurant currTab={2} />
+          </PrivateRoute>
+          <PrivateRoute exact path="/your-restaurant/create">
+            <CreateMenu />
           </PrivateRoute>
           <PrivateRoute path="/orders">
             <Orders />

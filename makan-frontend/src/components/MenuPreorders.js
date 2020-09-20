@@ -46,20 +46,24 @@ function Cards({ preorders }) {
           <PreorderCard index={0} preorder={preorders[0]} />
         </Grid>
       )}
-      <Collapse in={isExpanded} component="span">
-        <Grid container alignItems="center" spacing={1}>
-          {preorders.map((preorder, i) => (
-            <Grid item key={i} xs={12} sm={6}>
-              <PreorderCard index={i} preorder={preorder} />
-            </Grid>
-          ))}
-        </Grid>
-      </Collapse>
-      <Grid item className={classes.showMoreButtonContainer} xs={12}>
-        <Button onClick={() => setIsExpanded(!isExpanded)} color="secondary">
-          {isExpanded ? "Show Less" : "Show All"}
-        </Button>
+      <Grid item xs={12}>
+        <Collapse in={isExpanded}>
+          <Grid item container alignItems="center" spacing={1}>
+            {preorders.map((preorder, i) => (
+              <Grid item key={i} xs={12} sm={6}>
+                <PreorderCard index={i} preorder={preorder} />
+              </Grid>
+            ))}
+          </Grid>
+        </Collapse>
       </Grid>
+      {preorders.length > 1 && (
+        <Grid item className={classes.showMoreButtonContainer} xs={12}>
+          <Button onClick={() => setIsExpanded(!isExpanded)} color="secondary">
+            {isExpanded ? "Show Less" : "Show All"}
+          </Button>
+        </Grid>
+      )}
     </>
   );
 }

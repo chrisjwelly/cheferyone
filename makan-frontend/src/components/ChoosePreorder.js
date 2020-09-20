@@ -199,7 +199,7 @@ export default function ChoosePreorder({
 
     const withNew = [...removeDeleted, ...new_preorders];
 
-    withNew.sort((p1, p2) => p2.start_date - p1.start_date);
+    withNew.sort((p1, p2) => new Date(p1.start_date) - new Date(p2.start_date));
     setDisplayedPreorders(withNew);
   }, [new_preorders, edited_preorders, deleted_preorders, existingPreorders]);
 
