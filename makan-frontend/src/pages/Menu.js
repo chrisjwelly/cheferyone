@@ -16,6 +16,7 @@ import MenuOrderDrawer from "../components/MenuOrderDrawer";
 import { useGet } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
+import MenuPreorders from "../components/MenuPreorders";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +58,7 @@ function MenuView({ id, isOwner }) {
   const history = useHistory();
 
   const res = useGet(`/api/v1/menus/${id}`);
+  console.log(res.data);
   const currUser = useSelector((store) => store.auth.user);
   const classes = useStyles();
   const [isOrderOpen, setIsOrderOpen] = useState(false);
@@ -121,15 +123,18 @@ function MenuView({ id, isOwner }) {
             </Grid>
           )}
           <MenuDetails description={data.description} price={data.price} />
-          <div className={classes.buttonContainer}>
-            <Button
-              variant="contained"
-              className={classes.button}
-              onClick={orderButtonOnClick}
-            >
-              Order Now!
-            </Button>
-          </div>
+          <MenuPreorders preorders={data.preorders} />
+          {data.current_preorder && (
+            <div className={classes.buttonContainer}>
+              <Button
+                variant="contained"
+                className={classes.button}
+                onClick={orderButtonOnClick}
+              >
+                Order Now!
+              </Button>
+            </div>
+          )}
           <MenuOrderDrawer
             open={isOrderOpen}
             onClose={() => setIsOrderOpen(false)}
