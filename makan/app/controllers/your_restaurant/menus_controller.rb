@@ -19,44 +19,37 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
 
   # POST /your_restaurant/menus
   def create
-    @menu = current_user.restaurant.menus.create(menu_params)
-
-    if @menu.save
-      is_create_success = create_preorders?
-      if (!is_create_success)
-        return
+    @menu = current_user.restaurant.menus.build(menu_params)
+    ActiveRecord::Base.transaction do
+      if !@menu.save
+        # Status code: 422
+        render body: nil, status: :unprocessable_entity
+        raise
       end
 
-      render json: @menu, status: :created, location: @menu
-    else
-      # Status code: 422
-      render json: @menu.errors, status: :unprocessable_entity
+      create_preorders? || raise
+      render json: @menu, status: :created
     end
+  rescue
   end
 
   # PATCH/PUT /your_restaurant/menus/1
   def update
-    if @menu.update(menu_params)
-      is_create_success = create_preorders?
-      if (!is_create_success)
-        return
+    ActiveRecord::Base.transaction do
+      if !@menu.update(menu_params)
+        # Status code: 422
+        render body: nil, status: :unprocessable_entity
+        raise
       end
 
-      is_update_success = update_preorders?
-      if (!is_update_success)
-        return
-      end
+      create_preorders? || raise
+      update_preorders? || raise
+      # This should always be true but it's here for consistency
+      destroy_preorders? || raise
 
-      is_destroy_success = destroy_preorders? # This should always be true but it's here for consistency
-      if (!is_destroy_success)
-        return
-      end
-
-      render json: @menu
-    else
-      # Status code: 422
-      render json: @menu.errors, status: :unprocessable_entity
+      render json: @menu, status: :ok
     end
+  rescue
   end
 
   # DELETE /your_restaurant/menus/1
@@ -93,8 +86,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
     def create_preorders?
       get_new_preorders.each { |unpermitted_params|
         permitted_params = permitted_create_preorder_params(unpermitted_params)
-        @preorder = @menu.preorders.create(permitted_params)
-
+        @preorder = @menu.preorders.build(permitted_params)
         if @preorder.save
           # If successful, no need to give response
         else
@@ -104,6 +96,9 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       }
 
       return true
+    rescue
+      render body: nil, status: :internal_server_error
+      return false
     end
     # ----- END OF Creating preorders -----
 
@@ -120,7 +115,9 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
     def update_preorders?
       get_edited_preorders.each { |unpermitted_params|
         permitted_params = permitted_update_preorder_params(unpermitted_params)
-        @preorder = @menu.preorders.find(permitted_params[:id])
+        @preorder = @menu.preorders.find_by_id(permitted_params[:id])
+        render body: nil, status: :not_found and return false if @preorder.nil?
+
         if @preorder.update(permitted_params)
           # If successful, no need to give response
         else
@@ -130,6 +127,9 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       }
 
       return true
+    rescue
+      render body: nil, status: :internal_server_error
+      return false
     end
     # ----- END OF Updating preorders -----
 
@@ -141,11 +141,14 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
     # Returns boolean to indicate the success
     def destroy_preorders?
       get_deleted_preorders.each { |id|
-        @preorder = @menu.preorders.find(id)
+        @preorder = @menu.preorders.find_by_id(id)
+        render body: nil, status: :not_found and return false if @preorder.nil?
         @preorder.destroy
       }
-
       return true
+    rescue
+      render body: nil, status: :internal_server_error
+      return false
     end
     # ----- END OF Deleting preorders -----
 end
