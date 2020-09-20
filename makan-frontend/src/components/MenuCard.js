@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
-import Chip from '@material-ui/core/Chip';
+import Chip from "@material-ui/core/Chip";
 
 import RatingStars from "../components/RatingStars";
 
@@ -47,7 +47,11 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
             {`S$${price}`}
           </Typography>
           <Grid container wrap="nowrap" spacing={1}>
-            {tags.map(t => <Grid item><Chip size="small" label={t.name + " "}/></Grid>)}
+            {tags.map((t, i) => (
+              <Grid key={i} item>
+                <Chip size="small" label={t.name + " "} />
+              </Grid>
+            ))}
           </Grid>
           <RatingStars size="small" rating={rating} />
         </CardContent>

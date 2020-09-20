@@ -58,7 +58,6 @@ function MenuView({ id, isOwner }) {
   const history = useHistory();
 
   const res = useGet(`/api/v1/menus/${id}`);
-  console.log(res.data);
   const currUser = useSelector((store) => store.auth.user);
   const classes = useStyles();
   const [isOrderOpen, setIsOrderOpen] = useState(false);

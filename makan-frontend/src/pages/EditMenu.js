@@ -40,13 +40,13 @@ function EditMenu({ id }) {
 
   useEffect(() => {
     if (res.data) {
-      setFields({
+      setFields((fields) => ({
         ...fields,
         name: res.data.name,
         description: res.data.description,
         price: res.data.price,
         tags: res.data.tags.map((tag) => tag.name),
-      });
+      }));
 
       setPreorders(res.data.preorders);
     }

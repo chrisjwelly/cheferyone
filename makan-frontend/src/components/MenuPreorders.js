@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,7 +17,7 @@ export default function MenuPreorders({ preorders }) {
   return (
     <Grid container alignItems="center" spacing={1}>
       <Grid item xs={12}>
-        <Typography variant="h6">Pre-orders</Typography>
+        <Typography variant="h5">Pre-orders</Typography>
       </Grid>
       <Cards preorders={preorders} />
     </Grid>
@@ -55,7 +55,7 @@ function Cards({ preorders }) {
           ))}
         </Grid>
       </Collapse>
-      <Grid className={classes.showMoreButtonContainer} xs={12}>
+      <Grid item className={classes.showMoreButtonContainer} xs={12}>
         <Button onClick={() => setIsExpanded(!isExpanded)} color="secondary">
           {isExpanded ? "Show Less" : "Show All"}
         </Button>
