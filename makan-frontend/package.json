@@ -31,7 +31,7 @@
     "uuid": "^8.3.0"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "PORT=3001 react-scripts start --no-cache",
     "build": "react-scripts build && cra-append-sw ./custom-sw.js && rm -rf ../makan/public/* && mv ./build/* ../makan/public",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
