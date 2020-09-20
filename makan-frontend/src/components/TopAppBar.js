@@ -87,6 +87,7 @@ export default function TopAppBar({ hasBell }) {
                 <form onSubmit={() => console.log("hello")}>
                   <InputBase
                     onFocus={() => console.log("LOL")}
+                    onBlur={() => console.log("blur")}
                     placeholder="Search…"
                     classes={{
                       root: classes.inputRoot,

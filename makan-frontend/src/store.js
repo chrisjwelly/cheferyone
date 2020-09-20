@@ -18,6 +18,11 @@ const initialState = {
   activeTab: null,
   restaurantTab: { isShown: false, index: 0 },
   dialog: { isOpen: false, title: "", body: "", actions: null },
+  search: {
+    term: "",
+    isActive: false,
+    path: "/api/v1/menus/search?query=",
+  },
 };
 
 const middleware = [thunk];

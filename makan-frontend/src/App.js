@@ -18,6 +18,7 @@ import Register from "./pages/Register";
 import YourRestaurant from "./pages/YourRestaurant";
 import EditMenu from "./pages/EditMenu";
 import CreateMenu from "./pages/CreateMenu";
+import SearchPage from "./pages/SearchPage";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
@@ -94,7 +95,8 @@ function Main() {
       <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
-        <Switch>
+        <SearchPage />
+        {/* <Switch>
           <PrivateRoute exact path="/your-restaurant">
             <YourRestaurant currTab={0} />
           </PrivateRoute>
@@ -140,7 +142,7 @@ function Main() {
           <Route path="*">
             <NotFound />
           </Route>
-        </Switch>
+        </Switch> */}
       </Container>
       {!_.isEmpty(currUser) && (
         <BottomNavigationBar className={classes.bottomNavigationBar} />
