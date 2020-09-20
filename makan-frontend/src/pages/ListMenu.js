@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Chip from '@material-ui/core/Chip';
 
 import NotFound from "./NotFound";
 import MenuListCard from "../components/MenuListCard";
@@ -46,8 +48,8 @@ function MenuList({ title, apiPath }) {
           <>
             <Typography variant="h6">{title}</Typography>
             {data.map((menus) => {
-              return menus.map((menu) => (
-                <MenuListCard
+              return menus.map((menu) => {
+                return <MenuListCard
                   className={classes.menuListCard}
                   key={menu.id}
                   name={menu.name}
@@ -58,11 +60,14 @@ function MenuList({ title, apiPath }) {
                     {`S$${menu.price}`}
                   </Typography>
                   <Typography variant="subtitle2" color="textSecondary">
-                    placeholder
+                    {menu.username}
                   </Typography>
+                  <Grid container spacing={1}>
+                    {menu.tags.map(t => <Grid item><Chip size="small" label={t.name + " "}/></Grid>)}
+                  </Grid>
                   <RatingStars size="small" rating={menu.rating} />
                 </MenuListCard>
-              ));
+              });
             })}
           </>
         )}
