@@ -53,6 +53,47 @@ class MenusController < ApplicationController
     end
   end
 
+  # POST /menus/1/subscribe
+  def subscribe
+    @menu = Menu.find(params[:id])
+    if Subscription.exists?(user: current_user, subscribable: @menu)
+      render json: {
+        message: "Menu has been subscribed"
+      }, status: :unprocessable_entity
+    else
+      @subscription = Subscription.create(user: current_user, subscribable: @menu)
+      if @subscription.save
+        render json: {
+          message: "Menu subscribed succesfully"
+        }, status: :ok
+      else
+        render json: {
+          message: @subscription.errors
+        }, status: :unprocessable_entity
+      end
+    end
+  end
+
+  # POST /menus/1/unsubscribe
+  def unsubscribe
+    @menu = Menu.find(params[:id])
+    if !Subscription.exists?(user: current_user, subscribable: @menu)
+      render json: {
+        message: "Menu has not been subscribed"
+      }, status: :unprocessable_entity
+    else
+      if Subscription.where(user: current_user, subscribable: @menu).first.destroy
+        render json: {
+          message: "Menu unsubscribed successfully"
+        }, status: :ok
+      else
+        render json: {
+          message: "Something went wrong"
+        }, status: :unprocessable_entity
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_menu

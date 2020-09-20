@@ -1,6 +1,7 @@
 class Restaurant < ApplicationRecord
-  validate :image_url_security
+  include Subscribable	
 
+  validate :image_url_security
   belongs_to :user, touch: true
   has_many :menus, dependent: :destroy
 

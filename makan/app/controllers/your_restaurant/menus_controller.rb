@@ -26,10 +26,16 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
         render body: nil, status: :unprocessable_entity
         raise
       end
-
       create_preorders? || raise
-      render json: @menu, status: :created
     end
+
+    @subscriptions = Subscription.where(subscribable: current_user.restaurant)
+
+    @subscriptions.each do |subscription|
+      Notification.create(recipient: subscription.user, notifiable: @menu, content: "A new menu is available. Let's check!")
+    end
+
+    render json: @menu, status: :created
   rescue
   end
 

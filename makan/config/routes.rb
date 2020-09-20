@@ -15,7 +15,10 @@ Rails.application.routes.draw do
       put 'users', to: 'users/registrations#update'
     end
 
-    resources :menus, only: [:index, :show] do
+    get 'notifications', to: 'notifications#index'
+    mount ActionCable.server => '/cable'
+
+    resources :menus do
       collection do
         get 'search'
         get 'recommended'
@@ -24,11 +27,17 @@ Rails.application.routes.draw do
       end
 
       member do
-        get 'belongs'
+        post 'subscribe'
+        post 'unsubscribe'
       end
     end
 
-    resources :chefs, only: [:index, :show]
+    resources :chefs do
+      member do
+        post 'subscribe'
+        post 'unsubscribe'
+      end
+    end
 
     resource '/your_restaurant', controller: :restaurants do
       collection do
