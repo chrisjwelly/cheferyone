@@ -16,7 +16,7 @@ class Menu < ApplicationRecord
   has_many :orders, through: :preorders
 
   # Append logo to JSON
-  def as_json(options)
+  def as_json(options = {})
     now = DateTime.now
     filtered_current_preorder = self.preorders.select { |preorder| time_in_range?(preorder, now) }
     # Invariant: There should be no overlapping intervals. Therefore either filtered_current_preorder

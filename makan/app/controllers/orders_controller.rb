@@ -5,7 +5,9 @@ class OrdersController < ApplicationController
   # GET /orders
   def index
     @orders = current_user.orders.where.not(status: Order.statuses[:unpaid])
-    grouped_orders = group_by_transaction_id
+    grouped_orders_by_transaction_id = group_by_transaction_id
+
+    grouped_orders = group_internals_by_restaurant_name(grouped_orders_by_transaction_id)
 
     render json: grouped_orders
   end
@@ -112,6 +114,32 @@ class OrdersController < ApplicationController
 
       valid_target_statuses = valid_status_transitions[curr_status.to_sym]
       valid_target_statuses.include? target_status
+    end
+
+    def group_internals_by_restaurant_name(grouped_orders_by_transaction_id)
+      grouped_orders = {}
+      grouped_orders_by_transaction_id.each do |key, arr|
+        converted = group_by_restaurant_name(arr)
+        grouped_orders.store(key, converted)
+      end
+
+      grouped_orders
+    end
+
+    def group_by_restaurant_name(orders_arr)
+      grouped_orders = {}
+
+      orders_arr.each do |order|
+        chef_name = order.user.username
+
+        if grouped_orders.has_key? chef_name
+          grouped_orders[chef_name] << order
+        else
+          grouped_orders.store(chef_name, [order])
+        end
+      end
+
+      grouped_orders
     end
 
     # Only allow a trusted parameter "white list" through.

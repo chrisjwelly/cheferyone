@@ -2,7 +2,7 @@ class CartController < ApplicationController
   acts_as_token_authentication_handler_for User
   # GET /cart
   def show 
-    @unpaid_orders = current_user.orders.unpaid
+    @unpaid_orders = group_by_restaurant_name
     render json: @unpaid_orders
   end
 
@@ -27,5 +27,24 @@ class CartController < ApplicationController
     end
     render body: nil, status: :ok
   end
+
+  private
+    # Returns a Hash, whose keys are the transaction_ids, and the value is an
+    # an array of Order objects which has that transaction_id
+    def group_by_restaurant_name
+      grouped_orders = {}
+      
+      current_user.orders.unpaid.each do |order|
+        chef_name = order.user.username
+
+        if grouped_orders.has_key? chef_name
+          grouped_orders[chef_name] << order
+        else
+          grouped_orders.store(chef_name, [order])
+        end
+      end
+
+      grouped_orders
+    end
 end
 
