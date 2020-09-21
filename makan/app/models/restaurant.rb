@@ -5,6 +5,7 @@ class Restaurant < ApplicationRecord
   validate :image_url_security
   belongs_to :user, touch: true
   has_many :menus, dependent: :destroy
+  has_many :orders, through: :menus
 
   algoliasearch do
     attributes :description

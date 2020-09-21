@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_18_160126) do
+ActiveRecord::Schema.define(version: 2020_09_20_085108) do
 
   create_table "menus", force: :cascade do |t|
     t.string "name"
@@ -32,6 +32,20 @@ ActiveRecord::Schema.define(version: 2020_09_18_160126) do
     t.string "notifiable_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.integer "quantity"
+    t.integer "status"
+    t.text "remarks"
+    t.datetime "paid_date"
+    t.integer "transaction_id"
+    t.integer "preorder_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["preorder_id"], name: "index_orders_on_preorder_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "preorders", force: :cascade do |t|
@@ -96,6 +110,8 @@ ActiveRecord::Schema.define(version: 2020_09_18_160126) do
   end
 
   add_foreign_key "menus", "restaurants"
+  add_foreign_key "orders", "preorders"
+  add_foreign_key "orders", "users"
   add_foreign_key "preorders", "menus"
   add_foreign_key "restaurants", "users"
   add_foreign_key "subscriptions", "users"

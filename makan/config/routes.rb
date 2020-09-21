@@ -41,9 +41,35 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :orders do
+      collection do
+        get 'all'
+      end
+      member do
+        patch 'update_status'
+      end
+    end
+
+    resource 'cart', controller: :cart, only: [:show] do
+      member do
+        post 'pay'
+      end
+    end
+
     resource '/your_restaurant', controller: :restaurants do
       collection do
         resources 'menus', :controller => "your_restaurant/menus"
+        resources 'orders', :controller => "your_restaurant/orders", only: [:index, :show] do
+          collection do
+            get 'paid'
+            get 'confirmed'
+            get 'completed'
+          end
+
+          member do
+            patch 'update_status'
+          end
+        end
       end
     end
   end

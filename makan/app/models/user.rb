@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :menus, through: :restaurant
   has_many :subscriptions
   has_many :notifications, as: :notifiable 
+  has_many :orders
 
   acts_as_token_authenticatable
 

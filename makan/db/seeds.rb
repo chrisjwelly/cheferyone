@@ -16,7 +16,7 @@ def create_preorders(menu)
     menu.preorders.create(start_date: DateTime.now + x,
       end_date: DateTime.now + x + 1,
       collection_date: DateTime.now + x + 2,
-      quota: 10)
+      quota: 15)
   }
 end
 
@@ -91,6 +91,7 @@ ah_beng = User.create(email: "chef1@example.com", password: "123456", username: 
 odading_mang_oleh = User.create(email: "chef2@example.com", password: "123456", username: "chef2", authentication_token: "chef2")
 joko = User.create(email: "chef3@example.com", password: "123456", username: "chef3", authentication_token: "chef3")
 yakuza = User.create(email: "chef4@example.com", password: "123456", username: "chef4", authentication_token: "chef4")
+list_of_chefs = [ah_beng, odading_mang_oleh, joko, yakuza]
 
 # Create Restaurants
 ah_beng_resto = ah_beng.create_restaurant(
@@ -169,3 +170,15 @@ ayam_geprek = yakuza_restaurant.menus.create(
   name: menus[11], description: desc[11], price: 2.5, rating: 2.5, image_url: menu_urls[11], tags: [indonesian_tag, chicken_tag, halal_tag]
 )
 create_preorders(ayam_geprek)
+
+4.times do |i|
+  now = DateTime.now
+  3.times do |j|
+    list_of_chefs[i].orders.create(quantity: 1, status: j + 1, remarks: "This is a dummy remark", preorder_id: j + 1, transaction_id: j + 1, paid_date: now)
+    list_of_chefs[i].orders.create(quantity: 1, status: j + 1, remarks: "Second remark", preorder_id: j + 1, transaction_id: j + 1, paid_date: now)
+  end
+
+  3.times do |j|
+    list_of_chefs[i].orders.create(quantity: 1, status: :unpaid, remarks: "Unpaid in the seed number: #{j}", preorder_id: j + 1)
+  end
+end

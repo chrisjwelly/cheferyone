@@ -13,6 +13,7 @@ class Menu < ApplicationRecord
   has_many :connections, as: :taggable
   has_many :tags, through: :connections
   has_many :subscribers, through: :subscriptions, class_name: "User"
+  has_many :orders, through: :preorders
 
   # Append logo to JSON
   def as_json(options)

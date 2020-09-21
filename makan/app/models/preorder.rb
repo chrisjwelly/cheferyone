@@ -6,6 +6,16 @@ class Preorder < ApplicationRecord
   validates :start_date, :end_date, :collection_date, :quota, :presence => true
   validates :quota, numericality: { :greater_than => 0 }
 
+  has_many :orders, dependent: :destroy
+
+  def as_json(options = {})
+    # Ignore those which have ended ("cancelled")
+    ordered_quantity = self.orders.where.not(status: Order.statuses[:ended]).sum(:quantity)
+    super(options).merge({
+      "ordered_quantity" => ordered_quantity
+    })
+  end
+
   private
     def end_after_start
       return if end_date.blank? || start_date.blank?
