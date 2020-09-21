@@ -102,7 +102,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
           # If successful, no need to give response
         else
           # Status code: 422
-          render json: @preorder.errors, status: :unprocessable_entity
+          render json: { errors: @preorder.errors }, status: :unprocessable_entity
           return false
         end
       }
@@ -131,7 +131,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
           # If successful, no need to give response
         else
           # Status code: 422
-          render json: @preorder.errors, status: :unprocessable_entity and return false
+          render json: { errors: @preorder.errors }, status: :unprocessable_entity and return false
         end
       }
 

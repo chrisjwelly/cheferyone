@@ -68,7 +68,7 @@ class MenusController < ApplicationController
         }, status: :ok
       else
         render json: {
-          message: @subscription.errors
+          errors: @subscription.errors
         }, status: :unprocessable_entity
       end
     end
