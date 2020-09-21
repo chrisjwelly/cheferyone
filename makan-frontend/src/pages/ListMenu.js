@@ -10,6 +10,7 @@ import MenuListCard from "../components/MenuListCard";
 import { setTabIndex } from "../actions/bottombar-actions";
 import RatingStars from "../components/RatingStars";
 import InfiniteScroll from "../components/InfiniteScroll";
+import { stringToMoney } from "../utils/general";
 
 const useStyles = makeStyles((theme) => ({
   menuListCard: {
@@ -61,7 +62,7 @@ function MenuList({ title, apiPath }) {
                     image={menu.image_url}
                   >
                     <Typography variant="subtitle2" color="textSecondary">
-                      {`S$${menu.price}`}
+                      {`S$${stringToMoney(menu.price)}`}
                     </Typography>
                     <Typography variant="subtitle2" color="textSecondary">
                       {menu.username}

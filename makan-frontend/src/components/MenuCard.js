@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import Chip from "@material-ui/core/Chip";
 
 import RatingStars from "../components/RatingStars";
+import { stringToMoney } from "../utils/general";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +48,7 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
             {name}
           </Typography>
           <Typography variant="subtitle2" color="textSecondary">
-            {`S$${price}`}
+            {`S$${stringToMoney(price)}`}
           </Typography>
           <Grid
             container

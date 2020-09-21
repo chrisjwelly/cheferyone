@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -13,7 +12,6 @@ import { openDialog, closeDialog } from "../actions/dialog-actions";
 
 export default function EditRestaurant() {
   const dispatch = useDispatch();
-  const history = useHistory();
   const res = useGet(`/api/v1/your_restaurant`);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -52,10 +50,7 @@ export default function EditRestaurant() {
     const res = await post();
     if (res) {
       dispatch(openSuccessSnackBar("Restaurant updated!!"));
-
-      // Hack to refresh page with router
-      history.push("/");
-      history.push("/your-restaurant");
+      window.location.reload();
     } else {
       setIsLoading(false);
     }
@@ -94,7 +89,7 @@ export default function EditRestaurant() {
       {(data) => (
         <div>
           <IconButton onClick={remove}>
-            <DeleteIcon fontSize="large" onClick={remove} />
+            <DeleteIcon fontSize="large" />
           </IconButton>
           <RestaurantForm
             fields={fields}

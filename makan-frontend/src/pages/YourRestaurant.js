@@ -19,6 +19,7 @@ import RenderResponse from "../components/RenderResponse";
 import NotFound from "./NotFound";
 import CreateRestaurant from "./CreateRestaurant";
 import EditRestaurant from "./EditRestaurant";
+import RestaurantOrders from "./RestaurantOrders";
 import {
   setRestaurantTabState,
   setRestaurantTabIndex,
@@ -27,6 +28,7 @@ import { setTabIndex } from "../actions/bottombar-actions";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
 import { useGet, usePost } from "../utils/rest-utils";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
+import { stringToMoney } from "../utils/general";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -82,7 +84,7 @@ function RenderTab({ index, isExist }) {
   } else if (index === 0) {
     return <MenuTab />;
   } else if (index === 1) {
-    return <h1>Tab 1</h1>;
+    return <RestaurantOrders />;
   } else if (index === 2) {
     return <EditRestaurant />;
   } else {
@@ -177,7 +179,7 @@ function MenuTab() {
                 image={menu.image_url}
               >
                 <Typography variant="subtitle2" color="textSecondary">
-                  {`S$${menu.price}`}
+                  {`S$${stringToMoney(menu.price)}`}
                 </Typography>
                 <Typography
                   variant="subtitle2"

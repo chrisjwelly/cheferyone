@@ -130,7 +130,7 @@ class OrdersController < ApplicationController
       grouped_orders = {}
 
       orders_arr.each do |order|
-        chef_name = order.user.username
+        chef_name = order.restaurant.user.username
 
         if grouped_orders.has_key? chef_name
           grouped_orders[chef_name] << order

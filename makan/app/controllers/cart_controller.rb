@@ -35,7 +35,7 @@ class CartController < ApplicationController
       grouped_orders = {}
       
       current_user.orders.unpaid.each do |order|
-        chef_name = order.user.username
+        chef_name = order.restaurant.user.username
 
         if grouped_orders.has_key? chef_name
           grouped_orders[chef_name] << order

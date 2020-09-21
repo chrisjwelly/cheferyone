@@ -7,6 +7,8 @@ import LinesEllipsis from "react-lines-ellipsis";
 import Chip from "@material-ui/core/Chip";
 import Grid from "@material-ui/core/Grid";
 
+import { stringToMoney } from "../utils/general";
+
 const useStyles = makeStyles((theme) => ({
   showMoreButtonContainer: {
     textAlign: "center",
@@ -36,7 +38,7 @@ export default function MenuDetails({ tags, description, price }) {
   return (
     <div>
       <Typography variant="h5">Details</Typography>
-      <Typography variant="h6">{`S$${price}`}</Typography>
+      <Typography variant="h6">{`S$${stringToMoney(price)}`}</Typography>
       <Typography
         className={classes.description}
         variant="body1"

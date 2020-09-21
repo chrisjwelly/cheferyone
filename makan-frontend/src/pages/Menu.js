@@ -116,7 +116,7 @@ function MenuView({ id, isOwner }) {
         <div className={classes.root}>
           <MenuHeader
             name={data.name}
-            homecook="placeholder"
+            homecook={data.username}
             image={data.image_url}
             rating={data.rating}
           />
@@ -140,7 +140,7 @@ function MenuView({ id, isOwner }) {
             price={data.price}
           />
           <MenuPreorders preorders={data.preorders} />
-          {data.current_preorder && (
+          {data.current_preorder && !isOwner && (
             <div className={classes.buttonContainer}>
               <Button
                 variant="contained"
@@ -157,10 +157,10 @@ function MenuView({ id, isOwner }) {
             name={data.name}
             image={data.image_url}
             price={data.price}
-            deliveryFee="3 (placeholder)"
-            collectionDate={
-              data.current_preorder && data.current_preorder.collection_date
-            }
+            current_preorder={data.current_preorder}
+            isAddToCart={true}
+            apiPath="/api/v1/orders"
+            method="POST"
           />
         </div>
       )}
