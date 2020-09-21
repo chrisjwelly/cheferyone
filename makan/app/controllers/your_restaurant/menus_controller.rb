@@ -35,7 +35,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       Notification.create(recipient: subscription.user, notifiable: @menu, content: "A new menu is available. Let's check!")
     end
     render json: @menu, status: :created
-    rescue
+  rescue
   end
 
   # PATCH/PUT /your_restaurant/menus/1

@@ -8,9 +8,6 @@ module ApplicationCable
 
     protected
       def find_verified_user
-        puts "lolol"
-        puts User.find_by(authentication_token: request.params[:token])
-        puts "jembud"
         if current_user = User.find_by(authentication_token: request.params[:token])
           current_user
         else

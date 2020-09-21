@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Chip from "@material-ui/core/Chip";
 
 import NotFound from "./NotFound";
 import MenuListCard from "../components/MenuListCard";
@@ -12,6 +14,9 @@ import InfiniteScroll from "../components/InfiniteScroll";
 const useStyles = makeStyles((theme) => ({
   menuListCard: {
     marginBottom: theme.spacing(2),
+  },
+  tags: {
+    padding: theme.spacing(1, 0, 1, 0),
   },
 }));
 
@@ -46,23 +51,32 @@ function MenuList({ title, apiPath }) {
           <>
             <Typography variant="h6">{title}</Typography>
             {data.map((menus) => {
-              return menus.map((menu) => (
-                <MenuListCard
-                  className={classes.menuListCard}
-                  key={menu.id}
-                  name={menu.name}
-                  link={`/menu/${menu.id}`}
-                  image={menu.image_url}
-                >
-                  <Typography variant="subtitle2" color="textSecondary">
-                    {`S$${menu.price}`}
-                  </Typography>
-                  <Typography variant="subtitle2" color="textSecondary">
-                    placeholder
-                  </Typography>
-                  <RatingStars size="small" rating={menu.rating} />
-                </MenuListCard>
-              ));
+              return menus.map((menu) => {
+                return (
+                  <MenuListCard
+                    className={classes.menuListCard}
+                    key={menu.id}
+                    name={menu.name}
+                    link={`/menu/${menu.id}`}
+                    image={menu.image_url}
+                  >
+                    <Typography variant="subtitle2" color="textSecondary">
+                      {`S$${menu.price}`}
+                    </Typography>
+                    <Typography variant="subtitle2" color="textSecondary">
+                      {menu.username}
+                    </Typography>
+                    <Grid container spacing={1} className={classes.tags}>
+                      {menu.tags.map((t) => (
+                        <Grid item>
+                          <Chip size="small" label={t.name} />
+                        </Grid>
+                      ))}
+                    </Grid>
+                    <RatingStars size="small" rating={menu.rating} />
+                  </MenuListCard>
+                );
+              });
             })}
           </>
         )}

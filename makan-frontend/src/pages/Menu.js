@@ -13,9 +13,11 @@ import { setTabIndex } from "../actions/bottombar-actions";
 import MenuHeader from "../components/MenuHeader";
 import MenuDetails from "../components/MenuDetails";
 import MenuOrderDrawer from "../components/MenuOrderDrawer";
-import { useGet } from "../utils/rest-utils";
+import { useGet, usePost } from "../utils/rest-utils";
 import RenderResponse from "../components/RenderResponse";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
+import MenuPreorders from "../components/MenuPreorders";
+import { openSuccessSnackBar } from "../actions/snackbar-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,6 +75,13 @@ function MenuView({ id, isOwner }) {
     history.push(`/menu/${id}/edit`);
   };
 
+  const deletePost = usePost(
+    {},
+    {},
+    `/api/v1/your_restaurant/menus/${id}`,
+    "DELETE"
+  )[1];
+
   const remove = () => {
     dispatch(
       openDialog(
@@ -84,9 +93,14 @@ function MenuView({ id, isOwner }) {
           </Button>
           <Button
             color="primary"
-            onClick={() => {
+            onClick={async () => {
               dispatch(closeDialog());
-              console.log("placeholder");
+              const res = await deletePost();
+
+              if (res) {
+                dispatch(openSuccessSnackBar("Menu deleted!"));
+                history.push("/your-restaurant");
+              }
             }}
           >
             Yes
@@ -120,16 +134,23 @@ function MenuView({ id, isOwner }) {
               </Grid>
             </Grid>
           )}
-          <MenuDetails description={data.description} price={data.price} />
-          <div className={classes.buttonContainer}>
-            <Button
-              variant="contained"
-              className={classes.button}
-              onClick={orderButtonOnClick}
-            >
-              Order Now!
-            </Button>
-          </div>
+          <MenuDetails
+            tags={data.tags}
+            description={data.description}
+            price={data.price}
+          />
+          <MenuPreorders preorders={data.preorders} />
+          {data.current_preorder && (
+            <div className={classes.buttonContainer}>
+              <Button
+                variant="contained"
+                className={classes.button}
+                onClick={orderButtonOnClick}
+              >
+                Order Now!
+              </Button>
+            </div>
+          )}
           <MenuOrderDrawer
             open={isOrderOpen}
             onClose={() => setIsOrderOpen(false)}
@@ -137,7 +158,9 @@ function MenuView({ id, isOwner }) {
             image={data.image_url}
             price={data.price}
             deliveryFee="3 (placeholder)"
-            deliveryDate="26th September 2020 9:00AM to 5:00PM (placeholder)"
+            collectionDate={
+              data.current_preorder && data.current_preorder.collection_date
+            }
           />
         </div>
       )}

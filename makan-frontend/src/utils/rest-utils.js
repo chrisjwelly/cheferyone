@@ -93,7 +93,11 @@ export function usePost(
           .put(imageBlob);
         const image_url = await snapshot.ref.getDownloadURL();
 
-        dataToPost.menu.image_url = image_url;
+        if (dataToPost.menu) {
+          dataToPost.menu.image_url = image_url;
+        } else if (dataToPost.restaurant) {
+          dataToPost.restaurant.image_url = image_url;
+        }
       }
 
       const res = await axios({
@@ -103,7 +107,8 @@ export function usePost(
       });
 
       return res;
-    } catch {
+    } catch (e) {
+      console.log(e.response.data);
       const err = {
         unknown: "Action failed, please try again",
       };

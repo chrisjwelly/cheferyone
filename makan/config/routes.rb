@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
     get 'notifications', to: 'notifications#index'
 
-    resources :menus do
+    resources :menus, only: [:index, :show]  do
       collection do
         get 'search'
         get 'recommended'
@@ -28,12 +28,13 @@ Rails.application.routes.draw do
       end
 
       member do
+        get 'belongs'
         post 'subscribe'
         post 'unsubscribe'
       end
     end
 
-    resources :chefs do
+    resources :chefs, only: [:index, :show] do
       member do
         post 'subscribe'
         post 'unsubscribe'

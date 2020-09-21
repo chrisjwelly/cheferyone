@@ -8,7 +8,7 @@ import RenderResponse from "../components/RenderResponse";
 import MenuForm from "../components/MenuForm";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
 
-export default function EditMenuWrapper() {
+export default function CreateMenuWrapper() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -16,41 +16,24 @@ export default function EditMenuWrapper() {
     dispatch(setTabIndex(1));
   }, [dispatch]);
 
-  const res = useGet(`/api/v1/menus/${id}/belongs`);
-  return <RenderResponse {...res}>{() => <EditMenu id={id} />}</RenderResponse>;
+  const res = useGet("/api/v1/your_restaurant");
+  return (
+    <RenderResponse {...res}>{() => <CreateMenu id={id} />}</RenderResponse>
+  );
 }
 
-function EditMenu({ id }) {
+function CreateMenu({ id }) {
   const history = useHistory();
   const dispatch = useDispatch();
-  const res = useGet(`/api/v1/menus/${id}`);
 
   const [fields, setFields] = useState({
     name: "",
     description: "",
     price: "",
     new_preorders: [],
-    edited_preorders: [],
-    deleted_preorders: [],
     tags: [],
   });
-  const [preorders, setPreorders] = useState([]);
-
   const [imageBlob, setImageBlob] = useState(null);
-
-  useEffect(() => {
-    if (res.data) {
-      setFields((fields) => ({
-        ...fields,
-        name: res.data.name,
-        description: res.data.description,
-        price: res.data.price,
-        tags: res.data.tags,
-      }));
-
-      setPreorders(res.data.preorders);
-    }
-  }, [res.data]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,7 +42,6 @@ function EditMenu({ id }) {
       menu: {
         ...fields,
         new_preorders: fields.new_preorders.map((p) => removeStatusAndId(p)),
-        edited_preorders: fields.edited_preorders.map((p) => removeStatus(p)),
       },
     },
     {
@@ -67,8 +49,8 @@ function EditMenu({ id }) {
       description: undefined,
       price: undefined,
     },
-    `/api/v1/your_restaurant/menus/${id}`,
-    "PATCH",
+    `/api/v1/your_restaurant/menus/`,
+    "POST",
     imageBlob
   );
 
@@ -78,7 +60,7 @@ function EditMenu({ id }) {
 
     const res = await post();
     if (res) {
-      dispatch(openSuccessSnackBar("Menu updated!"));
+      dispatch(openSuccessSnackBar("Menu created!"));
       history.push(`/menu/${res.data.id}`);
     } else {
       setIsLoading(false);
@@ -86,33 +68,19 @@ function EditMenu({ id }) {
   };
 
   return (
-    <RenderResponse {...res}>
-      {(data) => (
-        <>
-          <MenuForm
-            fields={fields}
-            preorders={preorders}
-            currentPreorder={data.current_preorder}
-            setFields={(e) => {
-              resetErrors();
-              setFields(e);
-            }}
-            initialImage={data.image_url}
-            setImageBlob={setImageBlob}
-            errors={errors}
-            isLoading={isLoading}
-            onSubmit={onSubmit}
-          />
-        </>
-      )}
-    </RenderResponse>
+    <MenuForm
+      fields={fields}
+      preorders={[]}
+      setFields={(e) => {
+        resetErrors();
+        setFields(e);
+      }}
+      setImageBlob={setImageBlob}
+      errors={errors}
+      isLoading={isLoading}
+      onSubmit={onSubmit}
+    />
   );
-}
-
-function removeStatus(preorder) {
-  const removed = { ...preorder };
-  delete removed["status"];
-  return removed;
 }
 
 function removeStatusAndId(preorder) {
