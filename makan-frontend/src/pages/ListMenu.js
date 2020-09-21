@@ -67,8 +67,8 @@ function MenuList({ title, apiPath }) {
                       {menu.username}
                     </Typography>
                     <Grid container spacing={1} className={classes.tags}>
-                      {menu.tags.map((t) => (
-                        <Grid item>
+                      {menu.tags.map((t, i) => (
+                        <Grid item key={i}>
                           <Chip size="small" label={t.name} />
                         </Grid>
                       ))}

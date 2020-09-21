@@ -7,7 +7,7 @@ export const TAGS = [
   "Indonesian",
   "Javanese",
   "Fast Food",
-  "Noodle",
+  "Noodles",
   "Rice",
   "Chicken",
   "Pork",

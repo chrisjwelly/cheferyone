@@ -24,9 +24,13 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       if !@menu.save
         # Status code: 422
         render body: nil, status: :unprocessable_entity
-        raise
+        raise ActiveRecord::Rollback
       end
-      create_preorders? || raise
+      raise ActiveRecord::Rollback unless create_preorders?
+    rescue ActiveRecord::Rollback
+      # If it's a rollback, the proper JSON response would have been returned.
+      # So, we did nothing here other than stopping the functions
+      return
     end
 
     @subscriptions = Subscription.where(subscribable: current_user.restaurant)
@@ -35,7 +39,6 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       Notification.create(recipient: subscription.user, notifiable: @menu, content: "A new menu is available. Let's check!")
     end
     render json: @menu, status: :created
-  rescue
   end
 
   # PATCH/PUT /your_restaurant/menus/1
@@ -44,17 +47,17 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       if !@menu.update(menu_params)
         # Status code: 422
         render body: nil, status: :unprocessable_entity
-        raise
+        raise ActiveRecord::Rollback
       end
 
-      create_preorders? || raise
-      update_preorders? || raise
-      # This should always be true but it's here for consistency
-      destroy_preorders? || raise
+      raise ActiveRecord::Rollback unless create_preorders?
+      raise ActiveRecord::Rollback unless update_preorders?
+      raise ActiveRecord::Rollback unless destroy_preorders?
 
       render json: @menu, status: :ok
+    rescue ActiveRecord::Rollback
+      return
     end
-  rescue
   end
 
   # DELETE /your_restaurant/menus/1
@@ -75,12 +78,15 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def menu_params
-      params.require(:menu).permit(:name, :price, :description, :image_url)
+      params.require(:menu).permit(:name, :price, :description, :image_url, tags: [])
+        .tap do |params|
+          params[:tags] = Tag.where(name: params[:tags]) unless params[:tags].nil?
+        end
     end
 
     # ----- START OF Creating preorders -----
     def get_new_preorders
-      params.require(:menu).delete(:new_preorders)
+      params.require(:menu).delete(:new_preorders) || []
     end
 
     def permitted_create_preorder_params(preorder_params)
@@ -96,20 +102,18 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
           # If successful, no need to give response
         else
           # Status code: 422
-          render json: @preorder.errors, status: :unprocessable_entity and return false
+          render json: @preorder.errors, status: :unprocessable_entity
+          return false
         end
       }
 
       return true
-    rescue
-      render body: nil, status: :internal_server_error
-      return false
     end
     # ----- END OF Creating preorders -----
 
     # ----- START OF Updating preorders -----
     def get_edited_preorders
-      params.require(:menu).delete(:edited_preorders)
+      params.require(:menu).delete(:edited_preorders) || []
     end
 
     def permitted_update_preorder_params(preorder_params)
@@ -132,15 +136,12 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       }
 
       return true
-    rescue
-      render body: nil, status: :internal_server_error
-      return false
     end
     # ----- END OF Updating preorders -----
 
     # ----- START OF Deleting preorders -----
     def get_deleted_preorders
-      params.require(:menu).delete(:deleted_preorders)
+      params.require(:menu).delete(:deleted_preorders) || []
     end
 
     # Returns boolean to indicate the success
@@ -151,9 +152,6 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
         @preorder.destroy
       }
       return true
-    rescue
-      render body: nil, status: :internal_server_error
-      return false
     end
     # ----- END OF Deleting preorders -----
 end

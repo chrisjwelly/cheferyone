@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
     overflow: "hidden",
   },
+  tagsContainer: {
+    height: theme.spacing(5),
+  },
 }));
 
 export default function MenuCard({ name, price, rating, link, image, tags }) {
@@ -46,7 +49,13 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
           <Typography variant="subtitle2" color="textSecondary">
             {`S$${price}`}
           </Typography>
-          <Grid container wrap="nowrap" spacing={1}>
+          <Grid
+            container
+            wrap="nowrap"
+            alignItems="center"
+            spacing={1}
+            className={classes.tagsContainer}
+          >
             {tags.map((t, i) => (
               <Grid key={i} item>
                 <Chip size="small" label={t.name + " "} />

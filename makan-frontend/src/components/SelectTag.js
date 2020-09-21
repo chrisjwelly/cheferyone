@@ -22,20 +22,18 @@ export default function SelectTag({ selected, setSelected }) {
       <Grid container spacing={1}>
         {TAGS.map((tag, i) => (
           <Grid item key={i}>
-            {selected.find((s) => s.name === tag) ? (
+            {selected.find((s) => s === tag) ? (
               // Pressed
               <Chip
                 label={tag}
-                onClick={() =>
-                  setSelected(selected.filter((s) => s.name !== tag))
-                }
+                onClick={() => setSelected(selected.filter((s) => s !== tag))}
                 color="primary"
               />
             ) : (
               // Not pressed
               <Chip
                 label={tag}
-                onClick={() => setSelected([...selected, { name: tag }])}
+                onClick={() => setSelected([...selected, tag])}
                 variant="outlined"
                 color="primary"
               />
