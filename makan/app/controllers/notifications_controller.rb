@@ -5,6 +5,7 @@ class NotificationsController < ApplicationController
   #GET /notifications
   def index
     @notifications = Notification.where(recipient: current_user).limit(@limit).offset(@offset)
+    render json: @notifications
   end
 
   # Unused at the moment

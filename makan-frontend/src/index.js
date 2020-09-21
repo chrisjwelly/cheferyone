@@ -6,6 +6,7 @@ import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
+import ActionCableProvider from "@thrash-industries/react-actioncable-provider";
 
 import store from "./store";
 
@@ -19,7 +20,9 @@ ReactDOM.render(
     <Provider store={store}>
       <Router>
         <SWRConfig value={{ shouldRetryOnError: false }}>
-          <App />
+          <ActionCableProvider url="ws://localhost:3000/cable?token=chef1">
+            <App />
+          </ActionCableProvider>
         </SWRConfig>
       </Router>
     </Provider>

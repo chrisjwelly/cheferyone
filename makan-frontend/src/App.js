@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import YourRestaurant from "./pages/YourRestaurant";
 import EditMenu from "./pages/EditMenu";
+import Notifications from "./pages/Notifications";
 import CreateMenu from "./pages/CreateMenu";
 import SearchPage from "./pages/SearchPage";
 
