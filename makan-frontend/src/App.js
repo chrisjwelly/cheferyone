@@ -97,47 +97,6 @@ function Main() {
       <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
-        <Switch>
-          <PrivateRoute exact path="/your-restaurant">
-            <YourRestaurant />
-          </PrivateRoute>
-          <PrivateRoute path="/orders">
-            <Orders />
-          </PrivateRoute>
-          <PrivateRoute path="/profile">
-            <Profile />
-          </PrivateRoute>
-          <PrivateRoute exact path="/recommended">
-            <ListMenu section="recommended" />
-          </PrivateRoute>
-          <PrivateRoute exact path="/nearby">
-            <ListMenu section="nearby" />
-          </PrivateRoute>
-          <PrivateRoute exact path="/menu/:id/edit">
-            <EditMenu />
-          </PrivateRoute>
-          <PrivateRoute exact path="/new">
-            <ListMenu section="new" />
-          </PrivateRoute>
-          <PrivateRoute exact path="/notifications">
-            <Notifications />
-          </PrivateRoute>
-          <Route exact path="/register">
-            <Register />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/menu/:id">
-            <Menu />
-          </Route>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="*">
-            <NotFound />
-          </Route>
-        </Switch>
         {isSearchActive ? (
           <SearchPage />
         ) : (
