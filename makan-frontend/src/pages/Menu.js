@@ -158,7 +158,9 @@ function MenuView({ id, isOwner }) {
             image={data.image_url}
             price={data.price}
             deliveryFee="3 (placeholder)"
-            collectionDate={data.current_preorder.collection_date}
+            collectionDate={
+              data.current_preorder && data.current_preorder.collection_date
+            }
           />
         </div>
       )}

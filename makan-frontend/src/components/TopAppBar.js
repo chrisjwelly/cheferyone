@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,7 +16,13 @@ import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
-import { setSearchTerm, setSearchState } from "../actions/search-actions";
+import {
+  setSearchTerm,
+  setSearchState,
+  setSearchInactive,
+  setIsSearching,
+  setSearchPath,
+} from "../actions/search-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  exitSearchButton: {
+    color: theme.palette.common.white,
   },
   inputRoot: {
     color: "inherit",
@@ -84,6 +94,11 @@ export default function TopAppBar({ hasBell }) {
           <Typography variant="h6" className={classes.title}>
             {isNarrow && isSearchActive ? "" : "Cheferyone"}
           </Typography>
+          {isSearchActive && (
+            <IconButton onMouseDown={() => dispatch(setSearchInactive())}>
+              <ArrowBackIcon className={classes.exitSearchButton} />
+            </IconButton>
+          )}
           {hasBell && (
             <>
               <div className={classes.search}>
@@ -93,7 +108,10 @@ export default function TopAppBar({ hasBell }) {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    console.log("hello");
+                    if (searchTerm !== "") {
+                      dispatch(setSearchPath("", ""));
+                      dispatch(setIsSearching(true));
+                    }
                   }}
                 >
                   <InputBase

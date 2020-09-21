@@ -2,12 +2,16 @@ import {
   SET_SEARCH_PATH,
   SET_SEARCH_TERM,
   SET_SEARCH_STATE,
+  SET_IS_SEARCHING,
+  SET_SEARCH_SECTION,
 } from "../actions/types";
 
 const initialState = {
   term: "",
   isActive: false,
-  path: "/api/v1/menus/search?query=",
+  path: "",
+  isSearching: false,
+  section: "menus",
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -26,6 +30,16 @@ export default function searchReducer(state = initialState, action) {
       return {
         ...state,
         isActive: action.payload,
+      };
+    case SET_IS_SEARCHING:
+      return {
+        ...state,
+        isSearching: action.payload,
+      };
+    case SET_SEARCH_SECTION:
+      return {
+        ...state,
+        section: action.payload,
       };
     default:
       return state;

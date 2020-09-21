@@ -194,7 +194,7 @@ function MenuTab() {
                   />
                 </Typography>
                 <Typography variant="subtitle2">
-                  {`Status: ${"placeholder"}`}
+                  {`Status: ${menu.current_preorder ? "Open" : "Closed"}`}
                 </Typography>
                 <Grid container>
                   <Grid item>

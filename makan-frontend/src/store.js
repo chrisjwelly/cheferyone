@@ -21,7 +21,9 @@ const initialState = {
   search: {
     term: "",
     isActive: false,
-    path: "/api/v1/menus/search?query=",
+    path: "",
+    isSearching: false,
+    section: "menus",
   },
 };
 

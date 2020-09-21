@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   description: {
-    wordBreak: "break-all",
+    overflowWrap: "anywhere",
   },
   tagsContainer: {
     paddingTop: theme.spacing(2),
@@ -62,13 +62,11 @@ export default function MenuDetails({ tags, description, price }) {
         </div>
       )}
       <Grid container className={classes.tagsContainer} spacing={1}>
-        {tags.map(
-          (tag, i) => (
-            <Grid item key={i}>
-              <Chip size="small" key={i} label={tag.name} />
-            </Grid>
-          )
-        )}
+        {tags.map((tag, i) => (
+          <Grid item key={i}>
+            <Chip size="small" key={i} label={tag.name} />
+          </Grid>
+        ))}
       </Grid>
     </div>
   );

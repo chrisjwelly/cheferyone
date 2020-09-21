@@ -1,4 +1,11 @@
-import { SET_SEARCH_TERM, SET_SEARCH_STATE, SET_SEARCH_PATH } from "./types";
+import store from "../store";
+import {
+  SET_SEARCH_TERM,
+  SET_SEARCH_STATE,
+  SET_SEARCH_PATH,
+  SET_IS_SEARCHING,
+  SET_SEARCH_SECTION,
+} from "./types";
 
 export const setSearchInactive = () => (dispatch) => {
   dispatch(setSearchState(false));
@@ -19,9 +26,22 @@ export const setSearchState = (isActive) => {
   };
 };
 
-export const setSearchPath = (pathString) => {
+export const setSearchPath = (filter, sort) => {
   return {
     type: SET_SEARCH_PATH,
-    payload: pathString,
+    payload: `/api/v1/${store.getState().search.section}/search?query=${
+      store.getState().search.term
+    }&filter=${filter}&sort=${sort}`,
   };
+};
+
+export const setIsSearching = (isSearching) => {
+  return {
+    type: SET_IS_SEARCHING,
+    payload: isSearching,
+  };
+};
+
+export const setSearchSection = (section) => {
+  return { type: SET_SEARCH_SECTION, payload: section };
 };
