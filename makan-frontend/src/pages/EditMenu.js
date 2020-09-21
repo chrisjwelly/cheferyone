@@ -92,6 +92,7 @@ function EditMenu({ id }) {
           <MenuForm
             fields={fields}
             preorders={preorders}
+            currentPreorder={data.current_preorder}
             setFields={(e) => {
               resetErrors();
               setFields(e);

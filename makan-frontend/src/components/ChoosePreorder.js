@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ChoosePreorder({
   existingPreorders,
+  currentPreorder,
   new_preorders,
   setNewPreorders,
   edited_preorders,
@@ -176,8 +177,8 @@ export default function ChoosePreorder({
         <PreorderCard
           index={i}
           preorder={preorder}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          onEdit={preorder.id === currentPreorder.id ? undefined : onEdit}
+          onDelete={preorder.id === currentPreorder.id ? undefined : onDelete}
         />
       </Grid>
     );

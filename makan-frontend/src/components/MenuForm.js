@@ -30,6 +30,7 @@ export default function MenuForm({
   fields,
   setFields,
   preorders,
+  currentPreorder,
   initialImage,
   setImageBlob,
   errors,
@@ -111,6 +112,7 @@ export default function MenuForm({
       />
       <ChoosePreorder
         existingPreorders={preorders}
+        currentPreorder={currentPreorder}
         new_preorders={new_preorders}
         setNewPreorders={setNewPreorders}
         edited_preorders={edited_preorders}
