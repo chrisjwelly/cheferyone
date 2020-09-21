@@ -3,15 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/date-fns": "^1.3.13",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/pickers": "^3.2.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.20.0",
     "clsx": "^1.1.1",
     "cra-append-sw": "^2.7.0",
+    "date-fns": "^2.16.1",
     "firebase": "^7.20.0",
     "lodash": "^4.17.20",
     "react": "^16.13.1",
@@ -29,7 +32,7 @@
     "uuid": "^8.3.0"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "PORT=3001 react-scripts start --no-cache",
     "build": "react-scripts build && cra-append-sw ./custom-sw.js && rm -rf ../makan/public/* && mv ./build/* ../makan/public",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

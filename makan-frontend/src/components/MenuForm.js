@@ -1,8 +1,5 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
@@ -10,9 +7,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 
-import LoadingButton from "../components/LoadingButton";
-import { openDialog, closeDialog } from "../actions/dialog-actions";
-import ImageUpload from "../components/ImageUpload";
+import LoadingButton from "./LoadingButton";
+import ImageUpload from "./ImageUpload";
+import CancelButton from "./CancelButton";
+import ChoosePreorder from "./ChoosePreorder";
+import SelectTag from "./SelectTag";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MenuForm({
   fields,
   setFields,
+  preorders,
   initialImage,
   setImageBlob,
   errors,
@@ -37,8 +37,14 @@ export default function MenuForm({
   onSubmit,
 }) {
   const classes = useStyles();
-  const history = useHistory();
-  const dispatch = useDispatch();
+
+  const { new_preorders, edited_preorders, deleted_preorders } = fields;
+  const setNewPreorders = (orders) =>
+    setFields({ ...fields, new_preorders: orders });
+  const setEditedPreorders = (orders) =>
+    setFields({ ...fields, edited_preorders: orders });
+  const setDeletedPreorders = (ids) =>
+    setFields({ ...fields, deleted_preorders: ids });
 
   const onChange = (e) => {
     setFields({
@@ -46,28 +52,6 @@ export default function MenuForm({
       [e.target.name]: e.target.value,
     });
   };
-
-  const cancel = () =>
-    dispatch(
-      openDialog(
-        "Cancel Edit?",
-        "Any unsaved changes will be lost.",
-        <>
-          <Button color="primary" onClick={() => dispatch(closeDialog())}>
-            No
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              dispatch(closeDialog());
-              history.goBack();
-            }}
-          >
-            Yes
-          </Button>
-        </>
-      )
-    );
 
   return (
     <form className={classes.root} noValidate onSubmit={onSubmit}>
@@ -121,6 +105,19 @@ export default function MenuForm({
           />
         </Grid>
       </Grid>
+      <SelectTag
+        selected={fields.tags}
+        setSelected={(tags) => setFields({ ...fields, tags })}
+      />
+      <ChoosePreorder
+        existingPreorders={preorders}
+        new_preorders={new_preorders}
+        setNewPreorders={setNewPreorders}
+        edited_preorders={edited_preorders}
+        setEditedPreorders={setEditedPreorders}
+        deleted_preorders={deleted_preorders}
+        setDeletedPreorders={setDeletedPreorders}
+      />
       <LoadingButton
         type="submit"
         fullWidth
@@ -131,9 +128,13 @@ export default function MenuForm({
       >
         Submit
       </LoadingButton>
-      <Button variant="contained" fullWidth color="secondary" onClick={cancel}>
+      <CancelButton
+        description="Any unsaved changes will be lost"
+        header="Cancel Edit?"
+        fullWidth
+      >
         Cancel
-      </Button>
+      </CancelButton>
     </form>
   );
 }

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MenuListCard from "../components/MenuListCard";
 import LinesEllipsis from "react-lines-ellipsis";
 import IconButton from "@material-ui/core/IconButton";
@@ -13,16 +13,20 @@ import { useHistory } from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import clsx from "clsx";
-import TextField from "@material-ui/core/TextField";
 
-import LoadingButton from "../components/LoadingButton";
 import InfiniteScroll from "../components/InfiniteScroll";
 import RenderResponse from "../components/RenderResponse";
-import NotFound from "../pages/NotFound";
-import { setRestaurantTabState } from "../actions/restaurant-tab-actions";
+import NotFound from "./NotFound";
+import CreateRestaurant from "./CreateRestaurant";
+import EditRestaurant from "./EditRestaurant";
+import {
+  setRestaurantTabState,
+  setRestaurantTabIndex,
+} from "../actions/restaurant-tab-actions";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
-import { useGet } from "../utils/rest-utils";
+import { useGet, usePost } from "../utils/rest-utils";
+import { openSuccessSnackBar } from "../actions/snackbar-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -40,10 +44,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function YourRestaurant() {
+export default function YourRestaurant({ currTab }) {
+  const currTabInStore = useSelector((store) => store.restaurantTab.index);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const currTab = useSelector((state) => state.restaurantTab.index);
+  const history = useHistory();
 
   const res = useGet("/api/v1/your_restaurant");
   const isExist = res && !res.isLoading && !res.error;
@@ -51,12 +56,16 @@ export default function YourRestaurant() {
   useEffect(() => {
     dispatch(setTabIndex(1));
 
+    if (currTabInStore !== currTab) {
+      dispatch(setRestaurantTabIndex(currTab, history));
+    }
+
     if (isExist) {
       dispatch(setRestaurantTabState(true)); // show tabs
     }
 
     return () => dispatch(setRestaurantTabState(false)); // hide tabs
-  }, [dispatch, isExist]);
+  }, [dispatch, isExist, currTab, history, currTabInStore]);
 
   return (
     <div className={clsx(isExist && classes.root)}>
@@ -75,62 +84,10 @@ function RenderTab({ index, isExist }) {
   } else if (index === 1) {
     return <h1>Tab 1</h1>;
   } else if (index === 2) {
-    return <h1>Tab 2</h1>;
+    return <EditRestaurant />;
   } else {
     return <NotFound />;
   }
-}
-
-function CreateRestaurant() {
-  const formData = {};
-  const onChange = () => null;
-  const onSubmit = () => null;
-  const classes = {};
-  const isLoading = false;
-  return (
-    <>
-      <form className={classes.form} noValidate onSubmit={onSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="Location"
-              name="location"
-              onChange={onChange}
-              value={formData.name}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              name="description"
-              label="Description"
-              onChange={onChange}
-              value={formData.description}
-              multiline
-              rows={4}
-            />
-          </Grid>
-          <Grid item>
-            <LoadingButton
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              isLoading={isLoading}
-            >
-              Save
-            </LoadingButton>
-          </Grid>
-        </Grid>
-      </form>
-    </>
-  );
 }
 
 function MenuTab() {
@@ -138,40 +95,77 @@ function MenuTab() {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [id, setId] = useState(null);
+  const [isDelete, setIsDelete] = useState(false);
+
   const edit = (e, id) => {
     e.preventDefault();
     history.push(`/menu/${id}/edit`);
   };
+
+  const deletePost = usePost(
+    {},
+    {},
+    `/api/v1/your_restaurant/menus/${id}`,
+    "DELETE"
+  )[1];
+
   const remove = (e, id) => {
     e.preventDefault();
-    dispatch(
-      openDialog(
-        "Delete Menu?",
-        "This action is irreversible!",
-        <>
-          <Button color="primary" onClick={() => dispatch(closeDialog())}>
-            No
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              dispatch(closeDialog());
-              console.log("placeholder");
-            }}
-          >
-            Yes
-          </Button>
-        </>
-      )
-    );
+    setId(id);
+    setIsDelete(true);
   };
+
+  useEffect(() => {
+    if (id && isDelete) {
+      dispatch(
+        openDialog(
+          "Delete Menu?",
+          "This action is irreversible!",
+          <>
+            <Button
+              color="primary"
+              onClick={() => {
+                setId(null);
+                setIsDelete(false);
+                dispatch(closeDialog());
+              }}
+            >
+              No
+            </Button>
+            <Button
+              color="primary"
+              onClick={async () => {
+                dispatch(closeDialog());
+                const res = await deletePost();
+
+                if (res) {
+                  dispatch(openSuccessSnackBar("Menu deleted!"));
+                  window.location.reload();
+                }
+                setId(null);
+                setIsDelete(false);
+              }}
+            >
+              Yes
+            </Button>
+          </>
+        )
+      );
+    }
+  }, [id, isDelete, deletePost, dispatch]);
 
   return (
     <div>
-      <Fab className={classes.fab} color="secondary" aria-label="add">
+      <Fab
+        onClick={() => history.push("/your-restaurant/create")}
+        className={classes.fab}
+        color="secondary"
+        aria-label="add"
+      >
         <AddIcon />
       </Fab>
-      <InfiniteScroll apiPath={"/api/v1/menus/recommended"}>
+      <InfiniteScroll apiPath={"/api/v1/your_restaurant/menus"}>
         {(data) =>
           data.map((menus) => {
             return menus.map((menu) => (

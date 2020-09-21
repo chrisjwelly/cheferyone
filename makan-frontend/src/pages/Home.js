@@ -69,7 +69,6 @@ function Authenticated() {
   } else if (recommended.error || nearby.error || recent.error) {
     return <Error />;
   } else {
-    console.log(recommended.data)
     return (
       <>
         <SuggestionsSectionContainer

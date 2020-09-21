@@ -30,7 +30,7 @@ export default function InfiniteScroll({ apiPath, children }) {
   useEffect(() => {
     const setOnline = () => setIsOnline(true);
     const setOffline = () => setIsOnline(false);
-    
+
     window.addEventListener("online", setOnline);
     window.addEventListener("offline", setOffline);
     return () => {
@@ -65,7 +65,9 @@ export default function InfiniteScroll({ apiPath, children }) {
                 </Button>
               ) : (
                 <Typography variant="caption">
-                  When you are at rock bottom... the only way is up :')
+                  {res.data[0].length > 0
+                    ? "When you are at rock bottom... the only way is up :')"
+                    : "It seems a little lonely here..."}
                 </Typography>
               )}
             </div>

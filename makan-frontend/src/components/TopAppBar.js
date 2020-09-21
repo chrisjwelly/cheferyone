@@ -9,6 +9,7 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TopAppBar({ hasBell }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const { index, isShown: isTabsShown } = useSelector(
     (store) => store.restaurantTab
@@ -49,7 +51,9 @@ export default function TopAppBar({ hasBell }) {
             centered
             indicatorColor="primary"
             value={index}
-            onChange={(_, index) => dispatch(setRestaurantTabIndex(index))}
+            onChange={(_, index) =>
+              dispatch(setRestaurantTabIndex(index, history))
+            }
             aria-label="your restaurant tabs"
           >
             <Tab label="Menus" />
