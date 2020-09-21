@@ -5,6 +5,7 @@ import snackBarReducer from "./snackbar-reducer";
 import bottomBarReducer from "./bottombar-reducer";
 import restaurantTabReducer from "./restaurant-tab-reducer";
 import dialogReducer from "./dialog-reducer";
+import searchReducer from "./search-reducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -12,4 +13,5 @@ export default combineReducers({
   activeTab: bottomBarReducer,
   restaurantTab: restaurantTabReducer,
   dialog: dialogReducer,
+  search: searchReducer,
 });

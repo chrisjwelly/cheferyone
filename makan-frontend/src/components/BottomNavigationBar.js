@@ -3,12 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PersonIcon from "@material-ui/icons/Person";
 import clsx from "clsx";
+
+import { setSearchInactive } from "../actions/search-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,12 +23,14 @@ const useStyles = makeStyles((theme) => ({
 export default function BottomNavigationBar({ className }) {
   const classes = useStyles();
   const activeTab = useSelector((state) => state.activeTab);
+  const dispatch = useDispatch();
 
   return (
     <BottomNavigation
       value={activeTab}
       showLabels
       className={clsx(className, classes.root)}
+      onClick={() => dispatch(setSearchInactive())}
     >
       <BottomNavigationAction
         label="Menus"
