@@ -1,21 +1,13 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 
 import LoadingCenter from "../components/LoadingCenter";
 import OrderCard from "../components/OrderCard";
 import { useGet } from "../utils/rest-utils";
 import OrdersChangeStatusButtons from "../components/OrdersChangeStatusButtons";
+import SeeAllButton from "../components/SeeAllButton";
 
 const PREVIEW_LENGTH = 2;
-
-const useStyles = makeStyles({
-  buttonContainer: {
-    textAlign: "center",
-  },
-});
 
 export default function RestaurantOrders() {
   const { isLoading: isPaidLoading, data: paidData } = useGet(
@@ -82,16 +74,4 @@ export default function RestaurantOrders() {
       </div>
     );
   }
-}
-
-function SeeAllButton(props) {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.buttonContainer}>
-      <Button component={Link} {...props} color="secondary">
-        See All
-      </Button>
-    </div>
-  );
 }

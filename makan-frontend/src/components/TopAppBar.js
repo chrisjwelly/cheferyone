@@ -163,7 +163,7 @@ export default function TopAppBar({ hasBell }) {
             aria-label="orders tabs"
           >
             <Tab label="Cart" />
-            <Tab label="History" />
+            <Tab label="Paid" />
           </Tabs>
         )}
       </AppBar>
