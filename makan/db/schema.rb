@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_20_085108) do
+ActiveRecord::Schema.define(version: 2020_09_22_095030) do
 
   create_table "menus", force: :cascade do |t|
     t.string "name"
     t.string "image_url"
     t.text "description"
     t.decimal "price", precision: 10, scale: 2
-    t.decimal "rating"
     t.integer "restaurant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -69,6 +68,15 @@ ActiveRecord::Schema.define(version: 2020_09_20_085108) do
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.integer "rating"
+    t.text "content"
+    t.integer "order_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_id"], name: "index_reviews_on_order_id"
+  end
+
   create_table "subscriptions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "subscribable_type", null: false
@@ -114,5 +122,6 @@ ActiveRecord::Schema.define(version: 2020_09_20_085108) do
   add_foreign_key "orders", "users"
   add_foreign_key "preorders", "menus"
   add_foreign_key "restaurants", "users"
+  add_foreign_key "reviews", "orders"
   add_foreign_key "subscriptions", "users"
 end

@@ -112,62 +112,62 @@ yakuza_restaurant = yakuza.create_restaurant(
 
 # Create Menus
 soya_chicken_rice = ah_beng_resto.menus.create(
-  name: menus[0], description: desc[0], price: 0.5, rating: 0.5, image_url: menu_urls[0], tags: [chinese_tag, chicken_tag, rice_tag]
+  name: menus[0], description: desc[0], price: 0.5, image_url: menu_urls[0], tags: [chinese_tag, chicken_tag, rice_tag]
 )
 create_preorders(soya_chicken_rice)
 
 char_siew_noodle = ah_beng_resto.menus.create(
-  name: menus[1], description: desc[1], price: 1.5, rating: 1.5, image_url: menu_urls[1], tags: [chinese_tag, noodles_tag, pork_tag]
+  name: menus[1], description: desc[1], price: 1.5, image_url: menu_urls[1], tags: [chinese_tag, noodles_tag, pork_tag]
 )
 create_preorders(char_siew_noodle)
 
 roasted_pork_hor_fun = ah_beng_resto.menus.create(
-  name: menus[2], description: desc[2], price: 2.5, rating: 2.5, image_url: menu_urls[2], tags: [chinese_tag, noodles_tag, pork_tag]
+  name: menus[2], description: desc[2], price: 2.5, image_url: menu_urls[2], tags: [chinese_tag, noodles_tag, pork_tag]
 )
 create_preorders(roasted_pork_hor_fun)
 
 tandoori_chicken = mang_oleh_place.menus.create(
-  name: menus[3], description: desc[3], price: 0.5, rating: 0.5, image_url: menu_urls[3], tags: [indian_tag, chicken_tag, halal_tag]
+  name: menus[3], description: desc[3], price: 0.5, image_url: menu_urls[3], tags: [indian_tag, chicken_tag, halal_tag]
 )
 create_preorders(tandoori_chicken)
 
 ayam_penyet = mang_oleh_place.menus.create(
-  name: menus[4], description: desc[4], price: 1.5, rating: 1.5, image_url: menu_urls[4], tags: [indonesian_tag, chicken_tag, halal_tag]
+  name: menus[4], description: desc[4], price: 1.5, image_url: menu_urls[4], tags: [indonesian_tag, chicken_tag, halal_tag]
 )
 create_preorders(ayam_penyet)
 
 butter_chicken = mang_oleh_place.menus.create(
-  name: menus[5], description: desc[5], price: 2.5, rating: 2.5, image_url: menu_urls[5], tags: [indian_tag, chicken_tag, halal_tag]
+  name: menus[5], description: desc[5], price: 2.5, image_url: menu_urls[5], tags: [indian_tag, chicken_tag, halal_tag]
 )
 create_preorders(butter_chicken)
 
 javanese_fried_noodle = chef_joko.menus.create(
-  name: menus[6], description: desc[6], price: 0.5, rating: 0.5, image_url: menu_urls[6], tags: [javanese_tag, indonesian_tag, noodles_tag, halal_tag]
+  name: menus[6], description: desc[6], price: 0.5, image_url: menu_urls[6], tags: [javanese_tag, indonesian_tag, noodles_tag, halal_tag]
 )
 create_preorders(javanese_fried_noodle)
 
 javanese_fried_rice = chef_joko.menus.create(
-  name: menus[7], description: desc[7], price: 1.5, rating: 1.5, image_url: menu_urls[7], tags: [javanese_tag, indonesian_tag, rice_tag, halal_tag]
+  name: menus[7], description: desc[7], price: 1.5, image_url: menu_urls[7], tags: [javanese_tag, indonesian_tag, rice_tag, halal_tag]
 )
 create_preorders(javanese_fried_rice)
 
 fried_kway_teow = chef_joko.menus.create(
-  name: menus[8], description: desc[8], price: 2.5, rating: 2.5, image_url: menu_urls[8], tags: [chinese_tag, indonesian_tag, noodles_tag]
+  name: menus[8], description: desc[8], price: 2.5, image_url: menu_urls[8], tags: [chinese_tag, indonesian_tag, noodles_tag]
 )
 create_preorders(fried_kway_teow)
 
 chicken_karage = yakuza_restaurant.menus.create(
-  name: menus[9], description: desc[9], price: 0.5, rating: 0.5, image_url: menu_urls[9], tags: [japanese_tag, indonesian_tag, chicken_tag]
+  name: menus[9], description: desc[9], price: 0.5, image_url: menu_urls[9], tags: [japanese_tag, indonesian_tag, chicken_tag]
 )
 create_preorders(chicken_karage)
 
 sashimi = yakuza_restaurant.menus.create(
-  name: menus[10], description: desc[10], price: 1.5, rating: 1.5, image_url: menu_urls[10], tags: [japanese_tag, sushi_tag]
+  name: menus[10], description: desc[10], price: 1.5, image_url: menu_urls[10], tags: [japanese_tag, sushi_tag]
 )
 create_preorders(sashimi)
 
 ayam_geprek = yakuza_restaurant.menus.create(
-  name: menus[11], description: desc[11], price: 2.5, rating: 2.5, image_url: menu_urls[11], tags: [indonesian_tag, chicken_tag, halal_tag]
+  name: menus[11], description: desc[11], price: 2.5, image_url: menu_urls[11], tags: [indonesian_tag, chicken_tag, halal_tag]
 )
 create_preorders(ayam_geprek)
 

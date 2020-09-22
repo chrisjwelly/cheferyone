@@ -32,6 +32,7 @@ Rails.application.routes.draw do
         get 'belongs'
         post 'subscribe'
         post 'unsubscribe'
+        get 'reviews'
       end
     end
 
@@ -52,6 +53,7 @@ Rails.application.routes.draw do
       end
       member do
         patch 'update_status'
+        resource 'review'
       end
     end
 

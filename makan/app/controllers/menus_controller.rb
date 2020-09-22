@@ -2,8 +2,8 @@ class MenusController < ApplicationController
   acts_as_token_authentication_handler_for User, except: [:show, :recent, :index]
 
   before_action :ensure_chef!, only: [:belongs]
-  before_action :set_menu, only: [:show, :belongs]
-  before_action :set_offset_and_limit, only: [:filter, :search, :recommended, :near_you, :recent, :index]
+  before_action :set_menu, only: [:show, :belongs, :reviews]
+  before_action :set_offset_and_limit, only: [:filter, :search, :recommended, :near_you, :recent, :index, :reviews]
 
   # GET /menus/filter?tags=params
   def filter
@@ -59,6 +59,12 @@ class MenusController < ApplicationController
       # 403 Forbidden
       render body: nil, status: :forbidden
     end
+  end
+
+  # GET /menus/1/reviews
+  def reviews
+    @reviews = @menu.reviews.limit(@limit).offset(@offset)
+    render json: @reviews
   end
 
   # POST /menus/1/subscribe

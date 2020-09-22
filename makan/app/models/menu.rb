@@ -16,6 +16,7 @@ class Menu < ApplicationRecord
   has_many :tags, through: :connections
   has_many :subscribers, through: :subscriptions, class_name: "User"
   has_many :orders, through: :preorders
+  has_many :reviews, through: :orders
 
   # Append logo to JSON
   def as_json(options = {})
@@ -27,12 +28,14 @@ class Menu < ApplicationRecord
 
     # 'order' here refers to the sorting order, and not the restaurant order
     sorted_preorders = self.preorders.order(:start_date)
+    rating = get_rating(reviews)
 
     super(options).merge({
       "tags" => tags,
       "username" => restaurant.user.username,
       "preorders" => sorted_preorders.select { |preorder| preorder.end_date >= now },
       "current_preorder" => current_preorder,
+      "rating" => rating,
     })
   end
 
@@ -41,6 +44,15 @@ class Menu < ApplicationRecord
   end
 
   private
+
+    def get_rating(reviews)
+      if reviews.empty?
+        0
+      else
+        (reviews.average(:rating)).round(2)
+      end
+    end
+
     def image_url_security
       image_source =  'https://firebasestorage.googleapis.com/v0/b/makan-a9ad2.appspot.com/o/'
       errors.add(:image_url, 'untrusted image source') unless image_url.nil? || image_url.start_with?(image_source)

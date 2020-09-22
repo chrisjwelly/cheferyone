@@ -5,6 +5,7 @@ class Order < ApplicationRecord
   belongs_to :user
   has_one :menu, through: :preorder
   has_one :restaurant, through: :menu
+  has_one :review
   enum status: STATUSES
   validate :within_preorder_quota
   validates :quantity, numericality: { :greater_than => 0 }
