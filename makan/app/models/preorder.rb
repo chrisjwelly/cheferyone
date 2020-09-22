@@ -16,6 +16,11 @@ class Preorder < ApplicationRecord
     })
   end
 
+  def has_started?
+    now = DateTime.now
+    now >= start_date
+  end
+
   private
     def end_after_start
       return if end_date.blank? || start_date.blank?

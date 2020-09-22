@@ -27,10 +27,6 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
         raise ActiveRecord::Rollback
       end
       raise ActiveRecord::Rollback unless create_preorders?
-    rescue ActiveRecord::Rollback
-      # If it's a rollback, the proper JSON response would have been returned.
-      # So, we did nothing here other than stopping the functions
-      return
     end
 
     @subscriptions = Subscription.where(subscribable: current_user.restaurant)
@@ -39,6 +35,9 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       Notification.create(recipient: subscription.user, notifiable: @menu, content: "A new menu is available. Let's check!")
     end
     render json: @menu, status: :created
+  rescue ActiveRecord::Rollback
+    # If it's a rollback, the proper JSON response would have been returned.
+    # So, we did nothing here other than stopping the functions
   end
 
   # PATCH/PUT /your_restaurant/menus/1
@@ -55,9 +54,8 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       raise ActiveRecord::Rollback unless destroy_preorders?
 
       render json: @menu, status: :ok
-    rescue ActiveRecord::Rollback
-      return
     end
+  rescue ActiveRecord::Rollback
   end
 
   # DELETE /your_restaurant/menus/1
@@ -127,11 +125,17 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
         @preorder = @menu.preorders.find_by_id(permitted_params[:id])
         render body: nil, status: :not_found and return false if @preorder.nil?
 
+        if @preorder.has_started?
+          render json: { error: "You cannot update a preorder that has started!" }, status: :unprocessable_entity
+          return false
+        end
+
         if @preorder.update(permitted_params)
           # If successful, no need to give response
         else
           # Status code: 422
-          render json: { errors: @preorder.errors }, status: :unprocessable_entity and return false
+          render json: { errors: @preorder.errors }, status: :unprocessable_entity
+          return false
         end
       }
 
@@ -149,6 +153,12 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
       get_deleted_preorders.each { |id|
         @preorder = @menu.preorders.find_by_id(id)
         render body: nil, status: :not_found and return false if @preorder.nil?
+
+        if @preorder.has_started?
+          render json: { error: "You cannot delete a preorder that has started!" }, status: :unprocessable_entity
+          return false
+        end
+
         @preorder.destroy
       }
       return true
