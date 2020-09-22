@@ -3,12 +3,20 @@ class MenusController < ApplicationController
 
   before_action :ensure_chef!, only: [:belongs]
   before_action :set_menu, only: [:show, :belongs]
-  before_action :set_offset_and_limit, only: [:recommended, :near_you, :recent, :index]
+  before_action :set_offset_and_limit, only: [:filter, :search, :recommended, :near_you, :recent, :index]
 
-  # GET /menus/search?query=Menu
+  # GET /menus/filter?tags=params
+  def filter
+    list_of_tags = params[:tags].split(',')
+    @menus = Menu.joins(:tags).where(tags: { name: list_of_tags }).limit(@limit).offset(@offset)
+    render json: @menus
+  end
+
+  # GET /menus/search?query=params
   def search
     word = params[:query]
-    data = Menu.search(word).raw_answer
+    data = Menu.search(word, {hitsPerPage: @limit, page: (@offset.to_f/@limit.to_f).ceil}).raw_answer
+   
     @menus = data['hits']
     render json: @menus
   end

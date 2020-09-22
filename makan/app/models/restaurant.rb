@@ -1,15 +1,10 @@
 class Restaurant < ApplicationRecord
   include Subscribable	
-  include AlgoliaSearch
 
   validate :image_url_security
   belongs_to :user, touch: true
   has_many :menus, dependent: :destroy
   has_many :orders, through: :menus
-
-  algoliasearch do
-    attributes :description
-  end
 
   has_many :connections, as: :taggable
   has_many :tags, through: :connections

@@ -87,10 +87,10 @@ halal_tag = Tag.create(name: "Halal")
 sushi_tag = Tag.create(name: "Sushi")
 
 # Create Users
-ah_beng = User.create(email: "chef1@example.com", password: "123456", username: "chef1", authentication_token: "chef1")
-odading_mang_oleh = User.create(email: "chef2@example.com", password: "123456", username: "chef2", authentication_token: "chef2")
-joko = User.create(email: "chef3@example.com", password: "123456", username: "chef3", authentication_token: "chef3")
-yakuza = User.create(email: "chef4@example.com", password: "123456", username: "chef4", authentication_token: "chef4")
+ah_beng = User.create(email: "chef1@example.com", password: "123456", username: "ah beng", authentication_token: "chef1")
+odading_mang_oleh = User.create(email: "chef2@example.com", password: "123456", username: "odading mang oleh", authentication_token: "chef2")
+joko = User.create(email: "chef3@example.com", password: "123456", username: "joko", authentication_token: "chef3")
+yakuza = User.create(email: "chef4@example.com", password: "123456", username: "yakuza", authentication_token: "chef4")
 list_of_chefs = [ah_beng, odading_mang_oleh, joko, yakuza]
 
 # Create Restaurants

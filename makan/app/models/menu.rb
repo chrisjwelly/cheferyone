@@ -5,9 +5,11 @@ class Menu < ApplicationRecord
   validate :image_url_security
   belongs_to :restaurant, touch: true
   has_many :preorders, dependent: :destroy
-
+  after_touch :index!
+  # Menu search: name, menu_image_url, tags, description, menu_id 
   algoliasearch do
-    attributes :name, :description
+    attributes :name, :description, :image_url, :price, :rating, :id, :restaurant_id, :tags
+    searchableAttributes ['name', 'description']
   end
 
   has_many :connections, as: :taggable

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
     resources :menus, only: [:index, :show]  do
       collection do
+        get 'filter'
         get 'search'
         get 'recommended'
         get 'near_you'
@@ -35,6 +36,10 @@ Rails.application.routes.draw do
     end
 
     resources :chefs, only: [:index, :show] do
+      collection do
+        get 'filter'
+        get 'search'
+      end
       member do
         post 'subscribe'
         post 'unsubscribe'

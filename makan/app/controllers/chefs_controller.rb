@@ -1,6 +1,21 @@
 class ChefsController < ApplicationController
   acts_as_token_authentication_handler_for User
-  before_action :set_offset_and_limit, only: [:index]
+  before_action :set_offset_and_limit, only: [:filter, :search, :index]
+
+  # GET /chefs/filter?tags=params
+  def filter
+    list_of_tags = params[:tags].split(',')
+    @chefs = User.joins(:restaurant => :tags).where(restaurant: {tags: { name: list_of_tags }}).limit(@limit).offset(@offset)
+    render json: @chefs
+  end
+
+  # GET /chefs/search?query=params
+  def search
+    word = params[:query]
+    data =  User.search(word, {hitsPerPage: @limit, page: (@offset.to_f/@limit.to_f).ceil}).raw_answer
+    @chefs = data['hits']
+    render json: @chefs
+  end
 
   # GET /chefs
   def index
