@@ -12,18 +12,11 @@ import LoadingCenter from "../components/LoadingCenter";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useGet } from "../utils/rest-utils";
 import { NUMBER_OF_SUGGESTIONS } from "../constants";
-import Offline from "../pages/Offline";
-import Error from "../pages/Error";
+import GreenButton from "../components/GreenButton";
 
 const useStyles = makeStyles((theme) => ({
   signInContainer: {
     height: "100vh",
-  },
-  loginButton: {
-    backgroundColor: theme.palette.success.main,
-    "&:hover": {
-      backgroundColor: theme.palette.success.dark,
-    },
   },
   buttonContainer: {
     width: theme.breakpoints.values.sm / 3,
@@ -59,15 +52,6 @@ function Authenticated() {
 
   if (recommended.isLoading || nearby.isLoading || recent.isLoading) {
     return <LoadingCenter />;
-  } else if (
-    (recommended.error || nearby.error || recent.error) &&
-    !navigator.onLine
-  ) {
-    // placeholder
-    // Improve when we have more advanced offline features
-    return <Offline />;
-  } else if (recommended.error || nearby.error || recent.error) {
-    return <Error />;
   } else {
     return (
       <>
@@ -131,16 +115,9 @@ function NotAuthenticated() {
       justify="center"
     >
       <Grid item className={classes.buttonContainer}>
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          classes={{ root: classes.loginButton }}
-          component={Link}
-          to="/login"
-        >
+        <GreenButton fullWidth variant="contained" component={Link} to="/login">
           Login
-        </Button>
+        </GreenButton>
       </Grid>
       <Grid item className={classes.buttonContainer}>
         <Button

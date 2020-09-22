@@ -14,9 +14,14 @@ const initialState = {
       isOpen: false,
       message: "",
     },
+    warning: {
+      isOpen: false,
+      message: "",
+    },
   },
   activeTab: null,
   restaurantTab: { isShown: false, index: 0 },
+  ordersTab: { isShown: false, index: 0 },
   dialog: { isOpen: false, title: "", body: "", actions: null },
   search: {
     term: "",

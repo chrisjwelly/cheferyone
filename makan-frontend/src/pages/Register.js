@@ -53,25 +53,8 @@ export default function Register() {
     password_confirmation: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, post, resetErrors] = usePost(
-    {
-      user: inputs,
-    },
-    {
-      email: undefined,
-      username: undefined,
-      password: undefined,
-      password_confirmation: (value) => {
-        if (value !== inputs.password) {
-          return { isValid: false, message: "Passwords do not match" };
-        }
-
-        return { isValid: true };
-      },
-    },
-    "/api/v1/users",
-    "POST"
-  );
+  const { errors, post, resetErrors } = usePost();
+  console.log(errors);
 
   const onChange = (e) => {
     resetErrors();
@@ -84,7 +67,13 @@ export default function Register() {
   const onSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    post().then((res) => {
+    post(
+      {
+        user: inputs,
+      },
+      "/api/v1/users",
+      "POST"
+    ).then((res) => {
       if (res) {
         dispatch(closeErrorSnackBar());
         dispatch(openSuccessSnackBar("Registration successful!"));

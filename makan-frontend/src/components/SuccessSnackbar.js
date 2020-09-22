@@ -25,7 +25,7 @@ export default function SuccessSnackbar() {
     <Snackbar
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
       open={isOpen}
-      autoHideDuration={6000}
+      autoHideDuration={3000}
       onClose={handleClose}
     >
       <Alert onClose={handleClose} severity="success">

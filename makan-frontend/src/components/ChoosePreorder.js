@@ -177,8 +177,16 @@ export default function ChoosePreorder({
         <PreorderCard
           index={i}
           preorder={preorder}
-          onEdit={preorder.id === currentPreorder.id ? undefined : onEdit}
-          onDelete={preorder.id === currentPreorder.id ? undefined : onDelete}
+          onEdit={
+            currentPreorder && preorder.id === currentPreorder.id
+              ? undefined
+              : onEdit
+          }
+          onDelete={
+            currentPreorder && preorder.id === currentPreorder.id
+              ? undefined
+              : onDelete
+          }
         />
       </Grid>
     );

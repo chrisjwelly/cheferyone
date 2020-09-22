@@ -14,10 +14,11 @@ import MenuHeader from "../components/MenuHeader";
 import MenuDetails from "../components/MenuDetails";
 import MenuOrderDrawer from "../components/MenuOrderDrawer";
 import { useGet, usePost } from "../utils/rest-utils";
-import RenderResponse from "../components/RenderResponse";
 import { openDialog, closeDialog } from "../actions/dialog-actions";
 import MenuPreorders from "../components/MenuPreorders";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
+import LoadingCenter from "../components/LoadingCenter";
+import GreenButton from "../components/GreenButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,33 +33,25 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "auto",
     marginLeft: "auto",
   },
-  button: {
-    backgroundColor: theme.palette.success.main,
-    "&:hover": {
-      backgroundColor: theme.palette.success.dark,
-    },
-    color: theme.palette.common.white,
-  },
 }));
 
 export default function Menu() {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     dispatch(setTabIndex(0));
   }, [dispatch]);
 
-  const res = useGet(`/api/v1/menus/${id}/belongs`);
+  const { id } = useParams();
 
-  return <MenuView id={id} isOwner={!res.isLoading && !res.error} />;
-}
+  const { isLoading: isNotOwner } = useGet(
+    `/api/v1/menus/${id}/belongs`,
+    true,
+    true
+  );
+  const { isLoading, data } = useGet(`/api/v1/menus/${id}`);
 
-function MenuView({ id, isOwner }) {
-  const dispatch = useDispatch();
-  const history = useHistory();
-
-  const res = useGet(`/api/v1/menus/${id}`);
   const currUser = useSelector((store) => store.auth.user);
   const classes = useStyles();
   const [isOrderOpen, setIsOrderOpen] = useState(false);
@@ -75,12 +68,7 @@ function MenuView({ id, isOwner }) {
     history.push(`/menu/${id}/edit`);
   };
 
-  const deletePost = usePost(
-    {},
-    {},
-    `/api/v1/your_restaurant/menus/${id}`,
-    "DELETE"
-  )[1];
+  const { post } = usePost();
 
   const remove = () => {
     dispatch(
@@ -95,7 +83,11 @@ function MenuView({ id, isOwner }) {
             color="primary"
             onClick={async () => {
               dispatch(closeDialog());
-              const res = await deletePost();
+              const res = await post(
+                {},
+                `/api/v1/your_restaurant/menus/${id}`,
+                "DELETE"
+              );
 
               if (res) {
                 dispatch(openSuccessSnackBar("Menu deleted!"));
@@ -110,47 +102,45 @@ function MenuView({ id, isOwner }) {
     );
   };
 
-  return (
-    <RenderResponse {...res}>
-      {(data) => (
-        <div className={classes.root}>
-          <MenuHeader
-            name={data.name}
-            homecook={data.username}
-            image={data.image_url}
-            rating={data.rating}
-          />
-          {isOwner && (
-            <Grid container>
-              <Grid item>
-                <IconButton onClick={edit}>
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <IconButton onClick={remove}>
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </Grid>
+  if (isLoading) {
+    return <LoadingCenter />;
+  } else {
+    return (
+      <div className={classes.root}>
+        <MenuHeader
+          name={data.name}
+          homecook={data.username}
+          image={data.image_url}
+          rating={data.rating}
+        />
+        {!isNotOwner && (
+          <Grid container>
+            <Grid item>
+              <IconButton onClick={edit}>
+                <EditIcon fontSize="small" />
+              </IconButton>
             </Grid>
-          )}
-          <MenuDetails
-            tags={data.tags}
-            description={data.description}
-            price={data.price}
-          />
-          <MenuPreorders preorders={data.preorders} />
-          {data.current_preorder && !isOwner && (
-            <div className={classes.buttonContainer}>
-              <Button
-                variant="contained"
-                className={classes.button}
-                onClick={orderButtonOnClick}
-              >
-                Order Now!
-              </Button>
-            </div>
-          )}
+            <Grid item>
+              <IconButton onClick={remove}>
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Grid>
+          </Grid>
+        )}
+        <MenuDetails
+          tags={data.tags}
+          description={data.description}
+          price={data.price}
+        />
+        <MenuPreorders preorders={data.preorders} />
+        {data.current_preorder && isNotOwner && (
+          <div className={classes.buttonContainer}>
+            <GreenButton variant="contained" onClick={orderButtonOnClick}>
+              Order Now!
+            </GreenButton>
+          </div>
+        )}
+        {data.current_preorder && isNotOwner && (
           <MenuOrderDrawer
             open={isOrderOpen}
             onClose={() => setIsOrderOpen(false)}
@@ -162,8 +152,8 @@ function MenuView({ id, isOwner }) {
             apiPath="/api/v1/orders"
             method="POST"
           />
-        </div>
-      )}
-    </RenderResponse>
-  );
+        )}
+      </div>
+    );
+  }
 }

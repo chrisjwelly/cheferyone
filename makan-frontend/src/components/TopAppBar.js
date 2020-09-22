@@ -16,6 +16,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
+import { setOrdersTabIndex } from "../actions/orders-tab-actions";
 import {
   setSearchTerm,
   setSearchState,
@@ -83,6 +84,9 @@ export default function TopAppBar({ hasBell }) {
   const { index, isShown: isTabsShown } = useSelector(
     (store) => store.restaurantTab
   );
+  const { index: ordersTabIndex, isShown: isOrdersTabsShown } = useSelector(
+    (store) => store.ordersTab
+  );
   const { term: searchTerm, isActive: isSearchActive } = useSelector(
     (store) => store.search
   );
@@ -148,6 +152,18 @@ export default function TopAppBar({ hasBell }) {
             <Tab label="Menus" />
             <Tab label="Orders" />
             <Tab label="Edit" />
+          </Tabs>
+        )}
+        {isOrdersTabsShown && (
+          <Tabs
+            centered
+            indicatorColor="primary"
+            value={ordersTabIndex}
+            onChange={(_, index) => dispatch(setOrdersTabIndex(index))}
+            aria-label="orders tabs"
+          >
+            <Tab label="Cart" />
+            <Tab label="History" />
           </Tabs>
         )}
       </AppBar>

@@ -9,7 +9,10 @@ export const loginUser = (post, isRemember, setLoadingDone, history) => (
   post().then((res) => {
     if (res) {
       dispatch(closeErrorSnackBar());
-      const { user } = res.data.data;
+      const user = {
+        email: res.data.email,
+        authentication_token: res.data.authentication_token,
+      };
       // Set token to Auth header
       setAuthHeaders(user);
       dispatch(setCurrentUser(user));

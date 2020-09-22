@@ -16,6 +16,7 @@ import { openSuccessSnackBar } from "../actions/snackbar-actions";
 import { usePost } from "../utils/rest-utils";
 import NumberInput from "../components/NumberInput";
 import { stringToMoney } from "../utils/general";
+import GreenButton from "./GreenButton";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -44,13 +45,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     overflow: "hidden",
   },
-  button: {
-    backgroundColor: theme.palette.success.main,
-    "&:hover": {
-      backgroundColor: theme.palette.success.dark,
-    },
-    color: theme.palette.common.white,
-  },
   remarksContainer: {
     width: "100%",
   },
@@ -76,21 +70,21 @@ export default function MenuOrderDrawer({
   const [quantity, setQuantity] = useState(initialQuantity || 1);
   const [remarks, setRemarks] = useState(initialRemarks || "");
 
-  const post = usePost(
-    {
-      order: {
-        quantity,
-        remarks,
-        preorder_id: current_preorder.id,
-      },
-    },
-    {},
-    apiPath,
-    method
-  )[1];
+  const { post } = usePost();
 
   const onSubmit = async () => {
-    const res = await post();
+    const res = await post(
+      {
+        order: {
+          quantity,
+          remarks,
+          preorder_id: current_preorder.id,
+        },
+      },
+      apiPath,
+      method
+    );
+    
     if (res) {
       if (isAddToCart) {
         dispatch(openSuccessSnackBar("Order added to cart!"));
@@ -161,16 +155,14 @@ export default function MenuOrderDrawer({
           </Grid>
           <Grid item className={classes.buttonContainer}>
             {isAddToCart ? (
-              <Button
+              <GreenButton
                 variant="contained"
-                color="secondary"
-                className={classes.button}
                 startIcon={<ShoppingCartIcon />}
                 disabled={quantity <= 0 || quantity === ""}
                 onClick={onSubmit}
               >
                 Add To Cart
-              </Button>
+              </GreenButton>
             ) : (
               <Button
                 variant="contained"

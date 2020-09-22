@@ -25,22 +25,18 @@ export default function CreateRestaurant() {
     description: "",
   });
 
-  const [errors, post, resetErrors] = usePost(
-    { restaurant: fields },
-    {
-      location: undefined,
-      description: undefined,
-    },
-    `/api/v1/your_restaurant`,
-    "POST",
-    imageBlob
-  );
+  const { errors, post, resetErrors } = usePost();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const res = await post();
+    const res = await post(
+      { restaurant: fields },
+      `/api/v1/your_restaurant`,
+      "POST",
+      imageBlob
+    );
     if (res) {
       dispatch(openSuccessSnackBar("Restaurant created!"));
 

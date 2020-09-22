@@ -20,9 +20,11 @@ import EditMenu from "./pages/EditMenu";
 import Notifications from "./pages/Notifications";
 import CreateMenu from "./pages/CreateMenu";
 import SearchPage from "./pages/SearchPage";
+import RestaurantOrderSection from "./pages/RestaurantOrderSection";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
+import WarningSnackbar from "./components/WarningSnackbar";
 import LoadingCenter from "./components/LoadingCenter";
 import PrivateRoute from "./components/PrivateRoute";
 import RootDialog from "./components/RootDialog";
@@ -94,6 +96,7 @@ function Main() {
     <>
       <ErrorSnackbar />
       <SuccessSnackbar />
+      <WarningSnackbar />
       <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
@@ -112,6 +115,9 @@ function Main() {
             </PrivateRoute>
             <PrivateRoute exact path="/your-restaurant/create">
               <CreateMenu />
+            </PrivateRoute>
+            <PrivateRoute exact path="/your-restaurant/orders/:id">
+              <RestaurantOrderSection />
             </PrivateRoute>
             <PrivateRoute path="/orders">
               <Orders />

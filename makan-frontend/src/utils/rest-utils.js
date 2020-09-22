@@ -7,25 +7,103 @@ import _ from "lodash";
 
 import { PAGE_SIZE } from "../constants";
 import storage from "./firebase-storage";
-import { notEmpty } from "./validators";
-import { openErrorSnackBar } from "../actions/snackbar-actions";
+import {
+  openWarningSnackBar,
+  openErrorSnackBar,
+} from "../actions/snackbar-actions";
+import { useHistory } from "react-router-dom";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-export function useGet(url) {
+function displayMessage(
+  error,
+  history,
+  dispatch,
+  skipUnauthorized = false,
+  skipForbidden = false,
+  skipNotFound = false,
+  skipOffline = false
+) {
+  const isUnauthorized =
+    error && error.response && error.response.status === 401;
+  const isForbidden = error && error.response && error.response.status === 403;
+  const isNotFound = error && error.response && error.response.status === 404;
+  const isOffline = error && !navigator.onLine;
+
+  if (isUnauthorized) {
+    // Not logged in
+    // Implement history for redirects next time
+    if (!skipUnauthorized) {
+      dispatch(
+        openWarningSnackBar("You need to login before accessing this page")
+      );
+      history.push("/login");
+    }
+  } else if (isForbidden) {
+    if (!skipForbidden) {
+      dispatch(
+        openErrorSnackBar("You do not have the permissions to access this page")
+      );
+      history.push("/");
+    }
+  } else if (isNotFound) {
+    if (!skipNotFound) {
+      history.push("/404");
+    } else if (isOffline) {
+      if (!skipOffline) {
+        dispatch(
+          openWarningSnackBar(
+            "You are currently offline. Offline functionality may be limited"
+          )
+        );
+      }
+    }
+  } else if (
+    error &&
+    !isForbidden &&
+    !isUnauthorized &&
+    !isNotFound &&
+    !isOffline
+  ) {
+    dispatch(
+      openErrorSnackBar("An unknown error occurred. Please try again later")
+    );
+  }
+}
+
+export function useGet(
+  url,
+  skipUnauthorized,
+  skipForbidden,
+  skipNotFound,
+  skipOffline
+) {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const { data, error } = useSWR(url, fetcher);
+
+  displayMessage(
+    error,
+    history,
+    dispatch,
+    skipUnauthorized,
+    skipForbidden,
+    skipNotFound,
+    skipOffline
+  );
 
   return {
     data,
-    isLoading: !data && !error,
+    isLoading: !data,
     error,
-    isUnauthorized: error && error.response && error.response.status === 401,
-    isForbidden: error && error.response && error.response.status === 403,
-    isNotFound: error && error.response && error.response.status === 404,
   };
 }
 
 export function useInfinite(url) {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const { data, size, setSize, error } = useSWRInfinite(
     (pageIndex, previousPageData) => {
       if (previousPageData && !previousPageData.length) {
@@ -35,6 +113,8 @@ export function useInfinite(url) {
     },
     fetcher
   );
+
+  displayMessage(error, history, dispatch);
 
   const isEmpty = data && data[0] && data.length === 0;
   const isEnd =
@@ -48,29 +128,20 @@ export function useInfinite(url) {
 
   return {
     data,
-    isLoading: !data && !error,
-    error,
-    isUnauthorized: error && error.response && error.response.status === 401,
-    isForbidden: error && error.response && error.response.status === 403,
-    isNotFound: error && error.response && error.response.status === 404,
+    isLoading: !data,
     isLoadingNextPage,
     isEnd,
     loadNextPage: () => setSize(size + 1),
   };
 }
 
-export function usePost(
-  dataToPost,
-  fieldsToValidate,
-  path,
-  method,
-  imageBlob = null
-) {
+export function usePost() {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
 
-  const post = async () => {
-    let err = findErrors(dataToPost, fieldsToValidate);
+  const post = async (dataToPost, path, method, imageBlob = null) => {
+    let err = {};
+
     if (imageBlob) {
       if (imageBlob.size >= 5 * 1024 * 1024) {
         err.image = "Image uploaded should not exceed 5MB";
@@ -78,10 +149,10 @@ export function usePost(
         err.image = "Make sure you uploaded a valid image";
       }
     }
-
     setErrors(err);
 
-    if (!_.isEmpty(err)) {
+    if (imageBlob && !_.isEmpty(err)) {
+      // Show image errors
       dispatch(openErrorSnackBar(parseErrors(err)));
       return false;
     }
@@ -108,60 +179,29 @@ export function usePost(
 
       return res;
     } catch (e) {
-      console.log(e.response.data);
-      const err = {
-        unknown: "Action failed, please try again",
-      };
-      setErrors(err);
+      const err = e.response.data;
+      if ("errors" in err) {
+        setErrors(err.errors);
+      } else {
+        setErrors(err);
+      }
       dispatch(openErrorSnackBar(parseErrors(err)));
       return false;
     }
   };
 
   const resetErrors = () => setErrors({});
-  return [errors, post, resetErrors];
-}
-
-function findErrors(data, fieldsToValidate) {
-  let errors = {};
-
-  _.forEach(data, (value, key) => {
-    if (key in fieldsToValidate) {
-      const validity = isValid(value, fieldsToValidate[key]);
-      if (!validity.isValid) {
-        errors = { ...errors, [key]: validity.message };
-      }
-    } else if (
-      _.isObject(value) &&
-      !_.isFunction(value) &&
-      value !== undefined
-    ) {
-      errors = {
-        ...errors,
-        ...findErrors(data[key], fieldsToValidate),
-      };
-    }
-  });
-
-  return errors;
-}
-
-function isValid(fieldValue, validator) {
-  if (validator === undefined) {
-    // check if is empty
-    return notEmpty(fieldValue);
-  }
-
-  return validator(fieldValue);
+  return { errors, post, resetErrors };
 }
 
 function parseErrors(err) {
-  let result = [];
-  for (const key in err) {
-    result.push(
-      <p key={key}>{(key !== "unknown" ? key + ": " : "") + err[key]}</p>
-    );
+  if (_.isObject(err) && "errors" in err) {
+    let result = [];
+    for (const key in err.errors) {
+      result.push(<p key={key}>{err.errors[key].join(" ")}</p>);
+    }
+    return result;
+  } else {
+    return <p>An error has occurred, please try again</p>;
   }
-
-  return result;
 }

@@ -52,17 +52,7 @@ export default function Login() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const [errors, post, resetErrors] = usePost(
-    {
-      user: inputs,
-    },
-    {
-      login: undefined,
-      password: undefined,
-    },
-    "/api/v1/users/sign_in",
-    "POST"
-  );
+  const { errors, post, resetErrors } = usePost();
 
   const onChange = (e) => {
     resetErrors();
@@ -75,7 +65,22 @@ export default function Login() {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(
-      loginUser(post, inputs.isRemember, () => setIsLoading(false), history)
+      loginUser(
+        () =>
+          post(
+            {
+              user: {
+                login: inputs.login,
+                password: inputs.password,
+              },
+            },
+            "/api/v1/users/sign_in",
+            "POST"
+          ),
+        inputs.isRemember,
+        () => setIsLoading(false),
+        history
+      )
     );
   };
 
