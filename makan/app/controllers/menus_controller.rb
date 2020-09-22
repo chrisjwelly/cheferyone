@@ -35,7 +35,7 @@ class MenusController < ApplicationController
 
   # GET /menus/recent
   def recent
-    @menus = Menu.limit(@limit).offset(@offset)
+    @menus = Menu.order(created_at: :desc).limit(@limit).offset(@offset)
     render json: @menus
   end
 
