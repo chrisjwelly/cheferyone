@@ -8,7 +8,7 @@ class Menu < ApplicationRecord
   after_touch :index!
   # Menu search: name, menu_image_url, tags, description, menu_id 
   algoliasearch do
-    attributes :name, :description, :image_url, :price, :rating, :id, :restaurant_id, :tags
+    attributes :name, :description, :image_url, :price, :id, :restaurant_id, :tags
     searchableAttributes ['name', 'description']
   end
 

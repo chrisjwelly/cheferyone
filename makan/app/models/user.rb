@@ -31,10 +31,13 @@ class User < ApplicationRecord
   has_many :notifications, as: :notifiable 
   has_many :orders
 
+  validates :username, presence: { message: "Username can't be empty" }
+
   acts_as_token_authenticatable
   def as_json(options)
     super(options).merge({
-      "tags" => restaurant.tags,
+      "is_chef" => chef?,
+      "restaurant_tags" => restaurant.nil? ? [] : restaurant.tags
     })
   end
   def self.find_for_database_authentication warden_condition
