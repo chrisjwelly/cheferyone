@@ -1,7 +1,7 @@
 class RestaurantsController < ApplicationController
   acts_as_token_authentication_handler_for User
   before_action :set_restaurant, only: [:show, :update, :destroy]
-  before_action :ensure_chef!, only: [:show, :update, :destroy]
+  before_action :ensure_chef!, only: [:update, :destroy]
 
   # POST /your_restaurant
   def create
@@ -24,6 +24,17 @@ class RestaurantsController < ApplicationController
 
   # GET /your_restaurant
   def show
+    @restaurant = current_user.restaurant
+
+    if @restaurant.nil?
+      render json: {
+        errors: {
+          messages: ["You need to create your-restaurant before accessing those endpoints"]
+        }
+      }, status: :not_found
+      return
+    end
+
     render json: @restaurant
   end
 
