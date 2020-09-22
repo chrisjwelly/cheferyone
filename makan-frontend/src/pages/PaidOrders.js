@@ -8,6 +8,8 @@ import _ from "lodash";
 import Paper from "@material-ui/core/Paper";
 import Chip from "@material-ui/core/Chip";
 import clsx from "clsx";
+import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 
 import { useGet } from "../utils/rest-utils";
 import OrderCard from "../components/OrderCard";
@@ -64,8 +66,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PaidOrders() {
   const classes = useStyles();
   const { isLoading, data } = useGet("/api/v1/orders");
-
-  console.log(data);
+  const history = useHistory();
 
   if (isLoading) {
     return <LoadingCenter />;
@@ -131,6 +132,20 @@ export default function PaidOrders() {
                             label={uppercaseFirst(order.status)}
                           ></Chip>
                         </Grid>
+                        {order.status === "completed" && (
+                          <Grid item xs={12}>
+                            <Button
+                              color="secondary"
+                              size="small"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                history.push(`/menu/${order.id}/review`);
+                              }}
+                            >
+                              Review
+                            </Button>
+                          </Grid>
+                        )}
                       </Grid>
                     </OrderCard>
                   ))}

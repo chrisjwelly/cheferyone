@@ -1,13 +1,8 @@
 import React from "react";
-import _ from "lodash";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import StarIcon from "@material-ui/icons/Star";
-import StarHalfIcon from "@material-ui/icons/StarHalf";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-
-const MAX_RATING = 5;
+import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles((theme) => ({
   star: {
@@ -23,36 +18,22 @@ export default function RatingStars({ rating, size }) {
 
   const nearestHalf = Math.round(Number(rating) * 2) / 2;
 
-  const numberOfFullStars = Math.floor(nearestHalf);
-  const numberOfHalfStars = (nearestHalf - numberOfFullStars) * 2;
-  const numberOfEmptyStars = MAX_RATING - numberOfFullStars - numberOfHalfStars;
-
   return (
     <Grid container wrap="nowrap" alignItems="center">
-      {[
-        ..._.range(numberOfFullStars).map((index) => (
-          <Grid key={index} item>
-            <StarIcon fontSize={size} className={classes.star} />
-          </Grid>
-        )),
-        ..._.range(numberOfHalfStars).map((index) => (
-          <Grid item key={index + numberOfFullStars}>
-            <StarHalfIcon fontSize={size} className={classes.star} />
-          </Grid>
-        )),
-        ..._.range(numberOfEmptyStars).map((index) => (
-          <Grid item key={index + numberOfFullStars + numberOfHalfStars}>
-            <StarBorderIcon fontSize={size} className={classes.star} />
-          </Grid>
-        )),
-      ]}
+      <Rating
+        name="read-only"
+        value={nearestHalf}
+        precision={0.5}
+        readOnly
+        size={size}
+      />
       <Grid item>
         <Typography
           variant="caption"
           color="textSecondary"
           className={classes.ratingText}
         >
-          {rating}
+          {Number(rating).toFixed(1)}
         </Typography>
       </Grid>
     </Grid>

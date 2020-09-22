@@ -180,7 +180,7 @@ export function usePost() {
       return res;
     } catch (e) {
       const err = e.response.data;
-      if ("errors" in err) {
+      if (_.isObject(err) && "errors" in err) {
         setErrors(err.errors);
       } else {
         setErrors(err);

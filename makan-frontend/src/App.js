@@ -21,6 +21,7 @@ import Notifications from "./pages/Notifications";
 import CreateMenu from "./pages/CreateMenu";
 import SearchPage from "./pages/SearchPage";
 import RestaurantOrderSection from "./pages/RestaurantOrderSection";
+import SubmitReview from "./pages/SubmitReview";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
@@ -133,6 +134,9 @@ function Main() {
             </PrivateRoute>
             <PrivateRoute exact path="/menu/:id/edit">
               <EditMenu />
+            </PrivateRoute>
+            <PrivateRoute exact path="/menu/:id/review">
+              <SubmitReview />
             </PrivateRoute>
             <PrivateRoute exact path="/new">
               <ListMenu section="new" />
