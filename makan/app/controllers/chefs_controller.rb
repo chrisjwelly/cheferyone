@@ -1,11 +1,13 @@
 class ChefsController < ApplicationController
-  acts_as_token_authentication_handler_for User
+  acts_as_token_authentication_handler_for User, only: [:subscribe, :unsubscribe]
   before_action :set_offset_and_limit, only: [:filter, :search, :index]
+  before_action :set_chef, only: [:show, :subscribe, :unsubscribe]
 
   # GET /chefs/filter?tags=params
   def filter
     list_of_tags = params[:tags].split(',')
-    @chefs = User.joins(:restaurant => :tags).where(restaurant: {tags: { name: list_of_tags }}).limit(@limit).offset(@offset)
+    @chefs = User.joins(:restaurant => :tags).where(restaurant: {tags: { name: list_of_tags }})
+        .distinct.limit(@limit).offset(@offset)
     render json: @chefs
   end
 
@@ -23,62 +25,47 @@ class ChefsController < ApplicationController
     render json: @chefs
   end
 
-  # GET /chefs/1
+  # GET /chefs/username1
   def show
-    @chef = all_chef.find(params[:id])
-    if @chef.nil?
-      render json: nil, status: :not_found
-    else
-      render json: @chef, status: :ok
-    end
+    render json: @chef
   end
 
-  # POST /chefs/1/subscribe
+  # POST /chefs/username1/subscribe
   def subscribe
-    @chef = all_chef.find(params[:id])
-    if @chef.nil?
-      render json: nil, status: :not_found
+    if Subscription.exists?(user: current_user, subscribable: @chef.restaurant)
+      render json: {
+        message: "Restaurant/chef has been subscribed"
+      }, status: :unprocessable_entity
     else
-      if Subscription.exists?(user: current_user, subscribable: @chef.restaurant)
-        render json: {
-          message: "Restaurant/chef has been subscribed"
-        }, status: :unprocessable_entity
-      else
-        @subscription = Subscription.create(user: current_user, subscribable: @chef.restaurant)
+      @subscription = Subscription.create(user: current_user, subscribable: @chef.restaurant)
 
-        if @subscription.save
-          render json: {
-            message: "Restaurant/chef subscribed succesfully"
-          }, status: :ok
-        else
-          render json: {
-            errors: @subscription.errors
-          }, status: :unprocessable_entity
-        end
+      if @subscription.save
+        render json: {
+          message: "Restaurant/chef subscribed succesfully"
+        }, status: :ok
+      else
+        render json: {
+          errors: @subscription.errors
+        }, status: :unprocessable_entity
       end
     end
   end
 
-  # POST /chefs/1/unsubscribe
+  # POST /chefs/username1/unsubscribe
   def unsubscribe
-    @chef = all_chef.find(params[:id])
-    if @chef.nil?
-      render json: nil, status: :not_found
+    if !Subscription.exists?(user: current_user, subscribable: @chef.restaurant)
+      render json: {
+        message: "Restaurant/chef has not been subscribed"
+      }, status: :unprocessable_entity
     else
-      if !Subscription.exists?(user: current_user, subscribable: @chef.restaurant)
+      if Subscription.where(user: current_user, subscribable: @chef.restaurant).first.destroy
         render json: {
-          message: "Restaurant/chef has not been subscribed"
-        }, status: :unprocessable_entity
+          message: "Restaurant/chef unsubscribed successfully"
+        }, status: :ok
       else
-        if Subscription.where(user: current_user, subscribable: @chef.restaurant).first.destroy
-          render json: {
-            message: "Restaurant/chef unsubscribed successfully"
-          }, status: :ok
-        else
-          render json: {
-            message: "Something went wrong"
-          }, status: :unprocessable_entity
-        end
+        render json: {
+          message: "Something went wrong"
+        }, status: :unprocessable_entity
       end
     end
   end
@@ -88,5 +75,10 @@ class ChefsController < ApplicationController
       # This will still return users but filtering out those who
       # do not have associations with restaurants by using INNER JOIN.
       User.joins(:restaurant)
+    end
+
+    def set_chef
+      @chef = User.find_by(username: params[:username])
+      not_found if @chef.nil? || !@chef.chef?
     end
 end

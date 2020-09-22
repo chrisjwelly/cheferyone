@@ -36,11 +36,14 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :chefs, only: [:index, :show] do
+    resources :chefs, only: [:index, :show], param: :username do
+      resources :menus, only: [:index, :show], controller: 'chefs/menus'
+
       collection do
         get 'filter'
         get 'search'
       end
+
       member do
         post 'subscribe'
         post 'unsubscribe'

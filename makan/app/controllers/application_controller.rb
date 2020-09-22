@@ -22,4 +22,11 @@ class ApplicationController < ActionController::API
       devise_parameter_sanitizer.permit(:account_update,
         keys: [:username, :name, :email, :password_confirmation, :current_password])
     end
+
+    # Generic 404 response for halting before action to several pages
+    def not_found
+      raise ActionController::RoutingError.new('Not Found')
+    rescue
+      render body: nil, status: :not_found
+    end
 end
