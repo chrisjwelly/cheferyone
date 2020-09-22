@@ -6,6 +6,7 @@ class User < ApplicationRecord
   after_touch :index!
   # Chef search: username, restaurant_image_url, description, tags 
   algoliasearch if: :chef? do
+    attributes :id, :email, :username
     add_attribute :image_url, :description, :tags
     searchableAttributes ['username', 'description']
   end
@@ -34,12 +35,14 @@ class User < ApplicationRecord
   validates :username, presence: { message: "Username can't be empty" }
 
   acts_as_token_authenticatable
-  def as_json(options)
-    super(options).merge({
+  def as_json(options = {})
+    new_options = options.merge({except: :authentication_token})
+    super(new_options).merge({
       "is_chef" => chef?,
       "restaurant_tags" => restaurant.nil? ? [] : restaurant.tags
     })
   end
+
   def self.find_for_database_authentication warden_condition
   	conditions = warden_condition.dup
   	login = conditions.delete(:login)
