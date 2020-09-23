@@ -10,6 +10,7 @@ class Menu < ApplicationRecord
   # Menu search: name, menu_image_url, tags, description, menu_id 
   algoliasearch do
     attributes :name, :description, :image_url, :price, :id, :restaurant_id, :tags
+    add_attribute :current_preorder
     searchableAttributes ['name', 'description']
   end
 
@@ -19,22 +20,31 @@ class Menu < ApplicationRecord
   has_many :orders, through: :preorders
   has_many :reviews, through: :orders
 
+  def current_preorder
+    now = DateTime.now
+    
+    # Invariant: There should be no overlapping intervals. Therefore either filtered_current_preorder
+    # is an Array of 0 or 1 item
+    preorders.where("preorders.start_date <= ? AND ? <= preorders.end_date ", now, now).take
+  end
+
+  # Return the current and upcoming preorders in ascending order
+  def current_and_upcoming_preorders
+    now = DateTime.now
+    preorders.where("preorders.end_date >= ? ", now).order(:start_date)
+  end
+
   # Append logo to JSON
   def as_json(options = {})
     now = DateTime.now
-    filtered_current_preorder = self.preorders.select { |preorder| time_in_range?(preorder, now) }
-    # Invariant: There should be no overlapping intervals. Therefore either filtered_current_preorder
-    # is an Array of 0 or 1 item
-    current_preorder = filtered_current_preorder.empty? ? nil : filtered_current_preorder[0]
 
     # 'order' here refers to the sorting order, and not the restaurant order
-    sorted_preorders = self.preorders.order(:start_date)
     rating = get_rating(reviews)
 
     super(options).merge({
       "tags" => tags,
       "username" => restaurant.user.username,
-      "preorders" => sorted_preorders.select { |preorder| preorder.end_date >= now },
+      "preorders" => current_and_upcoming_preorders,
       "current_preorder" => current_preorder,
       "rating" => rating,
     })
@@ -47,19 +57,11 @@ class Menu < ApplicationRecord
   private
 
     def get_rating(reviews)
-      if reviews.empty?
-        0
-      else
-        (reviews.average(:rating)).round(2)
-      end
+      (reviews.average(:rating) || 0).round(2)
     end
 
     def image_url_security
       image_source =  'https://firebasestorage.googleapis.com/v0/b/makan-a9ad2.appspot.com/o/'
       errors.add(:image_url, 'untrusted image source') unless image_url.nil? || image_url.start_with?(image_source)
-    end
-
-    def time_in_range?(preorder, datetime)
-      preorder.start_date <= datetime && preorder.end_date >= datetime
     end
 end
