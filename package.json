@@ -1,0 +1,13 @@
+{
+  "name": "cheferyone",
+  "license": "MIT",
+  "engines": {
+    "node": "10.15.3",
+    "yarn": "1.15.2"
+  },
+  "scripts": {
+    "build": "yarn --cwd makan-frontend install && yarn --cwd makan-frontend build",
+    "deploy": "cp -a makan-frontend/build/. makan/public/",
+    "heroku-postbuild": "yarn build && yarn deploy"
+  }
+}
