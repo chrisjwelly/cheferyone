@@ -18,6 +18,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 import { setOrdersTabIndex } from "../actions/orders-tab-actions";
 import { setIsShowSearchOverlay } from "../actions/search-actions";
+import { uppercaseFirst } from "../utils/general";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,8 +82,8 @@ export default function TopAppBar({ hasBell }) {
   const { index: ordersTabIndex, isShown: isOrdersTabsShown } = useSelector(
     (store) => store.ordersTab
   );
-  const isShowSearchOverlay = useSelector(
-    (store) => store.search.isShowSearchOverlay
+  const { isShowSearchOverlay, searchSection } = useSelector(
+    (store) => store.search
   );
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -125,7 +126,7 @@ export default function TopAppBar({ hasBell }) {
                       dispatch(setIsShowSearchOverlay(true));
                     }}
                     value={searchTerm}
-                    placeholder="Search…"
+                    placeholder={`${uppercaseFirst(searchSection)}...`}
                     classes={{
                       root: classes.inputRoot,
                       input: classes.inputInput,

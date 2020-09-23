@@ -25,7 +25,7 @@ const initialState = {
   dialog: { isOpen: false, title: "", body: "", actions: null },
   search: {
     isShowSearchOverlay: false,
-    searchSection: "menu",
+    searchSection: "menus",
   },
 };
 

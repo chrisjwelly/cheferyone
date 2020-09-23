@@ -32,6 +32,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import RootDialog from "./components/RootDialog";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import TopAppBar from "./components/TopAppBar";
+import SearchOverlay from "./components/SearchOverlay";
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 
@@ -103,10 +104,10 @@ function Main() {
       <WarningSnackbar />
       <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
-      <Container className={classes.root} maxWidth="sm">
-        {isShowSearchOverlay ? (
-          <h1>SearchOverlay</h1>
-        ) : (
+      {isShowSearchOverlay ? (
+        <SearchOverlay />
+      ) : (
+        <Container className={classes.root} maxWidth="sm">
           <Switch>
             <PrivateRoute exact path="/your-restaurant">
               <YourRestaurant currTab={0} />
@@ -166,8 +167,9 @@ function Main() {
               <NotFound />
             </Route>
           </Switch>
-        )}
-      </Container>
+        </Container>
+      )}
+
       {!_.isEmpty(currUser) && (
         <BottomNavigationBar className={classes.bottomNavigationBar} />
       )}

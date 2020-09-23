@@ -31,60 +31,76 @@ export default function SearchPage() {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const searchSection = useSelector((store) => store.search.searchSection);
+
   useEffect(() => {
     dispatch(setTabIndex(0));
   }, [dispatch]);
 
-  return (
-    <InfiniteScroll apiPath={`/api/v1/menus/search?query=${term}&`}>
-      {(data) =>
-        data.map((results) =>
-          results.map((result, i) => (
-            <MenuListCard
-              key={i}
-              name={result.name}
-              image={result.image_url}
-              className={classes.menuListCard}
-              link={`/menu/${result.id}/`}
-            >
-              <Typography variant="subtitle2" color="textSecondary">
-                {`S$${stringToMoney(result.price)}`}
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                color="textSecondary"
-                component="div"
-                className={classes.description}
-              >
-                <HTMLEllipsis
-                  unsafeHTML={
-                    result._highlightResult &&
-                    result._highlightResult.description &&
-                    result._highlightResult.description.value
-                      ? sanitizeHtml(
-                          result._highlightResult.description.value,
-                          {
-                            allowedTags: ["em"],
-                          }
-                        )
-                      : result.description
+  if (searchSection)
+    return (
+      <div>
+        <Typography variant="h6">{`Search ${searchSection} results`}</Typography>
+        <InfiniteScroll
+          apiPath={`/api/v1/${searchSection}/search?query=${term}&`}
+        >
+          {(data) =>
+            data.map((results) =>
+              results.map((result, i) => (
+                <MenuListCard
+                  key={i}
+                  name={
+                    searchSection === "menus" ? result.name : result.username
                   }
-                  maxLine="2"
-                  ellipsis="..."
-                  basedOn="letters"
-                />
-                <Grid container spacing={1} className={classes.tags}>
-                  {result.tags.map((t, i) => (
-                    <Grid item key={i}>
-                      <Chip size="small" label={t.name} />
+                  image={result.image_url}
+                  className={classes.menuListCard}
+                  link={
+                    searchSection === "menus"
+                      ? `/menu/${result.id}/`
+                      : `/chef/${result.username}/`
+                  }
+                >
+                  {searchSection === "menus" && (
+                    <Typography variant="subtitle2" color="textSecondary">
+                      {`S$${stringToMoney(result.price)}`}
+                    </Typography>
+                  )}
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    component="div"
+                    className={classes.description}
+                  >
+                    <HTMLEllipsis
+                      unsafeHTML={
+                        result._highlightResult &&
+                        result._highlightResult.description &&
+                        result._highlightResult.description.value
+                          ? sanitizeHtml(
+                              result._highlightResult.description.value,
+                              {
+                                allowedTags: ["em"],
+                              }
+                            )
+                          : result.description
+                      }
+                      maxLine="2"
+                      ellipsis="..."
+                      basedOn="letters"
+                    />
+                    <Grid container spacing={1} className={classes.tags}>
+                      {result.tags.map((t, i) => (
+                        <Grid item key={i}>
+                          <Chip size="small" label={t.name} />
+                        </Grid>
+                      ))}
                     </Grid>
-                  ))}
-                </Grid>
-              </Typography>
-            </MenuListCard>
-          ))
-        )
-      }
-    </InfiniteScroll>
-  );
+                  </Typography>
+                </MenuListCard>
+              ))
+            )
+          }
+        </InfiniteScroll>
+      </div>
+    );
 }

@@ -5,7 +5,7 @@ import {
 
 const initialState = {
   isShowSearchOverlay: false,
-  searchSection: "menu",
+  searchSection: "menus",
 };
 
 export default function searchReducer(state = initialState, action) {
