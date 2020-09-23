@@ -24,7 +24,7 @@ class Order < ApplicationRecord
       return if quantity.blank?
 
       # Do not include orders which have ended (cancelled) in the computation
-      non_ended_orders = preorder.orders.where.not(status: Order.statuses[:ended])
+      non_ended_orders = preorder.get_orders_for_quantity
 
       # Exclude self. Otherwise this will create troubles when updating
       preorder_ordered_quantity = non_ended_orders.where.not(id: id).sum(:quantity)

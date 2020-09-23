@@ -10,7 +10,7 @@ class Preorder < ApplicationRecord
 
   def as_json(options = {})
     # Ignore those which have ended ("cancelled")
-    ordered_quantity = self.orders.where.not(status: Order.statuses[:ended]).sum(:quantity)
+    ordered_quantity = get_orders_for_quantity.sum(:quantity)
     super(options).merge({
       "ordered_quantity" => ordered_quantity
     })
@@ -19,6 +19,13 @@ class Preorder < ApplicationRecord
   def has_started?
     now = DateTime.now
     now >= start_date
+  end
+
+  def get_orders_for_quantity
+    ordered_quantity = self.orders.where("orders.status != ? AND orders.status != ?",
+      Order.statuses[:ended],
+      Order.statuses[:unpaid])
+    ordered_quantity
   end
 
   private
