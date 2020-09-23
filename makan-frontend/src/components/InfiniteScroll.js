@@ -24,7 +24,7 @@ export default function InfiniteScroll({ apiPath, children }) {
       loadNextPage();
     }
   };
-  
+
   if (isLoading) {
     return <LoadingCenter />;
   } else {

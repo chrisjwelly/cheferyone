@@ -10,7 +10,7 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PersonIcon from "@material-ui/icons/Person";
 import clsx from "clsx";
 
-import { setSearchInactive } from "../actions/search-actions";
+import { setIsShowSearchOverlay } from "../actions/search-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,7 +30,7 @@ export default function BottomNavigationBar({ className }) {
       value={activeTab}
       showLabels
       className={clsx(className, classes.root)}
-      onClick={() => dispatch(setSearchInactive())}
+      onClick={() => dispatch(setIsShowSearchOverlay(false))}
     >
       <BottomNavigationAction
         label="Menus"

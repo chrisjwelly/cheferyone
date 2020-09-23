@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, fade } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,13 +17,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 import { setOrdersTabIndex } from "../actions/orders-tab-actions";
-import {
-  setSearchTerm,
-  setSearchState,
-  setSearchInactive,
-  setIsSearching,
-  setSearchPath,
-} from "../actions/search-actions";
+import { setIsShowSearchOverlay } from "../actions/search-actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,19 +81,25 @@ export default function TopAppBar({ hasBell }) {
   const { index: ordersTabIndex, isShown: isOrdersTabsShown } = useSelector(
     (store) => store.ordersTab
   );
-  const { term: searchTerm, isActive: isSearchActive } = useSelector(
-    (store) => store.search
+  const isShowSearchOverlay = useSelector(
+    (store) => store.search.isShowSearchOverlay
   );
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <>
       <AppBar className={classes.root}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            {isNarrow && isSearchActive ? "" : "Cheferyone"}
+            {isNarrow && isShowSearchOverlay ? "" : "Cheferyone"}
           </Typography>
-          {isSearchActive && (
-            <IconButton onMouseDown={() => dispatch(setSearchInactive())}>
+          {isShowSearchOverlay && (
+            <IconButton
+              onMouseDown={() => {
+                dispatch(setIsShowSearchOverlay(false));
+              }}
+            >
               <ArrowBackIcon className={classes.exitSearchButton} />
             </IconButton>
           )}
@@ -113,21 +113,23 @@ export default function TopAppBar({ hasBell }) {
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (searchTerm !== "") {
-                      dispatch(setSearchPath("", ""));
-                      dispatch(setIsSearching(true));
+                      dispatch(setIsShowSearchOverlay(false));
+                      history.push(`/search/${searchTerm}`);
                     }
                   }}
                 >
                   <InputBase
-                    onFocus={() => dispatch(setSearchState(true))}
-                    onChange={(e) => dispatch(setSearchTerm(e.target.value))}
+                    onClick={() => dispatch(setIsShowSearchOverlay(true))}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      dispatch(setIsShowSearchOverlay(true));
+                    }}
                     value={searchTerm}
                     placeholder="Search…"
                     classes={{
                       root: classes.inputRoot,
                       input: classes.inputInput,
                     }}
-                    inputProps={{ "aria-label": "search" }}
                   />
                 </form>
               </div>

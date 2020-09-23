@@ -92,7 +92,9 @@ function App() {
 function Main() {
   const classes = useStyles();
   const currUser = useSelector((store) => store.auth.user);
-  const isSearchActive = useSelector((store) => store.search.isActive);
+  const isShowSearchOverlay = useSelector(
+    (store) => store.search.isShowSearchOverlay
+  );
 
   return (
     <>
@@ -102,8 +104,8 @@ function Main() {
       <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
       <Container className={classes.root} maxWidth="sm">
-        {isSearchActive ? (
-          <SearchPage />
+        {isShowSearchOverlay ? (
+          <h1>SearchOverlay</h1>
         ) : (
           <Switch>
             <PrivateRoute exact path="/your-restaurant">
@@ -141,6 +143,9 @@ function Main() {
             </PrivateRoute>
             <PrivateRoute exact path="/new">
               <ListMenu section="new" />
+            </PrivateRoute>
+            <PrivateRoute exact path="/search/:term">
+              <SearchPage />
             </PrivateRoute>
             <Route exact path="/register">
               <Register />

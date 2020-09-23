@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
+import LinesEllipsis from "react-lines-ellipsis";
 
 import NotFound from "./NotFound";
 import MenuListCard from "../components/MenuListCard";
@@ -64,16 +65,26 @@ function MenuList({ title, apiPath }) {
                     <Typography variant="subtitle2" color="textSecondary">
                       {`S$${stringToMoney(menu.price)}`}
                     </Typography>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      {menu.username}
+                    <Typography
+                      variant="subtitle2"
+                      color="textSecondary"
+                      component="div"
+                    >
+                      <LinesEllipsis
+                        text={menu.description}
+                        maxLine="2"
+                        ellipsis="..."
+                        trimRight
+                        basedOn="letters"
+                      />
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      {`Status: ${menu.current_preorder ? "Open" : "Closed"}`}
                     </Typography>
                     <Grid container spacing={1} className={classes.tags}>
                       {menu.tags.map((t, i) => (
                         <Grid item key={i}>
-                          <Chip
-                            size="small"
-                            label={t.name}
-                          />
+                          <Chip size="small" label={t.name} />
                         </Grid>
                       ))}
                     </Grid>

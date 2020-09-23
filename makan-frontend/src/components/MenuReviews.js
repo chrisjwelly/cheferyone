@@ -38,8 +38,10 @@ export default function MenuReviews({ id }) {
                     </Grid>
                     <Grid item>
                       <Typography variant="caption">
-                        {console.log(review.created_at)}
-                        {format(new Date(review.created_at), "dd/MM/yy")}
+                        {`Ordered on: ${format(
+                          new Date(review.created_at),
+                          "dd/MM/yy"
+                        )}`}
                       </Typography>
                     </Grid>
                   </Grid>
