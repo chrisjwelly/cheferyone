@@ -6,6 +6,7 @@ import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import axios from "axios";
+import ReactGA from "react-ga";
 
 import Home from "./pages/Home";
 import ListMenu from "./pages/ListMenu";
@@ -55,6 +56,8 @@ function App() {
 
   const currUser = useSelector((store) => store.auth.user);
   useEffect(() => {
+    ReactGA.initialize("UA-178745693-1");
+
     async function hydrateRedux() {
       if (_.isEmpty(currUser)) {
         const user =
@@ -67,6 +70,9 @@ function App() {
           dispatch(setCurrentUser(userObj));
           try {
             await axios.get("/api/v1/authenticated");
+            ReactGA.set({
+              email: userObj.email,
+            });
           } catch (err) {
             if (err.response && err.response.status === 401) {
               // Is online and unauthorized

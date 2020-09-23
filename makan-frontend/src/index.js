@@ -3,9 +3,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter as Router } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
+import { createBrowserHistory } from "history";
+import ReactGA from "react-ga";
 import ActionCableProvider from "@thrash-industries/react-actioncable-provider";
 
 import store from "./store";
@@ -15,10 +17,17 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.patch["Content-Type"] = "application/json";
 axios.defaults.headers.delete["Content-Type"] = "application/json";
 
+const history = createBrowserHistory();
+
+history.listen((location) => {
+  ReactGA.set({ page: location.pathname }); // Update the user's current page
+  ReactGA.pageview(location.pathname); // Record a pageview for the given page
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Router>
+      <Router history={history}>
         <SWRConfig value={{ shouldRetryOnError: false }}>
           <ActionCableProvider url="ws://localhost:3000/cable?token=chef1">
             <App />

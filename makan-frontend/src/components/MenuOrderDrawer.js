@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import ReactGA from "react-ga";
 
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
 import { usePost } from "../utils/rest-utils";
@@ -73,6 +74,11 @@ export default function MenuOrderDrawer({
   const { post } = usePost();
 
   const onSubmit = async () => {
+    ReactGA.event({
+      category: "Add to cart",
+      action: "User added item to cart",
+    });
+
     const res = await post(
       {
         order: {
