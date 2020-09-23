@@ -10,6 +10,10 @@ class User < ApplicationRecord
     add_attribute :image_url, :description, :tags, :location
     searchableAttributes ['username', 'description']
   end
+  
+  def chef?
+    not restaurant.nil?
+  end
 
   def image_url
     chef? ? restaurant.image_url : nil
@@ -55,9 +59,5 @@ class User < ApplicationRecord
   	login = conditions.delete(:login)
   	where(conditions).where(["lower(username) = :value OR lower(email) = :value",
       { value: login.downcase}]).first
-  end
-  
-  def chef?
-    not restaurant.nil?
   end
 end
