@@ -34,7 +34,7 @@ class MenusController < ApplicationController
   # GET /menus/near_you?latitude=1.1213123&longitude=12.123123213
   def near_you
     origin = nil
-    if (params[:latitude].empty? || params[:longitude].empty?)
+    if (params[:latitude].blank? || params[:longitude].blank?)
       origin = DEFAULT_ORIGIN
     else
       origin = [params[:latitude], params[:longitude]]
