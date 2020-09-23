@@ -50,7 +50,7 @@ class User < ApplicationRecord
     super(new_options).merge({
       "is_chef" => chef?,
       "tags" => tags,
-      "decription" => description,
+      "description" => description,
       "image_url" => image_url,
       "location" => location
     })
