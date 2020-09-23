@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import Typography from "@material-ui/core/Typography";
 import HTMLEllipsis from "react-lines-ellipsis/lib/html";
 import sanitizeHtml from "sanitize-html";
@@ -40,7 +40,7 @@ export default function SearchPage({ isFilter }) {
   useEffect(() => {
     dispatch(setTabIndex(0));
     dispatch(setSearchSection(searchSection));
-  }, [dispatch]);
+  }, [dispatch, searchSection]);
 
   if (searchSection)
     return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -7,23 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import axios from "axios";
 import ReactGA from "react-ga";
-
-import Home from "./pages/Home";
-import ListMenu from "./pages/ListMenu";
-import Login from "./pages/Login";
-import Menu from "./pages/Menu";
-import NotFound from "./pages/NotFound";
-import Orders from "./pages/Orders";
-import Profile from "./pages/Profile";
-import Register from "./pages/Register";
-import YourRestaurant from "./pages/YourRestaurant";
-import EditMenu from "./pages/EditMenu";
-import Notifications from "./pages/Notifications";
-import Chef from "./pages/Chef";
-import CreateMenu from "./pages/CreateMenu";
-import SearchPage from "./pages/SearchPage";
-import RestaurantOrderSection from "./pages/RestaurantOrderSection";
-import SubmitReview from "./pages/SubmitReview";
 
 import BottomNavigationBar from "./components/BottomNavigationBar";
 import ErrorSnackbar from "./components/ErrorSnackbar";
@@ -36,6 +19,25 @@ import TopAppBar from "./components/TopAppBar";
 import SearchOverlay from "./components/SearchOverlay";
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
+
+const Home = lazy(() => import("./pages/Home"));
+const ListMenu = lazy(() => import("./pages/ListMenu"));
+const Login = lazy(() => import("./pages/Login"));
+const Menu = lazy(() => import("./pages/Menu"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Orders = lazy(() => import("./pages/Orders"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Register = lazy(() => import("./pages/Register"));
+const YourRestaurant = lazy(() => import("./pages/YourRestaurant"));
+const EditMenu = lazy(() => import("./pages/EditMenu"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const Chef = lazy(() => import("./pages/Chef"));
+const CreateMenu = lazy(() => import("./pages/CreateMenu"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const RestaurantOrderSection = lazy(() =>
+  import("./pages/RestaurantOrderSection")
+);
+const SubmitReview = lazy(() => import("./pages/SubmitReview"));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,68 +116,70 @@ function Main() {
         <SearchOverlay />
       ) : (
         <Container className={classes.root} maxWidth="sm">
-          <Switch>
-            <PrivateRoute exact path="/your-restaurant">
-              <YourRestaurant currTab={0} />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/orders">
-              <YourRestaurant currTab={1} />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/edit">
-              <YourRestaurant currTab={2} />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/create">
-              <CreateMenu />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/orders/:id">
-              <RestaurantOrderSection />
-            </PrivateRoute>
-            <PrivateRoute path="/orders">
-              <Orders />
-            </PrivateRoute>
-            <PrivateRoute path="/profile">
-              <Profile />
-            </PrivateRoute>
-            <PrivateRoute exact path="/recommended">
-              <ListMenu section="recommended" />
-            </PrivateRoute>
-            <PrivateRoute exact path="/nearby">
-              <ListMenu section="nearby" />
-            </PrivateRoute>
-            <PrivateRoute exact path="/menu/:id/edit">
-              <EditMenu />
-            </PrivateRoute>
-            <PrivateRoute exact path="/menu/:id/review">
-              <SubmitReview />
-            </PrivateRoute>
-            <PrivateRoute exact path="/new">
-              <ListMenu section="new" />
-            </PrivateRoute>
-            <PrivateRoute exact path="/search/:section/:term">
-              <SearchPage />
-            </PrivateRoute>
-            <PrivateRoute exact path="/filter/:section/:term">
-              <SearchPage isFilter />
-            </PrivateRoute>
-            <Route exact path="/register">
-              <Register />
-            </Route>
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/menu/:id">
-              <Menu />
-            </Route>
-            <Route exact path="/chef/:username">
-              <Chef />
-            </Route>
-            <Route exact path="/">
-              <Home />
-            </Route>
-            <Route path="*">
-              <NotFound />
-            </Route>
-          </Switch>
+          <Suspense fallback={<LoadingCenter />}>
+            <Switch>
+              <PrivateRoute exact path="/your-restaurant">
+                <YourRestaurant currTab={0} />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/orders">
+                <YourRestaurant currTab={1} />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/edit">
+                <YourRestaurant currTab={2} />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/create">
+                <CreateMenu />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/orders/:id">
+                <RestaurantOrderSection />
+              </PrivateRoute>
+              <PrivateRoute path="/orders">
+                <Orders />
+              </PrivateRoute>
+              <PrivateRoute path="/profile">
+                <Profile />
+              </PrivateRoute>
+              <PrivateRoute exact path="/recommended">
+                <ListMenu section="recommended" />
+              </PrivateRoute>
+              <PrivateRoute exact path="/nearby">
+                <ListMenu section="nearby" />
+              </PrivateRoute>
+              <PrivateRoute exact path="/menu/:id/edit">
+                <EditMenu />
+              </PrivateRoute>
+              <PrivateRoute exact path="/menu/:id/review">
+                <SubmitReview />
+              </PrivateRoute>
+              <PrivateRoute exact path="/new">
+                <ListMenu section="new" />
+              </PrivateRoute>
+              <PrivateRoute exact path="/search/:section/:term">
+                <SearchPage />
+              </PrivateRoute>
+              <PrivateRoute exact path="/filter/:section/:term">
+                <SearchPage isFilter />
+              </PrivateRoute>
+              <Route exact path="/register">
+                <Register />
+              </Route>
+              <Route exact path="/login">
+                <Login />
+              </Route>
+              <Route exact path="/menu/:id">
+                <Menu />
+              </Route>
+              <Route exact path="/chef/:username">
+                <Chef />
+              </Route>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route path="*">
+                <NotFound />
+              </Route>
+            </Switch>
+          </Suspense>
         </Container>
       )}
 

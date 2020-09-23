@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -64,7 +64,9 @@ export default function SearchOverlay() {
             fullWidth
             onClick={() => {
               dispatch(setIsShowSearchOverlay(false));
-              history.push(`/filter/${searchSection}/${selectedTags.join(",")}`);
+              history.push(
+                `/filter/${searchSection}/${selectedTags.join(",")}`
+              );
             }}
           >
             {`View filtered ${searchSection}`}

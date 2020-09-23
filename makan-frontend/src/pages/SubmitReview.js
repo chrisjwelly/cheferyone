@@ -12,6 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import Rating from "@material-ui/lab/Rating";
 import { useParams, useHistory } from "react-router-dom";
 import clsx from "clsx";
+import ReactGA from "react-ga";
 
 import LoadingButton from "../components/LoadingButton";
 import CancelButton from "../components/CancelButton";
