@@ -12,6 +12,9 @@ import InfiniteScroll from "../components/InfiniteScroll";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { stringToMoney } from "../utils/general";
 import RatingStars from "../components/RatingStars";
+import { useGet } from "../utils/rest-utils";
+import LoadingCenter from "../components/LoadingCenter";
+import ChefHeader from "../components/ChefHeader";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -32,12 +35,25 @@ export default function Chef() {
   const dispatch = useDispatch();
   const { username } = useParams();
 
+  const chefData = useGet(`/api/v1/chefs/${username}/`);
+
   useEffect(() => {
     dispatch(setTabIndex(0));
   }, [dispatch]);
 
   return (
     <div>
+      {chefData.isLoading ? (
+        <LoadingCenter />
+      ) : (
+        <ChefHeader
+          username={chefData.data.username}
+          image_url={chefData.data.image_url}
+          description={chefData.data.description}
+          location={chefData.data.location}
+          tags={chefData.data.tags}
+        />
+      )}
       <InfiniteScroll apiPath={`/api/v1/chefs/${username}/menus`}>
         {(data) =>
           data.map((menus) => {

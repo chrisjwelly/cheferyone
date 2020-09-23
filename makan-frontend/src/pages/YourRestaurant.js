@@ -29,6 +29,7 @@ import { openSuccessSnackBar } from "../actions/snackbar-actions";
 import { stringToMoney } from "../utils/general";
 import LoadingCenter from "../components/LoadingCenter";
 import Fab from "../components/FloatingActionButton";
+import ChefHeader from "../components/ChefHeader";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -140,6 +141,8 @@ function MenuTab() {
     );
   };
 
+  const chefData = useGet(`/api/v1/your_restaurant/`);
+
   return (
     <div>
       <Fab
@@ -149,6 +152,17 @@ function MenuTab() {
       >
         <AddIcon />
       </Fab>
+      {chefData.isLoading ? (
+        <LoadingCenter />
+      ) : (
+        <ChefHeader
+          username={chefData.data.username}
+          image_url={chefData.data.image_url}
+          description={chefData.data.description}
+          location={chefData.data.location}
+          tags={chefData.data.tags}
+        />
+      )}
       <InfiniteScroll apiPath={"/api/v1/your_restaurant/menus"}>
         {(data) =>
           data.map((menus) => {

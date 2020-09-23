@@ -26,7 +26,7 @@ export default function RestaurantOrders() {
     return (
       <div>
         <Typography variant="h6">Paid</Typography>
-        {paidData.slice(0, PREVIEW_LENGTH).map((order, i) => (
+        {paidData.reverse().slice(0, PREVIEW_LENGTH).map((order, i) => (
           <OrderCard order={order} key={i}>
             <OrdersChangeStatusButtons
               order={order}
@@ -35,7 +35,7 @@ export default function RestaurantOrders() {
             />
           </OrderCard>
         ))}
-        {paidData.length === 0 ? (
+        {paidData.reverse().length === 0 ? (
           <Typography variant="caption" color="textSecondary">
             It seems a little lonely here...
           </Typography>
@@ -52,7 +52,7 @@ export default function RestaurantOrders() {
             />
           </OrderCard>
         ))}
-        {completedData.length === 0 ? (
+        {completedData.reverse().length === 0 ? (
           <Typography variant="caption" color="textSecondary">
             It seems a little lonely here...
           </Typography>

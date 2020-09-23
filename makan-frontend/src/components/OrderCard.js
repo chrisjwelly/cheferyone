@@ -8,6 +8,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { format } from "date-fns";
 
 import { stringToMoney } from "../utils/general";
 
@@ -54,20 +55,6 @@ export default function OrderCard({ order, children }) {
       image={image_url}
       className={classes.menuListCard}
     >
-      <Typography
-        variant="subtitle2"
-        color="textSecondary"
-        component="div"
-        className={classes.description}
-      >
-        <LinesEllipsis
-          text={description}
-          maxLine="2"
-          ellipsis="..."
-          trimRight
-          basedOn="letters"
-        />
-      </Typography>
       <Grid container justify="space-between">
         <Grid item>
           <Typography variant="caption">
@@ -77,6 +64,9 @@ export default function OrderCard({ order, children }) {
         <Grid item>
           <Typography variant="caption">{`x${order.quantity}`}</Typography>
         </Grid>
+      </Grid>
+      <Grid item>
+        <Typography variant="caption">{`Customer email: ${order.email}`}</Typography>
       </Grid>
       {order.remarks !== "" && (
         <Accordion
@@ -102,6 +92,9 @@ export default function OrderCard({ order, children }) {
         </Accordion>
       )}
       {children}
+      <Typography variant="caption">
+        {`Updated at: ${format(new Date(order.updated_at), "dd/MM/yy hh:mma")}`}
+      </Typography>
     </MenuListCard>
   );
 }

@@ -18,7 +18,7 @@ export default function InfiniteScroll({ apiPath, children }) {
   const classes = useStyles();
   const res = useInfinite(apiPath);
   const { data, isLoading, isLoadingNextPage, isEnd, loadNextPage } = res;
-
+  
   const requestNextPage = (isVisible) => {
     if (isVisible && !isEnd && !isLoadingNextPage) {
       loadNextPage();

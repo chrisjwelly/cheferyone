@@ -6,6 +6,7 @@ import { useGet } from "../utils/rest-utils";
 import LoadingCenter from "../components/LoadingCenter";
 import OrderCard from "../components/OrderCard";
 import OrdersChangeStatusButtons from "../components/OrdersChangeStatusButtons";
+import { uppercaseFirst } from "../utils/general";
 
 export default function RestaurantOrdersSection() {
   const { id } = useParams();
@@ -22,8 +23,8 @@ export default function RestaurantOrdersSection() {
   } else {
     return (
       <div>
-        <Typography variant="h6">Paid</Typography>
-        {data.map((order, i) => (
+        <Typography variant="h6">{uppercaseFirst(id)}</Typography>
+        {[...data].reverse().map((order, i) => (
           <OrderCard order={order} key={i}>
             <OrdersChangeStatusButtons
               order={order}
