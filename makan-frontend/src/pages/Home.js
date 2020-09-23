@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@material-ui/core/Grid";
@@ -40,21 +40,38 @@ export default function Home() {
 }
 
 function Authenticated() {
+  const location = useSelector((store) => store.location);
+  const [hasLocationName, setHasLocationName] = useState(
+    !!location && !!location.name
+  );
+
+  const [nearbyPath, setNearbyPath] = useState(
+    `/api/v1/menus/near_you?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+  );
+
+  useEffect(() => {
+    setHasLocationName(!!location && !!location.name);
+
+    if (!!location) {
+      setNearbyPath(
+        `/api/v1/menus/near_you?latitude=${location.lat}&longitude=${location.lng}&limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+      );
+    }
+  }, [location]);
+
   const recommended = useGet(
     `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
   );
-  const nearby = useGet(
-    `/api/v1/menus/near_you?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
-  );
+  const nearby = useGet(nearbyPath);
   const recent = useGet(
     `/api/v1/menus/recent?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
   );
 
-  if (recommended.isLoading || nearby.isLoading || recent.isLoading) {
-    return <LoadingCenter />;
-  } else {
-    return (
-      <>
+  return (
+    <>
+      {recommended.isLoading ? (
+        <LoadingCenter />
+      ) : (
         <SuggestionsSectionContainer
           title="Recommended"
           seeMorePath="/recommended"
@@ -71,7 +88,16 @@ function Authenticated() {
             />
           ))}
         </SuggestionsSectionContainer>
-        <SuggestionsSectionContainer title="Near You" seeMorePath="/nearby">
+      )}
+      {nearby.isLoading ? (
+        <LoadingCenter />
+      ) : (
+        <SuggestionsSectionContainer
+          title="Near You"
+          seeMorePath="/nearby"
+          locationName={!hasLocationName ? undefined : location.name}
+          isNearby
+        >
           {nearby.data.map((obj, i) => (
             <MenuCard
               key={i}
@@ -84,6 +110,10 @@ function Authenticated() {
             />
           ))}
         </SuggestionsSectionContainer>
+      )}
+      {recent.isLoading ? (
+        <LoadingCenter />
+      ) : (
         <SuggestionsSectionContainer title="New" seeMorePath="/new">
           {recent.data.map((obj, i) => (
             <MenuCard
@@ -97,9 +127,9 @@ function Authenticated() {
             />
           ))}
         </SuggestionsSectionContainer>
-      </>
-    );
-  }
+      )}
+    </>
+  );
 }
 
 function NotAuthenticated() {

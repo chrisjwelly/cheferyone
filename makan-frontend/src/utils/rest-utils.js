@@ -25,45 +25,43 @@ function displayMessage(
   skipOffline = false
 ) {
   const isUnauthorized =
-    error && error.response && error.response.status === 401;
-  const isForbidden = error && error.response && error.response.status === 403;
-  const isNotFound = error && error.response && error.response.status === 404;
-  const isOffline = error && !navigator.onLine;
+    error &&
+    error.response &&
+    error.response.status === 401 &&
+    !skipUnauthorized;
+  const isForbidden =
+    error && error.response && error.response.status === 403 && !skipForbidden;
+  const isNotFound =
+    error && error.response && error.response.status === 404 && !skipNotFound;
+  const isOffline = error && !navigator.onLine && !skipOffline;
 
   if (isUnauthorized) {
     // Not logged in
     // Implement history for redirects next time
-    if (!skipUnauthorized) {
-      dispatch(
-        openWarningSnackBar("You need to login before accessing this page")
-      );
-      history.push("/login");
-    }
+    dispatch(
+      openWarningSnackBar("You need to login before accessing this page")
+    );
+    history.push("/login");
   } else if (isForbidden) {
-    if (!skipForbidden) {
-      dispatch(
-        openErrorSnackBar("You do not have the permissions to access this page")
-      );
-      history.push("/");
-    }
+    dispatch(
+      openErrorSnackBar("You do not have the permissions to access this page")
+    );
+
+    history.push("/");
   } else if (isNotFound) {
-    if (!skipNotFound) {
-      history.push("/404");
-    } else if (isOffline) {
-      if (!skipOffline) {
-        dispatch(
-          openWarningSnackBar(
-            "You are currently offline. Offline functionality may be limited"
-          )
-        );
-      }
-    }
+    history.push("/404");
+  } else if (isOffline) {
+    dispatch(
+      openWarningSnackBar(
+        "You are currently offline. Offline functionality may be limited"
+      )
+    );
   } else if (
     error &&
-    !isForbidden &&
-    !isUnauthorized &&
-    !isNotFound &&
-    !isOffline
+    error.response &&
+    error.response.status !== 401 &&
+    error.response.status !== 403 &&
+    error.response.status !== 404
   ) {
     dispatch(
       openErrorSnackBar("An unknown error occurred. Please try again later")

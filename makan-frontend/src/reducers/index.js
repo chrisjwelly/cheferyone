@@ -7,6 +7,7 @@ import restaurantTabReducer from "./restaurant-tab-reducer";
 import ordersTabReducer from "./orders-tab-reducer";
 import dialogReducer from "./dialog-reducer";
 import searchReducer from "./search-reducer";
+import locationReducer from "./location-reducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -16,4 +17,5 @@ export default combineReducers({
   dialog: dialogReducer,
   search: searchReducer,
   ordersTab: ordersTabReducer,
+  location: locationReducer,
 });

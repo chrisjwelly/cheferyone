@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "@material-ui/core/Typography";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
@@ -35,7 +35,7 @@ export default function ListMenu({ section }) {
         <MenuList title="Recommended" apiPath="/api/v1/menus/recommended" />
       );
     case "nearby":
-      return <MenuList title="Near You" apiPath="/api/v1/menus/near_you" />;
+      return <NearYou />;
     case "new":
       return <MenuList title="New" apiPath="/api/v1/menus/recent" />;
     default:
@@ -43,7 +43,33 @@ export default function ListMenu({ section }) {
   }
 }
 
-function MenuList({ title, apiPath }) {
+function NearYou() {
+  const location = useSelector((store) => store.location);
+  const [hasLocationName, setHasLocationName] = useState(
+    !!location && !!location.name
+  );
+  const [nearbyPath, setNearbyPath] = useState(`/api/v1/menus/near_you`);
+  useEffect(() => {
+    setHasLocationName(!!location && !!location.name);
+
+    if (!!location) {
+      setNearbyPath(
+        `/api/v1/menus/near_you?latitude=${location.lat}&longitude=${location.lng}`
+      );
+    }
+  }, [location]);
+
+  return (
+    <MenuList
+      title="Near You"
+      apiPath={nearbyPath}
+      locationName={!hasLocationName ? undefined : location.name}
+      isNearby
+    />
+  );
+}
+
+function MenuList({ title, apiPath, locationName, isNearby }) {
   const classes = useStyles();
 
   return (
@@ -52,6 +78,11 @@ function MenuList({ title, apiPath }) {
         {(data) => (
           <>
             <Typography variant="h6">{title}</Typography>
+            {isNearby && (
+              <Typography variant="caption">{`Your location: ${
+                locationName ? locationName : "Singapore"
+              }`}</Typography>
+            )}
             {data.map((menus) => {
               return menus.map((menu) => {
                 return (

@@ -19,6 +19,7 @@ import TopAppBar from "./components/TopAppBar";
 import SearchOverlay from "./components/SearchOverlay";
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
+import { getLocation } from "./actions/location-actions";
 
 const Home = lazy(() => import("./pages/Home"));
 const ListMenu = lazy(() => import("./pages/ListMenu"));
@@ -86,6 +87,7 @@ function App() {
       }
 
       setIsLoading(false);
+      dispatch(getLocation());
     }
 
     hydrateRedux();

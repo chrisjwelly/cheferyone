@@ -27,6 +27,7 @@ const initialState = {
     isShowSearchOverlay: false,
     searchSection: "menus",
   },
+  location: "loading", // Either false, "loading", or { name: null, lat, lng }
 };
 
 const middleware = [thunk];

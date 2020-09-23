@@ -11,12 +11,20 @@ const useStyles = makeStyles((theme) => ({
   root: {
     paddingBottom: theme.spacing(3),
   },
+  location: {
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    display: "block",
+  },
 }));
 
 export default function SuggestionsSectionContainer({
   title,
   seeMorePath,
   children,
+  locationName,
+  isNearby,
 }) {
   const classes = useStyles();
   return (
@@ -31,6 +39,14 @@ export default function SuggestionsSectionContainer({
           </Button>
         </Grid>
       </Grid>
+      {isNearby && (
+        <Typography
+          className={classes.location}
+          variant="caption"
+        >{`Your location: ${
+          locationName ? locationName : "Singapore"
+        }`}</Typography>
+      )}
       <MenuCardContainer seeMorePath={seeMorePath}>
         {children}
       </MenuCardContainer>
