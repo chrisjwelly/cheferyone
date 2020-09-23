@@ -12,12 +12,15 @@
 
 ActiveRecord::Schema.define(version: 2020_09_22_095030) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "menus", force: :cascade do |t|
     t.string "name"
     t.string "image_url"
     t.text "description"
     t.decimal "price", precision: 10, scale: 2
-    t.integer "restaurant_id", null: false
+    t.bigint "restaurant_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["restaurant_id"], name: "index_menus_on_restaurant_id"
@@ -39,8 +42,8 @@ ActiveRecord::Schema.define(version: 2020_09_22_095030) do
     t.text "remarks"
     t.datetime "paid_date"
     t.integer "transaction_id"
-    t.integer "preorder_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "preorder_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["preorder_id"], name: "index_orders_on_preorder_id"
@@ -52,7 +55,7 @@ ActiveRecord::Schema.define(version: 2020_09_22_095030) do
     t.datetime "end_date"
     t.integer "quota"
     t.datetime "collection_date"
-    t.integer "menu_id", null: false
+    t.bigint "menu_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["menu_id"], name: "index_preorders_on_menu_id"
@@ -61,26 +64,29 @@ ActiveRecord::Schema.define(version: 2020_09_22_095030) do
   create_table "restaurants", force: :cascade do |t|
     t.text "description"
     t.string "image_url"
-    t.string "location"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
+    t.string "location", null: false
+    t.decimal "latitude", precision: 10, scale: 6, null: false
+    t.decimal "longitude", precision: 10, scale: 6, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["latitude", "longitude"], name: "index_restaurants_on_latitude_and_longitude"
     t.index ["user_id"], name: "index_restaurants_on_user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
     t.integer "rating"
     t.text "content"
-    t.integer "order_id", null: false
+    t.bigint "order_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["order_id"], name: "index_reviews_on_order_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "subscribable_type", null: false
-    t.integer "subscribable_id", null: false
+    t.bigint "subscribable_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["subscribable_type", "subscribable_id"], name: "index_subscriptions_on_subscribable_type_and_subscribable_id"
@@ -89,8 +95,8 @@ ActiveRecord::Schema.define(version: 2020_09_22_095030) do
 
   create_table "taggables_tags", id: false, force: :cascade do |t|
     t.string "taggable_type"
-    t.integer "taggable_id"
-    t.integer "tag_id"
+    t.bigint "taggable_id"
+    t.bigint "tag_id"
     t.index ["tag_id"], name: "index_taggables_tags_on_tag_id"
     t.index ["taggable_type", "taggable_id"], name: "index_taggables_tags_on_taggable_type_and_taggable_id"
   end

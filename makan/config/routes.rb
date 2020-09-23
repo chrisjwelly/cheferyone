@@ -74,6 +74,7 @@ Rails.application.routes.draw do
             get 'paid'
             get 'confirmed'
             get 'completed'
+            get 'ended'
           end
 
           member do

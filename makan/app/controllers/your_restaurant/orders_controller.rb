@@ -42,6 +42,11 @@ class YourRestaurant::OrdersController < YourRestaurant::ApplicationController
     @orders = current_user.restaurant.orders.where(status: Order.statuses[:completed])
     render json: @orders
   end
+
+  def ended
+    @orders = current_user.restaurant.orders.where(status: Order.statuses[:ended])
+    render json: @orders
+  end
   
   private
     # Use callbacks to share common setup or constraints between actions.

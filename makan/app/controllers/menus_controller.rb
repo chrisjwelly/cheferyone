@@ -27,10 +27,23 @@ class MenusController < ApplicationController
     render json: @menus
   end
 
-  # GET /menus/near_you
+  # Taken based on the point returned for Singapore in google maps
+  DEFAULT_ORIGIN = [1.3143394,103.7041628]
+
+  # If no locations are sent, this endpoint will return based on the singapore locations
+  # GET /menus/near_you?latitude=1.1213123&longitude=12.123123213
   def near_you
-    @menus = Menu.limit(@limit).offset(@offset)
-    render json: @menus
+    origin = nil
+    if (params[:latitude].empty? || params[:longitude].empty?)
+      origin = DEFAULT_ORIGIN
+    else
+      origin = [params[:latitude], params[:longitude]]
+    end
+
+    @menus = Restaurant.by_distance(origin: origin).joins(:menus).select('"menus".*')
+        .limit(@limit).offset(@offset)
+
+    render json: @menus, status: :ok
   end
 
   # GET /menus/recent

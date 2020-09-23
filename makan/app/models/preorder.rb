@@ -47,14 +47,14 @@ class Preorder < ApplicationRecord
         ((preorder.start_date <= self.start_date) && (self.start_date <= preorder.end_date)) && preorder.id != self.id
       }
       if !matching_start_preorders.empty?
-        errors.add(:start_date, "must not be overlapping with existing preorders")
+        errors.add(:start_date, "Start date must not be overlapping with existing preorders")
       end
 
       matching_end_preorders = preorders.select{ |preorder| 
         ((preorder.start_date <= self.end_date) && (self.end_date <= preorder.end_date)) && preorder.id != self.id
       }
       if !matching_end_preorders.empty?
-        errors.add(:end_date, "must not be overlapping with existing preorders")
+        errors.add(:end_date, "End date must not be overlapping with existing preorders")
       end
     end
 

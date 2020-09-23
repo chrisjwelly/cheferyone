@@ -3,24 +3,32 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   include AlgoliaSearch
   attr_accessor :login
-  after_touch :index!
+  after_touch :index!, if: :chef?
   # Chef search: username, restaurant_image_url, description, tags 
   algoliasearch if: :chef? do
     attributes :id, :email, :username
-    add_attribute :image_url, :description, :tags
+    add_attribute :image_url, :description, :tags, :location
     searchableAttributes ['username', 'description']
+  end
+  
+  def chef?
+    not restaurant.nil?
   end
 
   def image_url
-    restaurant.image_url
+    chef? ? restaurant.image_url : nil
   end
 
   def description
-    restaurant.description
+    chef? ? restaurant.description : nil
   end
 
   def tags
-    restaurant.tags
+    chef? ? restaurant.tags : nil
+  end
+
+  def location
+    chef? ? restaurant.location : nil
   end
 
   devise :database_authenticatable, :registerable,
@@ -33,13 +41,18 @@ class User < ApplicationRecord
   has_many :orders
 
   validates :username, presence: { message: "Username can't be empty" }
+  validates :username, format: { with: /\A[a-zA-Z0-9_]+\Z/,
+    message: 'Username should only include alphanumeric characters and underscore' }
 
   acts_as_token_authenticatable
   def as_json(options = {})
     new_options = options.merge({except: :authentication_token})
     super(new_options).merge({
       "is_chef" => chef?,
-      "restaurant_tags" => restaurant.nil? ? [] : restaurant.tags
+      "tags" => tags,
+      "decription" => description,
+      "image_url" => image_url,
+      "location" => location
     })
   end
 
@@ -48,9 +61,5 @@ class User < ApplicationRecord
   	login = conditions.delete(:login)
   	where(conditions).where(["lower(username) = :value OR lower(email) = :value",
       { value: login.downcase}]).first
-  end
-  
-  def chef?
-    not restaurant.nil?
   end
 end
