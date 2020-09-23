@@ -3,24 +3,28 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   include AlgoliaSearch
   attr_accessor :login
-  after_touch :index!
+  after_touch :index!, if: :chef?
   # Chef search: username, restaurant_image_url, description, tags 
   algoliasearch if: :chef? do
     attributes :id, :email, :username
-    add_attribute :image_url, :description, :tags
+    add_attribute :image_url, :description, :tags, :location
     searchableAttributes ['username', 'description']
   end
 
   def image_url
-    restaurant.image_url
+    chef? ? restaurant.image_url : nil
   end
 
   def description
-    restaurant.description
+    chef? ? restaurant.description : nil
   end
 
   def tags
-    restaurant.tags
+    chef? ? restaurant.tags : nil
+  end
+
+  def location
+    chef? ? restaurant.location : nil
   end
 
   devise :database_authenticatable, :registerable,
@@ -39,7 +43,10 @@ class User < ApplicationRecord
     new_options = options.merge({except: :authentication_token})
     super(new_options).merge({
       "is_chef" => chef?,
-      "restaurant_tags" => restaurant.nil? ? [] : restaurant.tags
+      "tags" => tags,
+      "decription" => description,
+      "image_url" => image_url,
+      "location" => location
     })
   end
 

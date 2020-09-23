@@ -13,6 +13,8 @@ class Order < ApplicationRecord
   def as_json(options = {})
     super(options).merge({
       restaurant_id: restaurant.id,
+      email: user.email,
+      username: user.username,
       menu: menu
     })
   end
