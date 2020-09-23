@@ -40,9 +40,9 @@ class MenusController < ApplicationController
       origin = [params[:latitude], params[:longitude]]
     end
 
-    @menus = Restaurant.by_distance(origin: origin).joins(:menus).select('"menus".id')
-        .limit(@limit).offset(@offset)
-
+    menu_ids = Restaurant.by_distance(origin: origin).joins(:menus)
+        .limit(@limit).offset(@offset).pluck('"menus".id')
+    @menus = Menu.find(menu_ids)
     render json: @menus, status: :ok
   end
 
