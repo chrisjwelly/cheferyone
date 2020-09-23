@@ -145,8 +145,11 @@ function Main() {
             <PrivateRoute exact path="/new">
               <ListMenu section="new" />
             </PrivateRoute>
-            <PrivateRoute exact path="/search/:term">
+            <PrivateRoute exact path="/search/:section/:term">
               <SearchPage />
+            </PrivateRoute>
+            <PrivateRoute exact path="/filter/:section/:term">
+              <SearchPage isFilter />
             </PrivateRoute>
             <Route exact path="/register">
               <Register />

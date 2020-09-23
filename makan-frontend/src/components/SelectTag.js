@@ -13,12 +13,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SelectTag({ selected, setSelected }) {
+export default function SelectTag({ selected, setSelected, header }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Typography variant="h6">Tags</Typography>
+      <Typography variant="h6">{header === undefined ? "Tags" : header}</Typography>
       <Grid container spacing={1}>
         {TAGS.map((tag, i) => (
           <Grid item key={i}>

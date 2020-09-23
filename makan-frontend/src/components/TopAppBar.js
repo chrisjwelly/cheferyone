@@ -115,7 +115,7 @@ export default function TopAppBar({ hasBell }) {
                     e.preventDefault();
                     if (searchTerm !== "") {
                       dispatch(setIsShowSearchOverlay(false));
-                      history.push(`/search/${searchTerm}`);
+                      history.push(`/search/${searchSection}/${searchTerm}`);
                     }
                   }}
                 >
