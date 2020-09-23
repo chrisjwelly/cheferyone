@@ -10,7 +10,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
-import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import clsx from "clsx";
 
@@ -29,6 +28,7 @@ import { useGet, usePost } from "../utils/rest-utils";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
 import { stringToMoney } from "../utils/general";
 import LoadingCenter from "../components/LoadingCenter";
+import Fab from "../components/FloatingActionButton";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -38,11 +38,6 @@ const useStyles = makeStyles((theme) => ({
   description: {
     width: "100%",
     overflow: "hidden",
-  },
-  fab: {
-    position: "fixed",
-    bottom: theme.spacing(10),
-    right: theme.spacing(3),
   },
 }));
 
@@ -149,7 +144,6 @@ function MenuTab() {
     <div>
       <Fab
         onClick={() => history.push("/your-restaurant/create")}
-        className={classes.fab}
         color="secondary"
         aria-label="add"
       >

@@ -38,6 +38,7 @@ const RestaurantOrderSection = lazy(() =>
   import("./pages/RestaurantOrderSection")
 );
 const SubmitReview = lazy(() => import("./pages/SubmitReview"));
+const Checkout = lazy(() => import("./pages/checkout/Checkout"));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -159,6 +160,9 @@ function Main() {
               </PrivateRoute>
               <PrivateRoute exact path="/filter/:section/:term">
                 <SearchPage isFilter />
+              </PrivateRoute>
+              <PrivateRoute exact path="/checkout">
+                <Checkout />
               </PrivateRoute>
               <Route exact path="/register">
                 <Register />

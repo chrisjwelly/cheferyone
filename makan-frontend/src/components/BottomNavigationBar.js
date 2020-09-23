@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     borderTop: `1px solid ${theme.palette.grey[400]}`,
     textAlign: "center",
     height: theme.spacing(8),
+    zIndex: theme.zIndex.appBar
   },
 }));
 

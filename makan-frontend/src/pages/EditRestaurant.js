@@ -40,7 +40,7 @@ export default function EditRestaurant() {
     ReactGA.event({
       category: "Editing a Restaurant",
       action: "User is editing a restaurant",
-    })
+    });
     e.preventDefault();
     setIsLoading(true);
 
