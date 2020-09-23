@@ -41,6 +41,8 @@ class User < ApplicationRecord
   has_many :orders
 
   validates :username, presence: { message: "Username can't be empty" }
+  validates :username, format: { with: /\A[a-zA-Z0-9_]+\Z/,
+    message: 'Username should only include alphanumeric characters and underscore' }
 
   acts_as_token_authenticatable
   def as_json(options = {})
