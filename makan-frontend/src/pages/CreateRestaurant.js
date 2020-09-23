@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import ReactGA from "react-ga";
 
 import RestaurantForm from "../components/RestaurantForm";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
@@ -28,6 +29,10 @@ export default function CreateRestaurant() {
   const { errors, post, resetErrors } = usePost();
 
   const onSubmit = async (e) => {
+    ReactGA.event({
+      category: "Creating a Restaurant",
+      action: "User is creating a restaurant",
+    })
     e.preventDefault();
     setIsLoading(true);
 

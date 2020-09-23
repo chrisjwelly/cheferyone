@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import _ from "lodash";
 import { Link as LinkRouter } from "react-router-dom";
+import ReactGA from "react-ga";
 
 import LoadingButton from "../components/LoadingButton";
 import {
@@ -64,6 +65,10 @@ export default function Register() {
   };
 
   const onSubmit = (e) => {
+    ReactGA.event({
+      category: "Registering an account",
+      action: "User is registering an account",
+    })
     e.preventDefault();
     setIsLoading(true);
     post(

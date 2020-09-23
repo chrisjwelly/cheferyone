@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
+import ReactGA from "react-ga";
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useGet, usePost } from "../utils/rest-utils";
@@ -61,6 +62,10 @@ function EditMenu({ id }) {
   const { errors, post, resetErrors } = usePost();
 
   const onSubmit = async (e) => {
+    ReactGA.event({
+      category: "Editing a Menu",
+      action: "User is editing a menu item",
+    })
     e.preventDefault();
     setIsLoading(true);
 

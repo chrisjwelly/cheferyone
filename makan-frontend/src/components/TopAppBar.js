@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import ReactGA from "react-ga";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 import { setOrdersTabIndex } from "../actions/orders-tab-actions";
@@ -112,7 +113,10 @@ export default function TopAppBar({ hasBell }) {
                 </div>
                 <form
                   onSubmit={(e) => {
-                    e.preventDefault();
+                    ReactGA.event({
+                      category: "Searching",
+                      action: "User is using the search bar",
+                    });                    e.preventDefault();
                     if (searchTerm !== "") {
                       dispatch(setIsShowSearchOverlay(false));
                       history.push(`/search/${searchSection}/${searchTerm}`);

@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ReactGA from "react-ga";
 
 import RestaurantForm from "../components/RestaurantForm";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
@@ -36,6 +37,10 @@ export default function EditRestaurant() {
   const { errors, post, resetErrors } = usePost();
 
   const onSubmit = async (e) => {
+    ReactGA.event({
+      category: "Editing a Restaurant",
+      action: "User is editing a restaurant",
+    })
     e.preventDefault();
     setIsLoading(true);
 

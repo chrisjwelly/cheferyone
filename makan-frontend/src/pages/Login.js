@@ -11,6 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import _ from "lodash";
 import { Link as LinkRouter } from "react-router-dom";
+import ReactGA from "react-ga";
 
 import LoadingButton from "../components/LoadingButton";
 import { loginUser } from "../actions/auth-actions";
@@ -63,6 +64,10 @@ export default function Login() {
   };
 
   const onSubmit = (e) => {
+    ReactGA.event({
+      category: "Logging in",
+      action: "User is logging in",
+    })
     e.preventDefault();
     dispatch(
       loginUser(

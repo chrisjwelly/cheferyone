@@ -77,6 +77,10 @@ export default function SubmitReview() {
   const { errors, post, resetErrors } = usePost();
 
   const onSubmit = async (e) => {
+    ReactGA.event({
+      category: "Submitting a Review",
+      action: "User is submitting a review",
+    })
     e.preventDefault();
     setIsLoading(true);
 
