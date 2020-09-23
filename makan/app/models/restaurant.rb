@@ -1,6 +1,7 @@
 class Restaurant < ApplicationRecord
   include Subscribable	
 
+  validates :location, :description, presence: { message: "%{attribute} cannot be empty" }
   validate :image_url_security
   belongs_to :user, touch: true
   has_many :menus, dependent: :destroy

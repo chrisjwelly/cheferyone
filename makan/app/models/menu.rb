@@ -2,6 +2,7 @@ class Menu < ApplicationRecord
   include Subscribable
   include AlgoliaSearch
 
+  validates :name, :description, :price, presence: { message: "%{attribute} cannot be empty" }
   validate :image_url_security
   belongs_to :restaurant, touch: true
   has_many :preorders, dependent: :destroy

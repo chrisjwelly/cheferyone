@@ -20,24 +20,30 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
   # POST /your_restaurant/menus
   def create
     @menu = current_user.restaurant.menus.build(menu_params)
+    is_success = true
     ActiveRecord::Base.transaction do
       if !@menu.save
         # Status code: 422
-        render body: nil, status: :unprocessable_entity
+        is_success = false
+        render json: { errors: @menu.errors }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
-      raise ActiveRecord::Rollback unless create_preorders?
+
+      if !create_preorders?
+        is_success = false
+        raise ActiveRecord::Rollback
+      end
+
+      render json: @menu, status: :created
     end
 
-    @subscriptions = Subscription.where(subscribable: current_user.restaurant)
+    return unless is_success
 
+    # Notifications
+    @subscriptions = Subscription.where(subscribable: current_user.restaurant)
     @subscriptions.each do |subscription|
       Notification.create(recipient: subscription.user, notifiable: @menu, content: "A new menu is available. Let's check!")
     end
-    render json: @menu, status: :created
-  rescue ActiveRecord::Rollback
-    # If it's a rollback, the proper JSON response would have been returned.
-    # So, we did nothing here other than stopping the functions
   end
 
   # PATCH/PUT /your_restaurant/menus/1
@@ -45,7 +51,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
     ActiveRecord::Base.transaction do
       if !@menu.update(menu_params)
         # Status code: 422
-        render body: nil, status: :unprocessable_entity
+        render json: { errors: @menu.errors }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
 
@@ -55,7 +61,6 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
 
       render json: @menu, status: :ok
     end
-  rescue ActiveRecord::Rollback
   end
 
   # DELETE /your_restaurant/menus/1
