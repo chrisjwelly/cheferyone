@@ -31,8 +31,7 @@ class Order < ApplicationRecord
 
       max_allowed_quantity = preorder.quota - preorder_ordered_quantity
       if quantity > max_allowed_quantity
-        errors.add(:quantity, "with the other order quantities should be " +
-          "within preorder's quota")
+        errors.add(:quantity, "Quantity should not be higher than the stock")
       end
     end
 end
