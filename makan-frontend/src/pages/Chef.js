@@ -5,10 +5,13 @@ import { useDispatch } from "react-redux";
 import MenuListCard from "../components/MenuListCard";
 import LinesEllipsis from "react-lines-ellipsis";
 import { useParams } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import Chip from "@material-ui/core/Chip";
 
 import InfiniteScroll from "../components/InfiniteScroll";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { stringToMoney } from "../utils/general";
+import RatingStars from "../components/RatingStars";
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: theme.spacing(6) },
@@ -18,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
   description: {
     width: "100%",
     overflow: "hidden",
+  },
+  tags: {
+    padding: theme.spacing(1, 0, 1, 0),
   },
 }));
 
@@ -63,6 +69,14 @@ export default function Chef() {
                 <Typography variant="subtitle2">
                   {`Status: ${menu.current_preorder ? "Open" : "Closed"}`}
                 </Typography>
+                <Grid container spacing={1} className={classes.tags}>
+                  {menu.tags.map((t, i) => (
+                    <Grid item key={i}>
+                      <Chip size="small" label={t.name} />
+                    </Grid>
+                  ))}
+                </Grid>
+                <RatingStars size="small" rating={menu.rating} />
               </MenuListCard>
             ));
           })

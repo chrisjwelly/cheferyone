@@ -32,6 +32,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import RootDialog from "./components/RootDialog";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import TopAppBar from "./components/TopAppBar";
+import SearchOverlay from "./components/SearchOverlay";
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 
@@ -92,7 +93,9 @@ function App() {
 function Main() {
   const classes = useStyles();
   const currUser = useSelector((store) => store.auth.user);
-  const isSearchActive = useSelector((store) => store.search.isActive);
+  const isShowSearchOverlay = useSelector(
+    (store) => store.search.isShowSearchOverlay
+  );
 
   return (
     <>
@@ -101,10 +104,10 @@ function Main() {
       <WarningSnackbar />
       <RootDialog />
       <TopAppBar hasBell={!_.isEmpty(currUser)} />
-      <Container className={classes.root} maxWidth="sm">
-        {isSearchActive ? (
-          <SearchPage />
-        ) : (
+      {isShowSearchOverlay ? (
+        <SearchOverlay />
+      ) : (
+        <Container className={classes.root} maxWidth="sm">
           <Switch>
             <PrivateRoute exact path="/your-restaurant">
               <YourRestaurant currTab={0} />
@@ -142,6 +145,12 @@ function Main() {
             <PrivateRoute exact path="/new">
               <ListMenu section="new" />
             </PrivateRoute>
+            <PrivateRoute exact path="/search/:section/:term">
+              <SearchPage />
+            </PrivateRoute>
+            <PrivateRoute exact path="/filter/:section/:term">
+              <SearchPage isFilter />
+            </PrivateRoute>
             <Route exact path="/register">
               <Register />
             </Route>
@@ -161,8 +170,9 @@ function Main() {
               <NotFound />
             </Route>
           </Switch>
-        )}
-      </Container>
+        </Container>
+      )}
+
       {!_.isEmpty(currUser) && (
         <BottomNavigationBar className={classes.bottomNavigationBar} />
       )}

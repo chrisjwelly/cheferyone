@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme) => ({
   },
   linkStyle: {
     textDecoration: "none",
+    color: theme.palette.common.black,
+    fontWeight: theme.typography.fontWeightBold,
   },
 }));
 

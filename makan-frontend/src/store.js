@@ -24,11 +24,8 @@ const initialState = {
   ordersTab: { isShown: false, index: 0 },
   dialog: { isOpen: false, title: "", body: "", actions: null },
   search: {
-    term: "",
-    isActive: false,
-    path: "",
-    isSearching: false,
-    section: "menus",
+    isShowSearchOverlay: false,
+    searchSection: "menus",
   },
 };
 

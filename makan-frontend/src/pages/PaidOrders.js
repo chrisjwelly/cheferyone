@@ -83,7 +83,7 @@ export default function PaidOrders() {
         const transaction = data[transactionId];
 
         return (
-          <Paper className={classes.paper}>
+          <Paper className={classes.paper} key={i}>
             <Grid container className={classes.transactionInfo}>
               <Grid item>
                 <Typography variant="caption">
