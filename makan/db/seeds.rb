@@ -93,21 +93,31 @@ joko = User.create(email: "chef3@example.com", password: "123456", username: "jo
 yakuza = User.create(email: "chef4@example.com", password: "123456", username: "yakuza", authentication_token: "chef4")
 list_of_chefs = [ah_beng, odading_mang_oleh, joko, yakuza]
 
+locations = ["Choa Chu Kang Ave 2", "Prince George's Park Residence", "UTown Residence", "3 Balestier Road"]
+latitudes = [1.3783642, 1.2909605, 1.3052071, 1.3164314]
+longitudes = [103.7405676, 103.7789504, 103.7717158, 103.8559093]
+
 # Create Restaurants
 ah_beng_resto = ah_beng.create_restaurant(
-  description: "Food from Ah Beng For Ah Beng's.", location: "Choa Chu Kang Ave 2", image_url: restaurant_urls[0], tags: [chinese_tag],
+  description: "Food from Ah Beng For Ah Beng's.", location: locations[0], image_url: restaurant_urls[0],
+  tags: [chinese_tag], latitude: latitudes[0], longitude: longitudes[0]
 )
 
 mang_oleh_place = odading_mang_oleh.create_restaurant(
-  description: "Odading Mang Oleh's place to eat. The best indian indonesian restaurant in the world.", location: "Prince George's Park Residences", image_url: restaurant_urls[1], tags: [indian_tag, indonesian_tag]
+  description: "Odading Mang Oleh's place to eat. The best indian indonesian restaurant in the world.",
+  location: locations[1], image_url: restaurant_urls[1], tags: [indian_tag, indonesian_tag],
+  latitude: latitudes[1], longitude: longitudes[1]
 )
 
 chef_joko = joko.create_restaurant(
-  description: "Best subset of Indonesia restaurant in Singapore.", location: "Utown Residence", image_url: restaurant_urls[2], tags: [javanese_tag, indonesian_tag, chinese_tag]
+  description: "Best subset of Indonesia restaurant in Singapore.", location: locations[2],
+  image_url: restaurant_urls[2], tags: [javanese_tag, indonesian_tag, chinese_tag],
+  latitude: latitudes[2], longitude: longitudes[2]
 )
 
 yakuza_restaurant = yakuza.create_restaurant(
-  description: "Hangout place for yakuzas.", location: "3 Balestier Road", image_url: restaurant_urls[3], tags: [japanese_tag, chinese_tag]
+  description: "Hangout place for yakuzas.", location: locations[3], image_url: restaurant_urls[3],
+  tags: [japanese_tag, chinese_tag], latitude: latitudes[3], longitude: longitudes[3]
 )
 
 # Create Menus

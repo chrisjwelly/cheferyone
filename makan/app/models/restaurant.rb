@@ -3,12 +3,21 @@ class Restaurant < ApplicationRecord
 
   validates :location, :description, presence: { message: "%{attribute} cannot be empty" }
   validate :image_url_security
+  validates :longitude, presence: { message: "Longitude can't be empty" }
+  validates :latitude, presence: { message: "Latitude can't be empty" }
+
   belongs_to :user, touch: true
   has_many :menus, dependent: :destroy
   has_many :orders, through: :menus
 
   has_many :connections, as: :taggable
   has_many :tags, through: :connections
+
+  acts_as_mappable :default_units => :miles,
+                   :default_formula => :sphere,
+                   :distance_field_name => :distance,
+                   :lat_column_name => :latitude,
+                   :lng_column_name => :longitude
 
   def as_json(options)
     super(options).merge({
