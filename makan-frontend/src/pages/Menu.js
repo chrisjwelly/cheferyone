@@ -132,8 +132,12 @@ export default function Menu() {
           tags={data.tags}
           description={data.description}
           price={data.price}
+          current_preorder={data.current_preorder}
         />
-        <MenuPreorders preorders={data.preorders} />
+        <MenuPreorders
+          preorders={data.preorders}
+          current_preorder={data.current_preorder}
+        />
         <MenuReviews id={id} />
         {data.current_preorder && isNotOwner && (
           <div className={classes.buttonContainer}>

@@ -59,7 +59,10 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
           >
             {tags.map((t, i) => (
               <Grid key={i} item>
-                <Chip size="small" label={t.name + " "} />
+                <Chip
+                  size="small"
+                  label={t.name + " "}
+                />
               </Grid>
             ))}
           </Grid>

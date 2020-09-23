@@ -22,7 +22,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuDetails({ tags, description, price }) {
+export default function MenuDetails({
+  tags,
+  description,
+  price,
+  current_preorder,
+}) {
   const classes = useStyles();
 
   const descriptionRef = useRef();
@@ -39,6 +44,11 @@ export default function MenuDetails({ tags, description, price }) {
     <div>
       <Typography variant="h5">Details</Typography>
       <Typography variant="h6">{`S$${stringToMoney(price)}`}</Typography>
+      {current_preorder && (
+        <Typography variant="caption">{`In stock: ${
+          current_preorder.quota - current_preorder.ordered_quantity
+        } / ${current_preorder.quota}`}</Typography>
+      )}
       <Typography
         className={classes.description}
         variant="body1"

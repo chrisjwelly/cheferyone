@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import LinesEllipsis from "react-lines-ellipsis";
 import Link from "@material-ui/core/Link";
+import { Link as RouterLink } from "react-router-dom";
 
 import RatingStars from "./RatingStars";
 
@@ -17,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
   },
   nameContainer: {
     overflow: "hidden",
+  },
+  linkStyle: {
+    textDecoration: "none",
   },
 }));
 
@@ -35,7 +39,12 @@ export default function MenuHeader({ name, rating, homecook, image }) {
           <LinesEllipsis text={name} maxLine="2" basedOn="letters" />
         </Typography>
         <RatingStars size="small" rating={rating} />
-        <Typography variant="caption">{`Homecook: ${homecook}`}</Typography>
+        <Typography
+          variant="caption"
+          component={RouterLink}
+          to={`/chef/${homecook}`}
+          className={classes.linkStyle}
+        >{`Homecook: ${homecook}`}</Typography>
       </Grid>
     </Grid>
   );

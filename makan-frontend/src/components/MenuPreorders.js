@@ -13,18 +13,18 @@ const useStyles = makeStyles({
   },
 });
 
-export default function MenuPreorders({ preorders }) {
+export default function MenuPreorders({ preorders, current_preorder }) {
   return (
     <Grid container alignItems="center" spacing={1}>
       <Grid item xs={12}>
         <Typography variant="h5">Pre-orders</Typography>
       </Grid>
-      <Cards preorders={preorders} />
+      <Cards preorders={preorders} current_preorder={current_preorder} />
     </Grid>
   );
 }
 
-function Cards({ preorders }) {
+function Cards({ preorders, current_preorder }) {
   const classes = useStyles();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -43,7 +43,13 @@ function Cards({ preorders }) {
     <>
       {!isExpanded && (
         <Grid item xs={12}>
-          <PreorderCard index={0} preorder={preorders[0]} />
+          <PreorderCard
+            index={0}
+            preorder={preorders[0]}
+            isOpenNow={
+              current_preorder && current_preorder.id === preorders[0].id
+            }
+          />
         </Grid>
       )}
       <Grid item xs={12}>
@@ -51,7 +57,13 @@ function Cards({ preorders }) {
           <Grid item container alignItems="center" spacing={1}>
             {preorders.map((preorder, i) => (
               <Grid item key={i} xs={12} sm={6}>
-                <PreorderCard index={i} preorder={preorder} />
+                <PreorderCard
+                  index={i}
+                  preorder={preorder}
+                  isOpenNow={
+                    current_preorder && current_preorder.id === preorder.id
+                  }
+                />
               </Grid>
             ))}
           </Grid>

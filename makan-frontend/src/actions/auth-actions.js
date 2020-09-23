@@ -46,4 +46,5 @@ export const logoutUser = () => (dispatch) => {
   setAuthHeaders(false);
   // Set current user to empty object {}
   dispatch(setCurrentUser({}));
+  window.location.reload();
 };

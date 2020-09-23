@@ -14,6 +14,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import DoneIcon from "@material-ui/icons/Done";
 import CloseIcon from "@material-ui/icons/Close";
+import Chip from "@material-ui/core/Chip";
 
 import NumberInput from "./NumberInput";
 
@@ -26,18 +27,38 @@ const useStyles = makeStyles((theme) => ({
   marginTop: {
     marginTop: theme.spacing(2),
   },
+  green: {
+    backgroundColor: theme.palette.success.main,
+    color: theme.palette.common.white,
+  },
 }));
 
-export function PreorderCard({ preorder, index, onEdit, onDelete, ...rest }) {
+export function PreorderCard({
+  preorder,
+  index,
+  onEdit,
+  onDelete,
+  isOpenNow,
+  ...rest
+}) {
   const classes = useStyles();
   return (
     <Card {...rest}>
       <CardContent>
-        {index !== undefined && (
-          <Typography color="textSecondary" gutterBottom>
-            {`Pre-order #${index + 1}`}
-          </Typography>
-        )}
+        <Grid container spacing={2} justify="space-between" alignItems="center">
+          <Grid item>
+            {index !== undefined && (
+              <Typography color="textSecondary" gutterBottom>
+                {`Pre-order #${index + 1}`}
+              </Typography>
+            )}
+          </Grid>
+          {isOpenNow && (
+            <Grid item>
+              <Chip className={classes.green} label="OPEN NOW" />
+            </Grid>
+          )}
+        </Grid>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className={classes.marginRight}>
             <AccessTimeIcon color="disabled" />
@@ -234,9 +255,9 @@ export function PreorderEdit({
       {isDisabled && (
         <CardContent>
           <Typography variant="caption" color="textSecondary">
-            Input dates are invalid. Make sure that start date is earlier than
-            end date, and collection date is later than end date. Ensure
-            quantity is more than 0.
+            Input dates are invalid. Make sure that start date is later than now
+            and is earlier than end date. Collection date should later than end
+            date. Ensure quantity is more than 0.
           </Typography>
         </CardContent>
       )}
