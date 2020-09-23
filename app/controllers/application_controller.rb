@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::API
   include ActionController::MimeResponds
-  force_ssl unless: -> { Rails.env.in? ['development', 'test'] }
 
   respond_to :json
 
