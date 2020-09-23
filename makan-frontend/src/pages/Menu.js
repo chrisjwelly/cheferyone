@@ -19,6 +19,7 @@ import MenuPreorders from "../components/MenuPreorders";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
 import LoadingCenter from "../components/LoadingCenter";
 import GreenButton from "../components/GreenButton";
+import MenuReviews from "../components/MenuReviews";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -133,6 +134,7 @@ export default function Menu() {
           price={data.price}
         />
         <MenuPreorders preorders={data.preorders} />
+        <MenuReviews id={id} />
         {data.current_preorder && isNotOwner && (
           <div className={classes.buttonContainer}>
             <GreenButton variant="contained" onClick={orderButtonOnClick}>

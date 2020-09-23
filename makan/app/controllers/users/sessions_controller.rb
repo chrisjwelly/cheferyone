@@ -12,7 +12,9 @@ class Users::SessionsController < Devise::SessionsController
   def create
     if @user.valid_password?(sign_in_params[:password])
       sign_in "user", @user
-      render json: @user, status: :ok
+      render json: @user.as_json.merge({
+        authentication_token: @user.authentication_token
+      }), status: :ok
     else
       render json: { errors: @user.errors }, status: :unauthorized
     end

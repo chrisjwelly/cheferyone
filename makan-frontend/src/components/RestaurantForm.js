@@ -35,65 +35,63 @@ export default function RestaurantForm({
   };
 
   return (
-    <>
-      <form noValidate onSubmit={onSubmit}>
-        <Grid container spacing={2} className={classes.creationTextContainer}>
-          <Grid item xs={12} className={classes.editPictureContainer}>
-            <ImageUpload
-              setImageBlob={setImageBlob}
-              initialImage={initialImage}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="Location"
-              name="location"
-              error={errors.location !== undefined}
-              onChange={onChange}
-              value={fields.location}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              name="description"
-              error={errors.description !== undefined}
-              label="Description"
-              onChange={onChange}
-              value={fields.description}
-              multiline
-              rows={4}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <LoadingButton
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              isLoading={isLoading}
-            >
-              Submit
-            </LoadingButton>
-          </Grid>
-          <Grid item xs={12}>
-            <CancelButton
-              description="Any unsaved changes will be lost"
-              header="Cancel Creation?"
-              gotoAfterCancel="/your-restaurant"
-              fullWidth
-            >
-              Cancel
-            </CancelButton>
-          </Grid>
+    <form noValidate onSubmit={onSubmit}>
+      <Grid container spacing={2} className={classes.creationTextContainer}>
+        <Grid item xs={12} className={classes.editPictureContainer}>
+          <ImageUpload
+            setImageBlob={setImageBlob}
+            initialImage={initialImage}
+          />
         </Grid>
-      </form>
-    </>
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="Location"
+            name="location"
+            error={errors.location !== undefined}
+            onChange={onChange}
+            value={fields.location}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            name="description"
+            error={errors.description !== undefined}
+            label="Description"
+            onChange={onChange}
+            value={fields.description}
+            multiline
+            rows={4}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <LoadingButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            isLoading={isLoading}
+          >
+            Submit
+          </LoadingButton>
+        </Grid>
+        <Grid item xs={12}>
+          <CancelButton
+            description="Any unsaved changes will be lost"
+            header="Cancel Creation?"
+            gotoAfterCancel="/your-restaurant"
+            fullWidth
+          >
+            Cancel
+          </CancelButton>
+        </Grid>
+      </Grid>
+    </form>
   );
 }

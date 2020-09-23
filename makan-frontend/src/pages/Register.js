@@ -54,7 +54,6 @@ export default function Register() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const { errors, post, resetErrors } = usePost();
-  console.log(errors);
 
   const onChange = (e) => {
     resetErrors();
