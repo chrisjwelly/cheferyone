@@ -128,7 +128,7 @@ export default function Cart() {
               justify="space-between"
               alignItems="center"
               component={Link}
-              to="/placeholder"
+              to={`/chef/${restaurantName}`}
               className={classes.restaurantNameGrid}
             >
               <Grid item>

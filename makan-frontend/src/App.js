@@ -18,6 +18,7 @@ import Register from "./pages/Register";
 import YourRestaurant from "./pages/YourRestaurant";
 import EditMenu from "./pages/EditMenu";
 import Notifications from "./pages/Notifications";
+import Chef from "./pages/Chef";
 import CreateMenu from "./pages/CreateMenu";
 import SearchPage from "./pages/SearchPage";
 import RestaurantOrderSection from "./pages/RestaurantOrderSection";
@@ -149,6 +150,9 @@ function Main() {
             </Route>
             <Route exact path="/menu/:id">
               <Menu />
+            </Route>
+            <Route exact path="/chef/:username">
+              <Chef />
             </Route>
             <Route exact path="/">
               <Home />

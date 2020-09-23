@@ -187,6 +187,7 @@ export default function ChoosePreorder({
               ? undefined
               : onDelete
           }
+          isOpenNow={currentPreorder && preorder.id === currentPreorder.id}
         />
       </Grid>
     );
