@@ -11,7 +11,7 @@ import { useGet, usePost } from "../utils/rest-utils";
 import LoadingButton from "../components/LoadingButton";
 
 const useStyles = makeStyles((theme) => ({
-  header: { marginBottom: theme.spacing(4) },
+  marginBottom: { marginBottom: theme.spacing(4) },
 }));
 
 export default function Profile() {
@@ -55,12 +55,37 @@ export default function Profile() {
     }
   };
 
+  const changePassword = async (e) => {
+    e.preventDefault();
+    const res = await post(
+      {
+        user: {
+          password: passwords.password,
+          password_confirmation: passwords.password_confirmation,
+        },
+      },
+
+      "/api/v1/users",
+      "PATCH",
+      null,
+      null,
+      true
+    );
+    if (res && res !== "offline") {
+      dispatch(openSuccessSnackBar("Password successfully changed!"));
+    }
+  };
+
   return (
     <div>
-      <Typography className={classes.header} variant="h6">
+      <Typography className={classes.marginBottom} variant="h6">
         Profile
       </Typography>
-      <form noValidate onSubmit={changeUsername}>
+      <form
+        noValidate
+        onSubmit={changeUsername}
+        className={classes.marginBottom}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -88,19 +113,41 @@ export default function Profile() {
           </Grid>
         </Grid>
       </form>
-      <form noValidate onSubmit={changeUsername}>
+
+      <form noValidate onSubmit={changePassword}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
               variant="outlined"
               fullWidth
-              label="Change username"
-              value={username}
+              label="Change password"
+              value={passwords.password}
               onChange={(e) => {
                 resetErrors();
-                setUsername(e.target.value);
+                setPasswords({
+                  ...passwords,
+                  password: e.target.value,
+                });
               }}
-              error={errors.username !== undefined}
+              error={errors.password !== undefined}
+              type="password"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              label="New password confirmation"
+              value={passwords.password_confirmation}
+              onChange={(e) => {
+                resetErrors();
+                setPasswords({
+                  ...passwords,
+                  password_confirmation: e.target.value,
+                });
+              }}
+              error={errors.password_confirmation}
+              type="password"
             />
           </Grid>
           <Grid item xs={12}>
@@ -108,10 +155,10 @@ export default function Profile() {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
               isLoading={isChangeUsernameLoading}
             >
-              Change username
+              Change password
             </LoadingButton>
           </Grid>
         </Grid>
