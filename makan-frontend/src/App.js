@@ -17,6 +17,8 @@ import RootDialog from "./components/RootDialog";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import TopAppBar from "./components/TopAppBar";
 import SearchOverlay from "./components/SearchOverlay";
+import NotificationsDrawer from "./components/NotificationsDrawer";
+
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import { getLocation } from "./actions/location-actions";
@@ -32,7 +34,6 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Register = lazy(() => import("./pages/Register"));
 const YourRestaurant = lazy(() => import("./pages/YourRestaurant"));
 const EditMenu = lazy(() => import("./pages/EditMenu"));
-const Notifications = lazy(() => import("./pages/Notifications"));
 const Chef = lazy(() => import("./pages/Chef"));
 const CreateMenu = lazy(() => import("./pages/CreateMenu"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
@@ -121,6 +122,7 @@ function Main() {
       <SuccessSnackbar />
       <WarningSnackbar />
       <RootDialog />
+      <NotificationsDrawer />
       <TopAppBar hasBell={!isEmpty(currUser)} />
       {isShowSearchOverlay ? (
         <SearchOverlay />

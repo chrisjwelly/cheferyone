@@ -78,7 +78,8 @@ export default function Register() {
       "/api/v1/users",
       "POST",
       null,
-      false
+      false,
+      true
     ).then((res) => {
       if (res) {
         dispatch(closeErrorSnackBar());

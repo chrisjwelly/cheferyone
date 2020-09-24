@@ -8,7 +8,6 @@ import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
 import { createBrowserHistory } from "history";
 import ReactGA from "react-ga";
-import ActionCableProvider from "@thrash-industries/react-actioncable-provider";
 
 import store from "./store";
 import "./fonts.css";
@@ -24,15 +23,13 @@ history.listen((location) => {
   ReactGA.set({ page: location.pathname }); // Update the user's current page
   ReactGA.pageview(location.pathname); // Record a pageview for the given page
 });
-
+// "ws://localhost:3000/cable?token=chef1">
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router history={history}>
         <SWRConfig value={{ shouldRetryOnError: false }}>
-          <ActionCableProvider url="ws://localhost:3000/cable?token=chef1">
             <App />
-          </ActionCableProvider>
         </SWRConfig>
       </Router>
     </Provider>

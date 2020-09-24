@@ -82,7 +82,8 @@ export default function Login() {
             "/api/v1/users/sign_in",
             "POST",
             null,
-            false
+            false,
+            true
           ),
         inputs.isRemember,
         () => setIsLoading(false),
@@ -144,12 +145,7 @@ export default function Login() {
           >
             Log In
           </LoadingButton>
-          <Grid container>
-            <Grid item xs>
-              {/* <Link component={LinkRouter} to="/" variant="body2">
-                Forgot Password?
-              </Link> */}
-            </Grid>
+          <Grid container justify="flex-end">
             <Grid item>
               <Link component={LinkRouter} to="/register" variant="body2">
                 Don't have an account? Register

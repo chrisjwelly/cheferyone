@@ -14,6 +14,7 @@ import {
   openErrorSnackBar,
 } from "../actions/snackbar-actions";
 import { saveRequest } from "../utils/offline-utils";
+import { uppercaseFirst } from "../utils/general";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -146,7 +147,8 @@ export function usePost() {
     path,
     method,
     imageBlob = null,
-    isSaveOffline = true
+    isSaveOffline = true,
+    displayErrorKeys = false
   ) => {
     if (
       offlineHandler(
@@ -208,7 +210,7 @@ export function usePost() {
       } else {
         setErrors(err);
       }
-      dispatch(openErrorSnackBar(parseErrors(err)));
+      dispatch(openErrorSnackBar(parseErrors(err, displayErrorKeys)));
       return false;
     }
   };
@@ -217,11 +219,24 @@ export function usePost() {
   return { errors, post, resetErrors };
 }
 
-function parseErrors(err) {
+function parseErrors(err, displayErrorKeys = false) {
   if (isObject(err) && "errors" in err) {
     let result = [];
-    for (const key in err.errors) {
-      result.push(<p key={key}>{err.errors[key].join(" ")}</p>);
+
+    if (!displayErrorKeys) {
+      for (const key in err.errors) {
+        result.push(<p key={key}>{err.errors[key].join(", ")}</p>);
+      }
+    } else {
+      for (const key in err.errors) {
+        result.push(
+          <p key={key}>
+            {uppercaseFirst(key).replace("_", " ") +
+              ": " +
+              err.errors[key].join(", ")}
+          </p>
+        );
+      }
     }
     return result;
   } else {
@@ -254,7 +269,7 @@ function offlineHandler(
 
     return true;
   } else if (!navigator.onLine) {
-    console.log("here")
+    console.log("here");
     dispatch(openErrorSnackBar("No internet connection!"));
     return true;
   }

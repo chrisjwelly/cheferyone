@@ -46,13 +46,15 @@ export default function Chef() {
       {chefData.isLoading ? (
         <LoadingCenter />
       ) : (
-        <ChefHeader
-          username={chefData.data.username}
-          image_url={chefData.data.image_url}
-          description={chefData.data.description}
-          location={chefData.data.location}
-          tags={chefData.data.tags}
-        />
+        <>
+          <ChefHeader
+            username={chefData.data.username}
+            image_url={chefData.data.image_url}
+            description={chefData.data.description}
+            location={chefData.data.location}
+            tags={chefData.data.tags}
+          />
+        </>
       )}
       <InfiniteScroll apiPath={`/api/v1/chefs/${username}/menus`}>
         {(data) =>
