@@ -85,9 +85,6 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
         notify(subscription.user, @menu, message)
       end
     end
-    
-    render json: @menu, status: :ok
-    end
   end
 
   # DELETE /your_restaurant/menus/1
