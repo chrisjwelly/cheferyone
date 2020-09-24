@@ -24,7 +24,7 @@ class MenusController < ApplicationController
   # GET /menus/recommended
   def recommended
     list_of_tags = User.limit(3).includes(orders: { preorder: { menu: :tags }}).where(id: 8, orders: { status: "completed" }).group("tags.name").order("sum(orders.quantity) desc").pluck('tags.name as favourite')
-    @menus = Menu.joins(:tags).left_outer_joins(:reviews).where(tags: { name: list_of_tags }).group('name').order('avg(rating) desc').limit(@limit).offset(@offset)
+    @menus = Menu.joins(:tags).left_outer_joins(:reviews).where(tags: { name: list_of_tags }).group(:id).order('avg(rating) desc').limit(@limit).offset(@offset)
     render json: @menus
   end
 
