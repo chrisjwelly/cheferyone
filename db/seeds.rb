@@ -7,8 +7,10 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # Create Users
+list_of_users = []
 4.times do |i|
-  User.create(email: "user#{i + 1}@example.com", password: "123456", username: "user#{i+1}", authentication_token: "user#{i + 1}")
+  user = User.create(email: "user#{i + 1}@example.com", password: "123456", username: "user#{i+1}", authentication_token: "user#{i + 1}")
+  list_of_users.append(user)
 end
 
 def create_preorders(menu)
@@ -184,14 +186,14 @@ create_preorders(ayam_geprek)
 4.times do |i|
   now = DateTime.now
   3.times do |j|
-    order1 = list_of_chefs[i].orders.create(quantity: 1, status: j + 1, remarks: "This is a dummy remark", preorder_id: (j + 1 + 3*i), transaction_id: j + 1, paid_date: now)
+    order1 = list_of_users[i].orders.create(quantity: 1, status: j + 1, remarks: "This is a dummy remark", preorder_id: (j + 1 + 3*i), transaction_id: j + 1, paid_date: now)
     order1.create_review(rating: [i,j].max + 2 , content: "I really like this menu")
-    order2 = list_of_chefs[i].orders.create(quantity: 1, status: j + 1, remarks: "Second remark", preorder_id: 12 + (j + 1 + 3*i), transaction_id: j + 1, paid_date: now)
+    order2 = list_of_users[i].orders.create(quantity: 1, status: j + 1, remarks: "Second remark", preorder_id: 12 + (j + 1 + 3*i), transaction_id: j + 1, paid_date: now)
     order2.create_review(rating: ([i,j].max + 5)/2 , content: "So-So ah")
   end
 
   3.times do |j|
-    order3 = list_of_chefs[i].orders.create(quantity: 1, status: :unpaid, remarks: "Unpaid in the seed number: #{j}", preorder_id: 24 + (j + 1 + 3*i))
+    order3 = list_of_users[i].orders.create(quantity: 1, status: :unpaid, remarks: "Unpaid in the seed number: #{j}", preorder_id: 24 + (j + 1 + 3*i))
     order3.create_review(rating: ([i,j].min + 2)/2 , content: "Disgusting")
   end
 end
