@@ -52,3 +52,6 @@ Rails.application.configure do
 end
 
 Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }
+
+ENV['GOOGLE_OAUTH_CLIENT_ID'] = '708625683961-b0ujucdj6scopa7ld6hc6lqp80lual2l.apps.googleusercontent.com'
+ENV['GOOGLE_OAUTH_CLIENT_SECRET'] = 'BBptlmvSVQChs9QquRRKX-MM'
