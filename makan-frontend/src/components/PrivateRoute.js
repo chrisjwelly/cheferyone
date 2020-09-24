@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 
 export default function PrivateRoute({ children, ...rest }) {
   const currUser = useSelector((store) => store.auth.user);
@@ -10,7 +10,7 @@ export default function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={({ location }) =>
-        !_.isEmpty(currUser) ? (
+        !isEmpty(currUser) ? (
           children
         ) : (
           <Redirect

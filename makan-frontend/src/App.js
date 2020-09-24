@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import axios from "axios";
 import ReactGA from "react-ga";
 
@@ -63,7 +63,7 @@ function App() {
     ReactGA.initialize("UA-178745693-1");
 
     async function hydrateRedux() {
-      if (_.isEmpty(currUser)) {
+      if (isEmpty(currUser)) {
         const user =
           localStorage.getItem("auth") || sessionStorage.getItem("auth");
         if (user) {
@@ -114,7 +114,7 @@ function Main() {
       <SuccessSnackbar />
       <WarningSnackbar />
       <RootDialog />
-      <TopAppBar hasBell={!_.isEmpty(currUser)} />
+      <TopAppBar hasBell={!isEmpty(currUser)} />
       {isShowSearchOverlay ? (
         <SearchOverlay />
       ) : (
@@ -189,7 +189,7 @@ function Main() {
         </Container>
       )}
 
-      {!_.isEmpty(currUser) && (
+      {!isEmpty(currUser) && (
         <BottomNavigationBar className={classes.bottomNavigationBar} />
       )}
     </>

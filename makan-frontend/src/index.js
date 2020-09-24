@@ -9,12 +9,9 @@ import { SWRConfig } from "swr";
 import { createBrowserHistory } from "history";
 import ReactGA from "react-ga";
 import ActionCableProvider from "@thrash-industries/react-actioncable-provider";
-import "fontsource-roboto/300.css"
-import "fontsource-roboto/400.css"
-import "fontsource-roboto/500.css"
-import "fontsource-roboto/700.css"
 
 import store from "./store";
+import "./fonts.css";
 
 // Set all post requests to contain json payload
 axios.defaults.headers.post["Content-Type"] = "application/json";

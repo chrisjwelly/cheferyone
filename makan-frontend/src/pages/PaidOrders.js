@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { Link } from "react-router-dom";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import Paper from "@material-ui/core/Paper";
 import Chip from "@material-ui/core/Chip";
 import clsx from "clsx";
@@ -70,7 +70,7 @@ export default function PaidOrders() {
 
   if (isLoading) {
     return <LoadingCenter />;
-  } else if (_.isEmpty(data)) {
+  } else if (isEmpty(data)) {
     return (
       <Typography variant="caption" color="textSecondary">
         It seems a little lonely here... Add some food to your cart!

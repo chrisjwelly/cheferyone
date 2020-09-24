@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import isObject from "lodash/isObject";
 import Button from "@material-ui/core/Button";
 
 import store from "../store";
@@ -28,7 +28,7 @@ export async function getLatLngFromPlace(place, lat, lng, setError) {
     setError();
   };
 
-  if (place && _.isObject(place) && "place_id" in place) {
+  if (place && isObject(place) && "place_id" in place) {
     return new Promise((resolve, _) =>
       new window.google.maps.Geocoder().geocode(
         { placeId: place.place_id },

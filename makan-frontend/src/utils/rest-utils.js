@@ -3,7 +3,8 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import useSWR, { useSWRInfinite } from "swr";
 import { v4 as uuidv4 } from "uuid";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
 
 import { PAGE_SIZE } from "../constants";
 import storage from "./firebase-storage";
@@ -149,7 +150,7 @@ export function usePost() {
     }
     setErrors(err);
 
-    if (imageBlob && !_.isEmpty(err)) {
+    if (imageBlob && !isEmpty(err)) {
       // Show image errors
       dispatch(openErrorSnackBar(parseErrors(err)));
       return false;
@@ -178,7 +179,7 @@ export function usePost() {
       return res;
     } catch (e) {
       const err = e.response.data;
-      if (_.isObject(err) && "errors" in err) {
+      if (isObject(err) && "errors" in err) {
         setErrors(err.errors);
       } else {
         setErrors(err);
@@ -193,7 +194,7 @@ export function usePost() {
 }
 
 function parseErrors(err) {
-  if (_.isObject(err) && "errors" in err) {
+  if (isObject(err) && "errors" in err) {
     let result = [];
     for (const key in err.errors) {
       result.push(<p key={key}>{err.errors[key].join(" ")}</p>);

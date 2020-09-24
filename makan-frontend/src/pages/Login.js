@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { Link as LinkRouter } from "react-router-dom";
 import ReactGA from "react-ga";
 
@@ -41,7 +41,7 @@ export default function Login() {
   // Redirect if logged in
   const currUser = useSelector((store) => store.auth.user);
   useEffect(() => {
-    if (!_.isEmpty(currUser)) {
+    if (!isEmpty(currUser)) {
       history.push("/");
     }
   });

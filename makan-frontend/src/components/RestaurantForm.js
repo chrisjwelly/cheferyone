@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import ReactGA from "react-ga";
-import _ from "lodash";
+import isObject from "lodash/isObject";
 import { useDispatch } from "react-redux";
 import clsx from "clsx";
 import { useHistory } from "react-router-dom";
@@ -94,7 +94,7 @@ export default function RestaurantForm({
       {
         restaurant: {
           location:
-            _.isObject(fields.location) && "description" in fields.location
+            isObject(fields.location) && "description" in fields.location
               ? fields.location.description
               : fields.location,
           latitude: latLng.lat,
