@@ -122,7 +122,7 @@ class MenusController < ApplicationController
     end
   end
 
-  # POST /menus/1/is_subscribed
+  # GET /menus/1/is_subscribed
   def is_subscribed
     @menu = Menu.find(params[:id])
     if Subscription.exists?(user: current_user, subscribable: @menu)

@@ -58,10 +58,6 @@ class OrdersController < ApplicationController
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
-      menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
-      message = "Too bad! #{current_user.username} has cancelled an order for #{menu.name}"
-      recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
-      notify(recipient, order, message)
       render json: @order
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity

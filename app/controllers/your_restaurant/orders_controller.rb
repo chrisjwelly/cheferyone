@@ -31,7 +31,7 @@ class YourRestaurant::OrdersController < YourRestaurant::ApplicationController
           message = "Too bad :(, Your order: #{current_user.username}'s #{menu.name} is rejected."
           notify(recipient, @order, message)
       elsif status == "confirmed"
-          message = "Congrats! Your order: #{current_user.username}'s #{menu.name} is approved. Hang on tight and wait for the next info for collection!"
+          message = "Congrats! Your order: #{current_user.username}'s #{menu.name} is approved. Hang on tight and wait until the collection day!"
           notify(recipient, @order, message)
       end
       render json: @order

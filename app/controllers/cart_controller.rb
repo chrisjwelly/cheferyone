@@ -29,9 +29,9 @@ class CartController < ApplicationController
     end
 
     orders.each do |order|
-      menu = Menu.where(id: Preorder.where(id: order.preorder_id).first.menu_id).first
+      menu = order.menu
       message = "Sweet! #{current_user.username} has paid an order for #{menu.name}"
-      recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
+      recipient = menu.restaurant.user
       notify(recipient, order, message)
     end
 

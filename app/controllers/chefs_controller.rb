@@ -70,7 +70,7 @@ class ChefsController < ApplicationController
     end
   end
 
-  # GET /menus/1/is_subscribed
+  # GET /chefs/1/is_subscribed
   def is_subscribed
     render json: {
       is_subscribed: Subscription.exists?(user: current_user, subscribable: @chef.restaurant)
