@@ -34,7 +34,6 @@ export default function MenuHeader({ name, rating, homecook, image }) {
       {image && (
         <Grid item component={Link} href={image}>
           <img
-            crossorigin="anonymous"
             alt={name}
             className={classes.thumbnail}
             src={image}

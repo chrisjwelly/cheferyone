@@ -112,7 +112,6 @@ export default function MenuOrderDrawer({
               <Grid item>
                 {image && (
                   <img
-                    crossorigin="anonymous"
                     alt={name}
                     className={classes.thumbnail}
                     src={image}

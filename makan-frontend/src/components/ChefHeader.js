@@ -7,6 +7,7 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Chip from "@material-ui/core/Chip";
 
 import CollapsibleText from "./CollapsibleText";
+import SubscribeButton from "../components/SubscribeButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,23 +26,24 @@ export default function ChefHeader({
   description,
   location,
   tags,
+  isOwner,
 }) {
   const classes = useStyles();
   return (
     <Grid container className={classes.root} alignItems="center">
       <Grid item xs={5}>
-        <Avatar
-          crossorigin="anonymous"
-          alt={username}
-          src={image_url}
-          className={classes.avatar}
-        />
+        <Avatar alt={username} src={image_url} className={classes.avatar} />
       </Grid>
       <Grid item xs={7}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography variant="h6">{username}</Typography>
           </Grid>
+          {!isOwner && (
+            <Grid item xs={12}>
+              <SubscribeButton size="small" chefName={username} />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Grid container spacing={1} alignItems="center" wrap="nowrap">
               <LocationOnIcon />

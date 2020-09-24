@@ -161,6 +161,7 @@ function MenuTab() {
           description={chefData.data.description}
           location={chefData.data.location}
           tags={chefData.data.tags}
+          isOwner
         />
       )}
       <InfiniteScroll apiPath={"/api/v1/your_restaurant/menus"}>
