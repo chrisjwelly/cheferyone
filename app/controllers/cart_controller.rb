@@ -28,11 +28,15 @@ class CartController < ApplicationController
       end
     end
 
+    # Notify the home chefs that someone has just make the order
     orders.each do |order|
       menu = order.menu
       message = "Sweet! #{current_user.username} has paid an order for #{menu.name}"
       recipient = menu.restaurant.user
-      notify(recipient, order, message)
+      image_url = menu.image_url
+      redirect_url = "/your-restaurant/orders"
+
+      notify(recipient, order, message, image_url, redirect_url)
     end
 
     render body: nil, status: :ok

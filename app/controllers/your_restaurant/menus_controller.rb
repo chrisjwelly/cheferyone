@@ -40,11 +40,11 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
 
     return unless is_success
 
-    # Notifications
+    # Notify subscribers of new menu
     @subscriptions = Subscription.where(subscribable: current_user.restaurant)
     message = "#{current_user.username}'s #{@menu.name} is in the town! Go check it out!"
     @subscriptions.each do |subscription|
-      notify(subscription.user, @menu, message)
+      notify(subscription.user, @menu, message, @menu.image_url, "/menu/#{@menu.id}")
     end
   end
 
@@ -78,12 +78,13 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
     end
 
     return unless is_success
-    # Notifications
+
+    # Notify subscribers of the newly scheduled preorder
     if exist_new_preorder
       @subscriptions = Subscription.where(subscribable: current_user.restaurant) | Subscription.where(subscribable: @menu)
       message = "#{current_user.username}'s #{@menu.name} is scheduled for a pre-order! Let's check it out"
       @subscriptions.each do |subscription|
-        notify(subscription.user, @menu, message)
+        notify(subscription.user, @menu, message, @menu.image_url, "/menu/#{@menu.id}")
       end
     end
   end

@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 2020_09_22_095030) do
     t.string "content"
     t.integer "notifiable_id"
     t.string "notifiable_type"
+    t.string "redirect_url"
+    t.string "image_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

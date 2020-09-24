@@ -22,17 +22,18 @@ class YourRestaurant::OrdersController < YourRestaurant::ApplicationController
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
+      # Notify customers on the updated status of the menu
       menu = @order.menu
       recipient = User.where(id: @order.user_id).first
       if status == "completed"
           message = "Your order: #{current_user.username}'s #{menu.name} is completed. Please write a sweet note to the chef by reviewing the menu!"
-          notify(recipient, @order, message)
+          notify(recipient, @order, message, @order.menu.image_url,"/orders/paid")
       elsif status == "ended"
           message = "Too bad :(, Your order: #{current_user.username}'s #{menu.name} is rejected."
-          notify(recipient, @order, message)
+          notify(recipient, @order, message, @order.menu.image_url,"/orders/paid")
       elsif status == "confirmed"
           message = "Congrats! Your order: #{current_user.username}'s #{menu.name} is approved. Hang on tight and wait until the collection day!"
-          notify(recipient, @order, message)
+          notify(recipient, @order, message, @order.menu.image_url,"/orders/paid")
       end
       render json: @order
     else

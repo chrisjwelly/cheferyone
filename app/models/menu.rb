@@ -47,6 +47,7 @@ class Menu < ApplicationRecord
       "preorders" => current_and_upcoming_preorders,
       "current_preorder" => current_preorder,
       "rating" => rating,
+      "review_counts" => reviews.count
     })
   end
 

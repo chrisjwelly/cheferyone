@@ -6,6 +6,8 @@ class CreateNotifications < ActiveRecord::Migration[6.0]
       t.string :content
       t.integer :notifiable_id
       t.string :notifiable_type
+      t.string :redirect_url
+      t.string :image_url
 
       t.timestamps
     end
