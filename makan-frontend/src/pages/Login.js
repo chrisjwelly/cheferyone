@@ -64,6 +64,7 @@ export default function Login() {
   };
 
   const onSubmit = (e) => {
+    setIsLoading(true);
     ReactGA.event({
       category: "Logging in",
       action: "User is logging in",

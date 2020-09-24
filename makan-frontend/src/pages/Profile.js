@@ -5,10 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { openSuccessSnackBar } from "../actions/snackbar-actions";
+import Button from "@material-ui/core/Button";
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useGet, usePost } from "../utils/rest-utils";
 import LoadingButton from "../components/LoadingButton";
+import { setCurrentUser, logoutUser } from "../actions/auth-actions";
 
 const useStyles = makeStyles((theme) => ({
   marginBottom: { marginBottom: theme.spacing(4) },
@@ -39,6 +41,8 @@ export default function Profile() {
   }, [data]);
 
   const changeUsername = async (e) => {
+    setIsChangeUsernameLoading(true);
+
     e.preventDefault();
     const res = await post(
       {
@@ -53,6 +57,7 @@ export default function Profile() {
     if (res && res !== "offline") {
       dispatch(openSuccessSnackBar("Username successfully changed!"));
     }
+    setIsChangeUsernameLoading(false);
   };
 
   const changePassword = async (e) => {
@@ -163,6 +168,7 @@ export default function Profile() {
           </Grid>
         </Grid>
       </form>
+      <Button>Logout</Button>
     </div>
   );
 }

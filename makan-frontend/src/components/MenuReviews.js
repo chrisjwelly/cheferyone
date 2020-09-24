@@ -31,10 +31,14 @@ export default function MenuReviews({ id }) {
             reviews.map((review, i) => (
               <Card key={i} className={classes.reviewCard}>
                 <CardContent>
-                  <Typography variant="caption">{review.email}</Typography>
-                  <Grid container spacing={2} wrap="nowrap">
+                  <Grid
+                    container
+                    spacing={2}
+                    wrap="nowrap"
+                    justify="space-between"
+                  >
                     <Grid item>
-                      <RatingStars size="small" rating={review.rating} />
+                      <Typography variant="caption">{review.email}</Typography>
                     </Grid>
                     <Grid item>
                       <Typography variant="caption">
@@ -44,6 +48,9 @@ export default function MenuReviews({ id }) {
                         )}`}
                       </Typography>
                     </Grid>
+                  </Grid>
+                  <Grid item>
+                    <RatingStars size="small" rating={review.rating} />
                   </Grid>
                   <Typography
                     className={classes.content}
