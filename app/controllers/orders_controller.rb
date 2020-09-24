@@ -31,6 +31,10 @@ class OrdersController < ApplicationController
       .build(create_order_params.merge({ status: Order.statuses[:unpaid] }))
 
     if @order.save
+      menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
+      message = "Sweet! #{current_user.username} has ordered for #{menu.name}"
+      recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
+      notify(recipient, order, menu)
       render json: @order, status: :created, location: @order
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity
@@ -54,6 +58,10 @@ class OrdersController < ApplicationController
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
+      menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
+      message = "Too bad! #{current_user.username} has cancelled an order for #{menu.name}"
+      recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
+      notify(recipient, order, menu)
       render json: @order
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity

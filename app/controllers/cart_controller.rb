@@ -18,13 +18,22 @@ class CartController < ApplicationController
       new_tid = max_tid + 1
     end
 
+    orders = current_user.orders.unpaid
     # TODO: Stripe Integrations
-    current_user.orders.unpaid.each do |order|
+    orders.each do |order|
       # TODO: Do a Transaction for rollback
       if !order.update(status: Order.statuses[:paid], transaction_id: new_tid, paid_date: now)
         render json: { errors: @order.errors }, status: :unprocessable_entity
       end
     end
+
+    orders.each do |order|
+      menu = Menu.where(id: Preorder.where(id: order.preorder_id).first.menu_id).first
+      message = "Sweet! #{current_user.username} has paid an order for #{menu.name}"
+      recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
+      notify(recipient, order, menu)
+    end
+
     render body: nil, status: :ok
   end
 
