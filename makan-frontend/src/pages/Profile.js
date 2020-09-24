@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { openSuccessSnackBar } from "../actions/snackbar-actions";
 import Button from "@material-ui/core/Button";
 
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useGet, usePost } from "../utils/rest-utils";
 import LoadingButton from "../components/LoadingButton";
-import { setCurrentUser, logoutUser } from "../actions/auth-actions";
+import { logoutUser } from "../actions/auth-actions";
+import GreenButton from "../components/GreenButton";
+import RedButton from "../components/RedButton";
+import { openDialog, closeDialog } from "../actions/dialog-actions";
+import { openSuccessSnackBar } from "../actions/snackbar-actions";
 
 const useStyles = makeStyles((theme) => ({
   marginBottom: { marginBottom: theme.spacing(4) },
 }));
 
 export default function Profile() {
+  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -38,7 +43,7 @@ export default function Profile() {
     if (!isLoading) {
       setUsername(data.username);
     }
-  }, [data]);
+  }, [isLoading, data]);
 
   const changeUsername = async (e) => {
     setIsChangeUsernameLoading(true);
@@ -62,6 +67,7 @@ export default function Profile() {
 
   const changePassword = async (e) => {
     e.preventDefault();
+
     const res = await post(
       {
         user: {
@@ -81,11 +87,64 @@ export default function Profile() {
     }
   };
 
+  const logout = () => {
+    dispatch(logoutUser());
+    history.push("/");
+  };
+
+  const deleteAccount = async (e) => {
+    e.preventDefault();
+    dispatch(
+      openDialog(
+        "Delete account?",
+        "This action is irreversible!",
+        <>
+          <Button color="primary" onClick={() => dispatch(closeDialog())}>
+            No
+          </Button>
+          <Button
+            color="primary"
+            onClick={async () => {
+              dispatch(closeDialog());
+              const res = await post(
+                {},
+
+                "/api/v1/users",
+                "DELETE",
+                null,
+                null,
+                true
+              );
+              if (res && res !== "offline") {
+                dispatch(openSuccessSnackBar("Account successfully deleted!"));
+                history.push("/");
+              }
+            }}
+          >
+            Yes
+          </Button>
+        </>
+      )
+    );
+  };
+
   return (
     <div>
       <Typography className={classes.marginBottom} variant="h6">
         Profile
       </Typography>
+      <Grid container className={classes.marginBottom} spacing={2}>
+        <Grid item xs={6}>
+          <GreenButton onClick={logout} fullWidth>
+            Logout
+          </GreenButton>
+        </Grid>
+        <Grid item xs={6}>
+          <RedButton onClick={deleteAccount} fullWidth>
+            Delete Account
+          </RedButton>
+        </Grid>
+      </Grid>
       <form
         noValidate
         onSubmit={changeUsername}
@@ -168,7 +227,6 @@ export default function Profile() {
           </Grid>
         </Grid>
       </form>
-      <Button>Logout</Button>
     </div>
   );
 }
