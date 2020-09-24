@@ -20,6 +20,15 @@ class YourRestaurant::OrdersController < YourRestaurant::ApplicationController
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
+      if params[:status] == "completed"
+          message = "Your order: #{current_user.username}'s #{menu.name} is completed. Please write a sweet note to the chef by reviewing the menu!"
+          notify(recipient, @order, message)
+      elsif params[:status] == "ended"
+          message = "Too bad :(, Your order: #{current_user.username}'s #{menu.name} is rejected."
+          notify(recipient, @order, message)
+      elsif params[:status] == "confirmed"
+          message = "Congrats! Your order: #{current_user.username}'s #{menu.name} is approved. Hang on tight and wait for the next info for collection!"
+          notify(recipient, @order, message)
       render json: @order
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity

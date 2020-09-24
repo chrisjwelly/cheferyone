@@ -51,6 +51,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
   # PATCH/PUT /your_restaurant/menus/1
   def update
     ActiveRecord::Base.transaction do
+      exist_new_preorder = !params[:new_preorders].blank
       if !@menu.update(menu_params)
         # Status code: 422
         render json: { errors: @menu.errors }, status: :unprocessable_entity
@@ -84,6 +85,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
         notify(subscription.user, @menu, message)
       end
     end
+    
     render json: @menu, status: :ok
     end
   end
