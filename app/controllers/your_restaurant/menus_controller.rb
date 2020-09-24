@@ -5,6 +5,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
   before_action :set_offset_and_limit, only: :index
   before_action :set_menu, only: [:show, :update, :destroy]
 
+  include Subscribable
   # GET /your_restaurant/menus
   def index
     @menus = current_user.restaurant.menus.limit(@limit).offset(@offset)
@@ -41,8 +42,9 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
 
     # Notifications
     @subscriptions = Subscription.where(subscribable: current_user.restaurant)
+    message = "#{current_user.username}'s #{@menu.name} is in the town! Go check it out!"
     @subscriptions.each do |subscription|
-      Notification.create(recipient: subscription.user, notifiable: @menu, content: "A new menu is available. Let's check!")
+      notify(subscription.user, @menu, message)
     end
   end
 
@@ -55,11 +57,34 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
         raise ActiveRecord::Rollback
       end
 
-      raise ActiveRecord::Rollback unless create_preorders?
-      raise ActiveRecord::Rollback unless update_preorders?
-      raise ActiveRecord::Rollback unless destroy_preorders?
+      if create_preorders?
+        is_success = false
+        raise ActiveRecord::Rollback
+      end
+
+      if update_preorders?
+        is_success = false
+        raise ActiveRecord::Rollback
+      end
+
+      if destroy_preorders?
+        is_success = false
+        raise ActiveRecord::Rollback
+      end
 
       render json: @menu, status: :ok
+    end
+
+    return unless is_success
+    # Notifications
+    if exist_new_preorder
+      @subscriptions = Subscription.where(subscribable: current_user.restaurant) | Subscription.where(subscribable: @menu)
+      message = "#{current_user.username}'s #{@menu.name} is scheduled for a pre-order! Let's check it out"
+      @subscriptions.each do |subscription|
+        notify(subscription.user, @menu, message)
+      end
+    end
+    render json: @menu, status: :ok
     end
   end
 
