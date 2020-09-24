@@ -145,8 +145,11 @@ function Main() {
               <PrivateRoute exact path="/your-restaurant/orders/:id">
                 <RestaurantOrderSection />
               </PrivateRoute>
-              <PrivateRoute path="/orders">
-                <Orders />
+              <PrivateRoute exact path="/orders">
+                <Orders isPaid={false} />
+              </PrivateRoute>
+              <PrivateRoute exact path="/orders/paid">
+                <Orders isPaid={true} />
               </PrivateRoute>
               <PrivateRoute path="/profile">
                 <Profile />

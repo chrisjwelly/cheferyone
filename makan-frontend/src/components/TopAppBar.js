@@ -20,6 +20,7 @@ import { setOrdersTabIndex } from "../actions/orders-tab-actions";
 import { setIsShowSearchOverlay } from "../actions/search-actions";
 import { uppercaseFirst } from "../utils/general";
 import LoadingCenter from "./LoadingCenter";
+import { setDrawerState } from "../actions/notification-actions";
 
 const Tabs = lazy(() => import("@material-ui/core/Tabs"));
 
@@ -88,6 +89,7 @@ export default function TopAppBar({ hasBell }) {
   const { isShowSearchOverlay, searchSection } = useSelector(
     (store) => store.search
   );
+  const isDrawerOpen = useSelector((store) => store.notification.isOpen);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -141,7 +143,11 @@ export default function TopAppBar({ hasBell }) {
                   />
                 </form>
               </div>
-              <IconButton aria-label="notifications" color="inherit">
+              <IconButton
+                aria-label="notifications"
+                color="inherit"
+                onClick={() => dispatch(setDrawerState(!isDrawerOpen))}
+              >
                 <Badge badgeContent={0} color="secondary">
                   <NotificationsIcon />
                 </Badge>
@@ -172,7 +178,12 @@ export default function TopAppBar({ hasBell }) {
               centered
               indicatorColor="primary"
               value={ordersTabIndex}
-              onChange={(_, index) => dispatch(setOrdersTabIndex(index))}
+              onChange={(_, index) => {
+                index === 0
+                  ? history.push("/orders")
+                  : history.push("/orders/paid");
+                dispatch(setOrdersTabIndex(index));
+              }}
               aria-label="orders tabs"
             >
               <Tab label="Cart" />

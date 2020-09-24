@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { createConsumer } from "@rails/actioncable";
 
+import { setDrawerState } from "../actions/notification-actions";
+
 const useStyles = makeStyles((theme) => ({
   drawer: { width: 240 },
   root: { zIndex: theme.zIndex.modal },
@@ -15,6 +17,7 @@ export default function NotificationsDrawer() {
   const authToken = useSelector(
     (store) => store.auth.user.authentication_token
   );
+  const isOpen = useSelector((store) => store.notification.isOpen);
 
   const [consumer, setConsumer] = useState(null);
 
@@ -37,6 +40,8 @@ export default function NotificationsDrawer() {
     <Drawer
       classes={{ paper: classes.drawer, root: classes.root }}
       anchor="right"
+      open={isOpen}
+      onClose={() => dispatch(setDrawerState(false))}
     >
       Test
     </Drawer>
@@ -51,4 +56,6 @@ function getWebSocketUrl(authToken) {
   }
 }
 
-function CurrentNotification() {}
+function CurrentNotification() {
+  
+}

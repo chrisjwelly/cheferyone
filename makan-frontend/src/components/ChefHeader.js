@@ -5,6 +5,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Chip from "@material-ui/core/Chip";
+import isEmpty from "lodash/isEmpty";
+import { useSelector } from "react-redux";
 
 import CollapsibleText from "./CollapsibleText";
 import SubscribeButton from "../components/SubscribeButton";
@@ -29,6 +31,8 @@ export default function ChefHeader({
   isOwner,
 }) {
   const classes = useStyles();
+
+  const currUser = useSelector((store) => store.auth.user);
   return (
     <Grid container className={classes.root} alignItems="center">
       <Grid item xs={5}>
@@ -39,7 +43,7 @@ export default function ChefHeader({
           <Grid item xs={12}>
             <Typography variant="h6">{username}</Typography>
           </Grid>
-          {!isOwner && (
+          {!isOwner && !isEmpty(currUser) && (
             <Grid item xs={12}>
               <SubscribeButton size="small" chefName={username} />
             </Grid>

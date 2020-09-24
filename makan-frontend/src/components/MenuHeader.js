@@ -5,6 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import LinesEllipsis from "react-lines-ellipsis";
 import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "react-router-dom";
+import isEmpty from "lodash/isEmpty";
+import { useSelector } from "react-redux";
 
 import RatingStars from "./RatingStars";
 import SubscribeButton from "./SubscribeButton";
@@ -40,6 +42,8 @@ export default function MenuHeader({
 }) {
   const classes = useStyles();
 
+  const currUser = useSelector((store) => store.auth.user);
+
   return (
     <Grid container wrap="nowrap" alignItems="center">
       {image && (
@@ -51,7 +55,7 @@ export default function MenuHeader({
         <Typography variant="h6" component="div">
           <LinesEllipsis text={name} maxLine="2" basedOn="letters" />
         </Typography>
-        {!isOwner && (
+        {!isOwner && !isEmpty(currUser) && (
           <SubscribeButton
             className={classes.marginBottom}
             size="small"
