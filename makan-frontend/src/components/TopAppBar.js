@@ -150,7 +150,7 @@ export default function TopAppBar({ hasBell }) {
           )}
         </Toolbar>
         {isTabsShown && (
-          <Suspense fallback={LoadingCenter}>
+          <Suspense fallback={<LoadingCenter />}>
             <Tabs
               centered
               indicatorColor="primary"
@@ -167,7 +167,7 @@ export default function TopAppBar({ hasBell }) {
           </Suspense>
         )}
         {isOrdersTabsShown && (
-          <Suspense fallback={LoadingCenter}>
+          <Suspense fallback={<LoadingCenter />}>
             <Tabs
               centered
               indicatorColor="primary"

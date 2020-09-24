@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-import { createConsumer } from "@rails/actioncable";
-import { useStore } from "react-redux";
+import { useSelector } from "react-redux";
+
+import consumer from "../utils/consumer";
 
 const useStyles = makeStyles({ drawer: { width: 240 } });
 
 export default function NotificationsDrawer() {
   const classes = useStyles();
-  const authToken = useStore((store) => store.auth.user.authentication_token);
+  const authToken = useSelector(
+    (store) => store.auth.user.authentication_token
+  );
+
+  useEffect(() => {
+    if (authToken) {
+      consumer.subscriptions.create(
+        { channel: "NotificationsChannel" },
+        {
+          received(data) {
+            console.log(data);
+          },
+        }
+      );
+    }
+  }, [authToken]);
 
   return (
     <Drawer classes={{ paper: classes.drawer }} anchor="right">

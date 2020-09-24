@@ -23,7 +23,6 @@ import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import { getLocation } from "./actions/location-actions";
 import { runRequests } from "./utils/offline-utils";
-import YourRestaurant from "./pages/YourRestaurant";
 
 const Home = lazy(() => import("./pages/Home"));
 const ListMenu = lazy(() => import("./pages/ListMenu"));
@@ -33,7 +32,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Orders = lazy(() => import("./pages/Orders"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Register = lazy(() => import("./pages/Register"));
-// const YourRestaurant = lazy(() => import("./pages/YourRestaurant"));
+const YourRestaurant = lazy(() => import("./pages/YourRestaurant"));
 const EditMenu = lazy(() => import("./pages/EditMenu"));
 const Chef = lazy(() => import("./pages/Chef"));
 const CreateMenu = lazy(() => import("./pages/CreateMenu"));
@@ -129,23 +128,23 @@ function Main() {
         <SearchOverlay />
       ) : (
         <Container className={classes.root} maxWidth="sm">
-          <Switch>
-            <PrivateRoute exact path="/your-restaurant">
-              <YourRestaurant currTab={0} />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/orders">
-              <YourRestaurant currTab={1} />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/edit">
-              <YourRestaurant currTab={2} />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/create">
-              <CreateMenu />
-            </PrivateRoute>
-            <PrivateRoute exact path="/your-restaurant/orders/:id">
-              <RestaurantOrderSection />
-            </PrivateRoute>
-            <Suspense>
+          <Suspense fallback={<LoadingCenter />}>
+            <Switch>
+              <PrivateRoute exact path="/your-restaurant">
+                <YourRestaurant currTab={0} />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/orders">
+                <YourRestaurant currTab={1} />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/edit">
+                <YourRestaurant currTab={2} />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/create">
+                <CreateMenu />
+              </PrivateRoute>
+              <PrivateRoute exact path="/your-restaurant/orders/:id">
+                <RestaurantOrderSection />
+              </PrivateRoute>
               <PrivateRoute path="/orders">
                 <Orders />
               </PrivateRoute>
@@ -194,8 +193,8 @@ function Main() {
               <Route path="*">
                 <NotFound />
               </Route>
-            </Suspense>
-          </Switch>
+            </Switch>
+          </Suspense>
         </Container>
       )}
 
