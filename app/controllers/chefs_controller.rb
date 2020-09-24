@@ -1,7 +1,7 @@
 class ChefsController < ApplicationController
-  acts_as_token_authentication_handler_for User, only: [:subscribe, :unsubscribe]
+  acts_as_token_authentication_handler_for User, only: [:subscribe, :unsubscribe, :is_subscribed]
   before_action :set_offset_and_limit, only: [:filter, :search, :index]
-  before_action :set_chef, only: [:show, :subscribe, :unsubscribe]
+  before_action :set_chef, only: [:show, :subscribe, :unsubscribe, :is_subscribed]
 
   # GET /chefs/filter?tags=params
   def filter
@@ -68,6 +68,13 @@ class ChefsController < ApplicationController
         }, status: :unprocessable_entity
       end
     end
+  end
+
+  # GET /chefs/1/is_subscribed
+  def is_subscribed
+    render json: {
+      is_subscribed: Subscription.exists?(user: current_user, subscribable: @chef.restaurant)
+    }, status: :ok
   end
 
   private
