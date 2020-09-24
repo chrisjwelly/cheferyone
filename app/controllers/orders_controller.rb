@@ -55,7 +55,6 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1/update_status
   def update_status
-    puts "lololl"
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
