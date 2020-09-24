@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import MenuListCard from "../components/MenuListCard";
-import LinesEllipsis from "react-lines-ellipsis";
 import Grid from "@material-ui/core/Grid";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function OrderCard({ order, children }) {
   const classes = useStyles();
-  const { id, name, description, image_url, price } = order.menu;
+  const { id, name, image_url, price } = order.menu;
 
   return (
     <MenuListCard
