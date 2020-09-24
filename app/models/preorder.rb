@@ -21,6 +21,11 @@ class Preorder < ApplicationRecord
     now >= start_date
   end
 
+  def has_ended?
+    now = DateTime.now
+    now > end_date
+  end
+
   def get_orders_for_quantity
     ordered_quantity = self.orders.where("orders.status != ? AND orders.status != ?",
       Order.statuses[:ended],

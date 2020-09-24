@@ -16,6 +16,7 @@ class Users::SessionsController < Devise::SessionsController
         authentication_token: @user.authentication_token
       }), status: :ok
     else
+      @user.errors.add(:credentials, "is incorrect")
       render json: { errors: @user.errors }, status: :unauthorized
     end
   end
@@ -53,14 +54,31 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def load_user
+    missing_params = false
+    errors = {}
+    if sign_in_params[:login] == ""
+      missing_params = true
+      errors.store(:login, ["can't be blank"])
+    end
+
+    if sign_in_params[:password] == ""
+      missing_params = true
+      errors.store(:password, ["can't be blank"])
+    end
+
+    if missing_params
+      render json: { errors: errors }, status: :unprocessable_entity
+      return
+    end
+
     @user = User.find_for_database_authentication(login: sign_in_params[:login])
     if @user
       return @user
     else
       render json: {
-        messages: "Cannot get User",
-        is_success: false,
-        data: {}
+        errors: {
+          credentials: ["is incorrect"]
+        }
       }, status: :unauthorized
     end
   end
