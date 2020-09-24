@@ -7,6 +7,7 @@ import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "react-router-dom";
 
 import RatingStars from "./RatingStars";
+import SubscribeButton from "./SubscribeButton";
 
 const useStyles = makeStyles((theme) => ({
   thumbnail: {
@@ -24,26 +25,39 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.black,
     fontWeight: theme.typography.fontWeightBold,
   },
+  marginBottom: {
+    marginBottom: theme.spacing(1),
+  },
 }));
 
-export default function MenuHeader({ name, rating, homecook, image }) {
+export default function MenuHeader({
+  name,
+  rating,
+  homecook,
+  image,
+  id,
+  isOwner,
+}) {
   const classes = useStyles();
 
   return (
     <Grid container wrap="nowrap" alignItems="center">
       {image && (
         <Grid item component={Link} href={image}>
-          <img
-            alt={name}
-            className={classes.thumbnail}
-            src={image}
-          />
+          <img alt={name} className={classes.thumbnail} src={image} />
         </Grid>
       )}
       <Grid item className={classes.nameContainer}>
         <Typography variant="h6" component="div">
           <LinesEllipsis text={name} maxLine="2" basedOn="letters" />
         </Typography>
+        {!isOwner && (
+          <SubscribeButton
+            className={classes.marginBottom}
+            size="small"
+            menuId={id}
+          />
+        )}
         <RatingStars size="small" rating={rating} />
         <Typography
           variant="caption"

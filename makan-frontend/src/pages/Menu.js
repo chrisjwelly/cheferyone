@@ -109,10 +109,12 @@ export default function Menu() {
     return (
       <div className={classes.root}>
         <MenuHeader
+          id={id}
           name={data.name}
           homecook={data.username}
           image={data.image_url}
           rating={data.rating}
+          isOwner={!isNotOwner}
         />
         {!isNotOwner && (
           <Grid container>

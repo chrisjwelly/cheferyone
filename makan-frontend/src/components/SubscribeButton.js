@@ -8,7 +8,7 @@ import RedButton from "./RedButton";
 
 export default function SubscribeButton({ chefName, menuId, ...rest }) {
   const { data } = useGet(
-    `/api/v1/${chefName ? "chefs" : "menu"}/${chefName || menuId}/is_subscribed`
+    `/api/v1/${chefName ? "chefs" : "menus"}/${chefName || menuId}/is_subscribed`
   );
 
   const { post } = usePost();
