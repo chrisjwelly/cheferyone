@@ -9,6 +9,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
+  def failure
+    render body: nil, status: :unauthorized
+  end
+
   private
 
   def from_google_params
