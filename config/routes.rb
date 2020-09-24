@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # Since everything is a json, any endpoint has to be put inside this block
   mount ActionCable.server => '/cable'
-  
+
   scope '/api/v1', defaults: { format: :json } do
     get 'test/index'
     get 'authenticated', to: 'test#authenticated'
@@ -86,5 +86,9 @@ Rails.application.routes.draw do
         end
       end
     end
+  end
+
+  get '*path', to: "application#fallback_index_html", constraints: ->(request) do
+    !request.xhr? && request.format.html?
   end
 end
