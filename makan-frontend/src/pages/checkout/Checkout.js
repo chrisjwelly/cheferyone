@@ -76,9 +76,14 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
     if (activeStep === 1) {
-      post({}, "/api/v1/cart/pay", "POST");
+      post({}, "/api/v1/cart/pay", "POST", null, false).then((res) => {
+        if (res && res !== "offline") {
+          setActiveStep(activeStep + 1);
+        }
+      });
+    } else {
+      setActiveStep(activeStep + 1);
     }
   };
 

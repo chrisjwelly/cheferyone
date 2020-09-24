@@ -67,7 +67,7 @@ export default function Login() {
     ReactGA.event({
       category: "Logging in",
       action: "User is logging in",
-    })
+    });
     e.preventDefault();
     dispatch(
       loginUser(
@@ -80,7 +80,9 @@ export default function Login() {
               },
             },
             "/api/v1/users/sign_in",
-            "POST"
+            "POST",
+            null,
+            false
           ),
         inputs.isRemember,
         () => setIsLoading(false),

@@ -3,8 +3,16 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import useSWR, { useSWRInfinite } from "swr";
 import { v4 as uuidv4 } from "uuid";
+<<<<<<< HEAD
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
+import { useHistory } from "react-router-dom";
+||||||| merged common ancestors
+import _ from "lodash";
+=======
+import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
+>>>>>>> 2b2343200b3a48d5a665963d0428a9b99bcdb62e
 
 import { PAGE_SIZE } from "../constants";
 import storage from "./firebase-storage";
@@ -12,7 +20,7 @@ import {
   openWarningSnackBar,
   openErrorSnackBar,
 } from "../actions/snackbar-actions";
-import { useHistory } from "react-router-dom";
+import { saveRequest } from "../utils/offline-utils";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -52,11 +60,12 @@ function displayMessage(
   } else if (isNotFound) {
     history.push("/404");
   } else if (isOffline) {
-    dispatch(
-      openWarningSnackBar(
-        "You are currently offline. Offline functionality may be limited"
-      )
-    );
+    // placeholder
+    // dispatch(
+    //   openWarningSnackBar(
+    //     "You are currently offline. Offline functionality may be limited"
+    //   )
+    // );
   } else if (
     error &&
     error.response &&
@@ -137,8 +146,30 @@ export function useInfinite(url) {
 export function usePost() {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const post = async (dataToPost, path, method, imageBlob = null) => {
+  const post = async (
+    dataToPost,
+    path,
+    method,
+    imageBlob = null,
+    isSaveOffline = true
+  ) => {
+    if (
+      offlineHandler(
+        isSaveOffline,
+        imageBlob,
+        method,
+        path,
+        dataToPost,
+        dispatch,
+        history
+      )
+    ) {
+      // Stop execution if request has been saved offline
+      return "offline";
+    }
+
     let err = {};
 
     if (imageBlob) {
@@ -203,4 +234,37 @@ function parseErrors(err) {
   } else {
     return <p>An error has occurred, please try again</p>;
   }
+}
+
+function offlineHandler(
+  isSaveOffline,
+  imageBlob,
+  method,
+  path,
+  data,
+  dispatch,
+  history
+) {
+  if (!navigator.onLine && isSaveOffline && !imageBlob) {
+    saveRequest({
+      method,
+      url: path,
+      data: JSON.stringify(data),
+    });
+
+    dispatch(
+      openWarningSnackBar(
+        "No network detected, operation will be completed when device is connected to the internet"
+      )
+    );
+    history.goBack();
+
+    return true;
+  } else if (!navigator.onLine) {
+    console.log("here")
+    dispatch(openErrorSnackBar("No internet connection!"));
+    return true;
+  }
+
+  return false;
 }

@@ -13,6 +13,7 @@ import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ReactGA from "react-ga";
+import Tab from "@material-ui/core/Tab";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 import { setOrdersTabIndex } from "../actions/orders-tab-actions";
@@ -21,7 +22,6 @@ import { uppercaseFirst } from "../utils/general";
 import LoadingCenter from "./LoadingCenter";
 
 const Tabs = lazy(() => import("@material-ui/core/Tabs"));
-const Tab = lazy(() => import("@material-ui/core/Tab"));
 
 const useStyles = makeStyles((theme) => ({
   root: {

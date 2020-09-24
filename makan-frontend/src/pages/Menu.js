@@ -90,7 +90,7 @@ export default function Menu() {
                 "DELETE"
               );
 
-              if (res) {
+              if (res && res !== "offline") {
                 dispatch(openSuccessSnackBar("Menu deleted!"));
                 history.push("/your-restaurant");
               }

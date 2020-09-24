@@ -53,7 +53,7 @@ export default function EditRestaurant() {
               dispatch(closeDialog());
               const res = await post({}, `/api/v1/your_restaurant/`, "DELETE");
 
-              if (res) {
+              if (res && res !== "offline") {
                 dispatch(openSuccessSnackBar("Restaurant deleted!"));
                 window.location.reload();
               }

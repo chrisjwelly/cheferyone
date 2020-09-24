@@ -46,7 +46,7 @@ function CreateMenu() {
     ReactGA.event({
       category: "Creating a menu",
       action: "User is creating a new menu item",
-    }) 
+    });
     e.preventDefault();
     setIsLoading(true);
 
@@ -61,10 +61,14 @@ function CreateMenu() {
       "POST",
       imageBlob
     );
-    
-    if (res) {
+
+    if (res && res !== "offline") {
       dispatch(openSuccessSnackBar("Menu created!"));
-      history.push(`/menu/${res.data.id}`);
+      if (res.data) {
+        history.push(`/menu/${res.data.id}`);
+      } else {
+        history.push("/menu");
+      }
     } else {
       setIsLoading(false);
     }

@@ -128,7 +128,7 @@ function MenuTab() {
                 "DELETE"
               );
 
-              if (res) {
+              if (res && res !== "offline") {
                 dispatch(openSuccessSnackBar("Menu deleted!"));
                 window.location.reload();
               }

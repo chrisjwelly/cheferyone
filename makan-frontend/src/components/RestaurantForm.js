@@ -108,7 +108,7 @@ export default function RestaurantForm({
       imageBlob
     );
 
-    if (res) {
+    if (res && res !== "offline") {
       dispatch(
         openSuccessSnackBar(`Restaurant ${isEdit ? "updated" : "created"}!`)
       );

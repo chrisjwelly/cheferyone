@@ -68,7 +68,7 @@ export default function Register() {
     ReactGA.event({
       category: "Registering an account",
       action: "User is registering an account",
-    })
+    });
     e.preventDefault();
     setIsLoading(true);
     post(
@@ -76,7 +76,9 @@ export default function Register() {
         user: inputs,
       },
       "/api/v1/users",
-      "POST"
+      "POST",
+      null,
+      false
     ).then((res) => {
       if (res) {
         dispatch(closeErrorSnackBar());

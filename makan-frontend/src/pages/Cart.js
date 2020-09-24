@@ -105,7 +105,7 @@ export default function Cart() {
               dispatch(closeDialog());
               const res = await post({}, `/api/v1/orders/${id}`, "DELETE");
 
-              if (res) {
+              if (res && res !== "offline") {
                 dispatch(openSuccessSnackBar("Order deleted!"));
                 history.push("/");
                 history.push("/orders");

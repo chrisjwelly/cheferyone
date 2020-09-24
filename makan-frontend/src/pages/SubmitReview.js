@@ -94,7 +94,7 @@ export default function SubmitReview() {
       `/api/v1/orders/${orderId}/review`,
       submitType
     );
-    if (res) {
+    if (res && res !== "offline") {
       dispatch(openSuccessSnackBar("Review posted!"));
       history.goBack();
     } else {

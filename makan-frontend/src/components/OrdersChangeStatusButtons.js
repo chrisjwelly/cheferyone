@@ -49,7 +49,7 @@ export default function OrdersChangeStatusButtons({
                 "PATCH"
               );
 
-              if (res) {
+              if (res && res !== "offline") {
                 dispatch(
                   openSuccessSnackBar(
                     `Order ${

@@ -20,6 +20,7 @@ import SearchOverlay from "./components/SearchOverlay";
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import { getLocation } from "./actions/location-actions";
+import { runRequests } from "./utils/offline-utils";
 
 const Home = lazy(() => import("./pages/Home"));
 const ListMenu = lazy(() => import("./pages/ListMenu"));
@@ -92,6 +93,12 @@ function App() {
 
     hydrateRedux();
   }, [currUser, dispatch]);
+
+  useEffect(() => {
+    window.addEventListener("online", runRequests);
+
+    return () => window.removeEventListener("online", runRequests);
+  }, []);
 
   return (
     <>
