@@ -17,7 +17,7 @@ export default function RestaurantOrdersSection() {
   } else if (data.length === 0) {
     return (
       <Typography variant="caption" color="textSecondary">
-        It seems a little lonely here...
+        No orders in this section. Start selling some food!
       </Typography>
     );
   } else {
@@ -26,11 +26,14 @@ export default function RestaurantOrdersSection() {
         <Typography variant="h6">{uppercaseFirst(id)}</Typography>
         {[...data].reverse().map((order, i) => (
           <OrderCard order={order} key={i}>
-            <OrdersChangeStatusButtons
-              order={order}
-              isToConfirm={id === "paid"}
-              dest={`/your-restaurant/orders/${id}`}
-            />
+            {id === "paid" ||
+              (id === "confirmed" && (
+                <OrdersChangeStatusButtons
+                  order={order}
+                  isToConfirm={id === "paid"}
+                  dest={`/your-restaurant/orders/${id}`}
+                />
+              ))}
           </OrderCard>
         ))}
       </div>

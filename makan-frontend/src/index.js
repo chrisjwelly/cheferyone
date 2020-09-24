@@ -8,13 +8,9 @@ import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
 import { createBrowserHistory } from "history";
 import ReactGA from "react-ga";
-import ActionCableProvider from "@thrash-industries/react-actioncable-provider";
-import "fontsource-roboto/300.css"
-import "fontsource-roboto/400.css"
-import "fontsource-roboto/500.css"
-import "fontsource-roboto/700.css"
 
 import store from "./store";
+import "./fonts.css";
 
 // Set all post requests to contain json payload
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -27,15 +23,13 @@ history.listen((location) => {
   ReactGA.set({ page: location.pathname }); // Update the user's current page
   ReactGA.pageview(location.pathname); // Record a pageview for the given page
 });
-
+// "ws://localhost:3000/cable?token=chef1">
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router history={history}>
         <SWRConfig value={{ shouldRetryOnError: false }}>
-          <ActionCableProvider url="ws://localhost:3000/cable?token=chef1">
             <App />
-          </ActionCableProvider>
         </SWRConfig>
       </Router>
     </Provider>

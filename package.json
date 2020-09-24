@@ -9,5 +9,8 @@
     "build": "yarn --cwd makan-frontend install && yarn --cwd makan-frontend build",
     "deploy": "cp -a makan-frontend/build/. public/",
     "heroku-postbuild": "yarn build && yarn deploy"
+  },
+  "dependencies": {
+    "@rails/actioncable": "^6.0.3-3"
   }
 }

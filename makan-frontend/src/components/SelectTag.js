@@ -18,7 +18,9 @@ export default function SelectTag({ selected, setSelected, header }) {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h6">{header === undefined ? "Tags" : header}</Typography>
+      <Typography variant="h6">
+        {header === undefined ? "Tags" : header}
+      </Typography>
       <Grid container spacing={1}>
         {TAGS.map((tag, i) => (
           <Grid item key={i}>

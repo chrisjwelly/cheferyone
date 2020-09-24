@@ -32,7 +32,8 @@ class User < ApplicationRecord
   end
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [:google_oauth2]
 
   has_one :restaurant, dependent: :destroy
   has_many :menus, through: :restaurant
@@ -61,5 +62,9 @@ class User < ApplicationRecord
   	login = conditions.delete(:login)
   	where(conditions).where(["lower(username) = :value OR lower(email) = :value",
       { value: login.downcase}]).first
+  end
+
+  def self.from_google(email:)
+    return create_with(username: "#{email[/^[^@]+/]}_#{SecureRandom.hex(1)}", password: "#{email[/^[^@]+/]}").find_or_create_by!(email: email)
   end
 end

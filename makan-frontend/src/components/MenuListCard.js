@@ -47,7 +47,7 @@ export default function MenuListCard({ name, link, image, children, ...rest }) {
               <CardMedia className={classes.media} image={image} title={name} />
             </Grid>
           )}
-          <Grid item className={classes.detailsContainer}>
+          <Grid item className={classes.detailsContainer} xs={12}>
             <CardContent className={classes.cardContent}>
               <Typography variant="subtitle1" className={classes.title}>
                 {name}

@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import axios from "axios";
 import ReactGA from "react-ga";
 
@@ -17,9 +17,12 @@ import RootDialog from "./components/RootDialog";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import TopAppBar from "./components/TopAppBar";
 import SearchOverlay from "./components/SearchOverlay";
+import NotificationsDrawer from "./components/NotificationsDrawer";
+
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
 import { getLocation } from "./actions/location-actions";
+import { runRequests } from "./utils/offline-utils";
 
 const Home = lazy(() => import("./pages/Home"));
 const ListMenu = lazy(() => import("./pages/ListMenu"));
@@ -31,7 +34,6 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Register = lazy(() => import("./pages/Register"));
 const YourRestaurant = lazy(() => import("./pages/YourRestaurant"));
 const EditMenu = lazy(() => import("./pages/EditMenu"));
-const Notifications = lazy(() => import("./pages/Notifications"));
 const Chef = lazy(() => import("./pages/Chef"));
 const CreateMenu = lazy(() => import("./pages/CreateMenu"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
@@ -63,7 +65,7 @@ function App() {
     ReactGA.initialize("UA-178745693-1");
 
     async function hydrateRedux() {
-      if (_.isEmpty(currUser)) {
+      if (isEmpty(currUser)) {
         const user =
           localStorage.getItem("auth") || sessionStorage.getItem("auth");
         if (user) {
@@ -93,6 +95,12 @@ function App() {
     hydrateRedux();
   }, [currUser, dispatch]);
 
+  useEffect(() => {
+    window.addEventListener("online", runRequests);
+
+    return () => window.removeEventListener("online", runRequests);
+  }, []);
+
   return (
     <>
       <CssBaseline />
@@ -114,7 +122,8 @@ function Main() {
       <SuccessSnackbar />
       <WarningSnackbar />
       <RootDialog />
-      <TopAppBar hasBell={!_.isEmpty(currUser)} />
+      <NotificationsDrawer />
+      <TopAppBar hasBell={!isEmpty(currUser)} />
       {isShowSearchOverlay ? (
         <SearchOverlay />
       ) : (
@@ -189,7 +198,7 @@ function Main() {
         </Container>
       )}
 
-      {!_.isEmpty(currUser) && (
+      {!isEmpty(currUser) && (
         <BottomNavigationBar className={classes.bottomNavigationBar} />
       )}
     </>

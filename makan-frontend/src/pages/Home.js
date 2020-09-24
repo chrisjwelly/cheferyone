@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { Link } from "react-router-dom";
 
 import MenuCard from "../components/MenuCard";
@@ -32,7 +32,7 @@ export default function Home() {
 
   const currUser = useSelector((store) => store.auth.user);
 
-  if (_.isEmpty(currUser)) {
+  if (isEmpty(currUser)) {
     return <NotAuthenticated />;
   } else {
     return <Authenticated />;
@@ -52,7 +52,7 @@ function Authenticated() {
   useEffect(() => {
     setHasLocationName(!!location && !!location.name);
 
-    if (!!location) {
+    if (!!location && navigator.onLine) {
       setNearbyPath(
         `/api/v1/menus/near_you?latitude=${location.lat}&longitude=${location.lng}&limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
       );

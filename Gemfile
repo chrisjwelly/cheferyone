@@ -41,8 +41,11 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'devise'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
 gem 'simple_token_authentication'
 gem "algoliasearch-rails"
 gem 'will_paginate', '~> 3.1.0'
 gem 'active_model_serializers', '~> 0.10.0'
+gem 'orm_adapter', '~> 0.5.0'
 gem 'geokit-rails'

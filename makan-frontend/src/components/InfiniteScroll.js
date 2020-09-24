@@ -48,7 +48,7 @@ export default function InfiniteScroll({ apiPath, children }) {
               <Typography variant="caption">
                 {res.data[0].length > 0
                   ? "When you are at rock bottom... the only way is up :')"
-                  : "It seems a little lonely here..."}
+                  : "No data found. It seems a little lonely here..."}
               </Typography>
             )}
           </div>

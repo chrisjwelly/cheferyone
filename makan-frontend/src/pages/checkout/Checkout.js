@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -76,9 +76,14 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
     if (activeStep === 1) {
-      post({}, "/api/v1/cart/pay", "POST");
+      post({}, "/api/v1/cart/pay", "POST", null, false).then((res) => {
+        if (res && res !== "offline") {
+          setActiveStep(activeStep + 1);
+        }
+      });
+    } else {
+      setActiveStep(activeStep + 1);
     }
   };
 
@@ -87,9 +92,9 @@ export default function Checkout() {
   };
 
   useEffect(() => {
-    if (!isLoading && _.isEmpty(data)) {
+    if (!isLoading && isEmpty(data)) {
       history.push("/");
-    } else if (!isLoading && !_.isEmpty(data)) {
+    } else if (!isLoading && !isEmpty(data)) {
       dispatch(
         openDialog(
           "Note",

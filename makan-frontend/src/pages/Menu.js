@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
@@ -58,7 +58,7 @@ export default function Menu() {
   const [isOrderOpen, setIsOrderOpen] = useState(false);
 
   const orderButtonOnClick = () => {
-    if (!_.isEmpty(currUser)) {
+    if (!isEmpty(currUser)) {
       setIsOrderOpen(true);
     } else {
       history.push("/login");
@@ -90,7 +90,7 @@ export default function Menu() {
                 "DELETE"
               );
 
-              if (res) {
+              if (res && res !== "offline") {
                 dispatch(openSuccessSnackBar("Menu deleted!"));
                 history.push("/your-restaurant");
               }

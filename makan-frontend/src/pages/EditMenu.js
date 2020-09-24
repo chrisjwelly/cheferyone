@@ -81,9 +81,13 @@ function EditMenu({ id }) {
       "PATCH",
       imageBlob
     );
-    if (res) {
+    if (res && res !== "offline") {
       dispatch(openSuccessSnackBar("Menu updated!"));
-      history.push(`/menu/${res.data.id}`);
+      if (res.data) {
+        history.push(`/menu/${res.data.id}`);
+      } else {
+        history.push("/menu");
+      }
     } else {
       setIsLoading(false);
     }

@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { Link as LinkRouter } from "react-router-dom";
 import ReactGA from "react-ga";
 
@@ -42,7 +42,7 @@ export default function Register() {
   // Redirect if logged in
   const currUser = useSelector((store) => store.auth.user);
   useEffect(() => {
-    if (!_.isEmpty(currUser)) {
+    if (!isEmpty(currUser)) {
       history.push("/");
     }
   }, [currUser, history]);
@@ -68,7 +68,7 @@ export default function Register() {
     ReactGA.event({
       category: "Registering an account",
       action: "User is registering an account",
-    })
+    });
     e.preventDefault();
     setIsLoading(true);
     post(
@@ -76,7 +76,10 @@ export default function Register() {
         user: inputs,
       },
       "/api/v1/users",
-      "POST"
+      "POST",
+      null,
+      false,
+      true
     ).then((res) => {
       if (res) {
         dispatch(closeErrorSnackBar());

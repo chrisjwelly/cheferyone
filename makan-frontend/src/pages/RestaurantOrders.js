@@ -19,57 +19,89 @@ export default function RestaurantOrders() {
   const { isLoading: isCompletedLoading, data: completedData } = useGet(
     "/api/v1/your_restaurant/orders/completed"
   );
+  const { isLoading: isEndedLoading, data: endedData } = useGet(
+    "/api/v1/your_restaurant/orders/ended"
+  );
 
-  if (isPaidLoading || isConfirmedLoading || isCompletedLoading) {
+  if (
+    isPaidLoading ||
+    isConfirmedLoading ||
+    isCompletedLoading ||
+    isEndedLoading
+  ) {
     return <LoadingCenter />;
   } else {
     return (
       <div>
         <Typography variant="h6">Paid</Typography>
-        {paidData.reverse().slice(0, PREVIEW_LENGTH).map((order, i) => (
-          <OrderCard order={order} key={i}>
-            <OrdersChangeStatusButtons
-              order={order}
-              dest="/your-restaurant/orders"
-              isToConfirm
-            />
-          </OrderCard>
-        ))}
-        {paidData.reverse().length === 0 ? (
+        {paidData
+          .reverse()
+          .slice(0, PREVIEW_LENGTH)
+          .map((order, i) => (
+            <OrderCard order={order} key={i}>
+              <OrdersChangeStatusButtons
+                order={order}
+                dest="/your-restaurant/orders"
+                isToConfirm
+              />
+            </OrderCard>
+          ))}
+        {paidData.length === 0 ? (
           <Typography variant="caption" color="textSecondary">
-            It seems a little lonely here...
+            No orders in this section. Start selling some food!
           </Typography>
         ) : (
           <SeeAllButton to="/your-restaurant/orders/paid" />
         )}
 
         <Typography variant="h6">Confirmed</Typography>
-        {confirmedData.slice(0, PREVIEW_LENGTH).map((order, i) => (
-          <OrderCard order={order} key={i}>
-            <OrdersChangeStatusButtons
-              order={order}
-              dest="/your-restaurant/orders"
-            />
-          </OrderCard>
-        ))}
-        {completedData.reverse().length === 0 ? (
+        {confirmedData
+          .reverse()
+          .slice(0, PREVIEW_LENGTH)
+          .map((order, i) => (
+            <OrderCard order={order} key={i}>
+              <OrdersChangeStatusButtons
+                order={order}
+                dest="/your-restaurant/orders"
+              />
+            </OrderCard>
+          ))}
+        {completedData.length === 0 ? (
           <Typography variant="caption" color="textSecondary">
-            It seems a little lonely here...
+            No orders in this section. Start selling some food!
           </Typography>
         ) : (
           <SeeAllButton to="/your-restaurant/orders/confirmed" />
         )}
 
         <Typography variant="h6">Completed</Typography>
-        {completedData.slice(0, PREVIEW_LENGTH).map((order, i) => (
-          <OrderCard order={order} key={i} />
-        ))}
+        {completedData
+          .reverse()
+          .slice(0, PREVIEW_LENGTH)
+          .map((order, i) => (
+            <OrderCard order={order} key={i} />
+          ))}
         {completedData.length === 0 ? (
           <Typography variant="caption" color="textSecondary">
-            It seems a little lonely here...
+            No orders in this section. Start selling some food!
           </Typography>
         ) : (
           <SeeAllButton to="/your-restaurant/orders/completed" />
+        )}
+
+        <Typography variant="h6">Ended</Typography>
+        {endedData
+          .reverse()
+          .slice(0, PREVIEW_LENGTH)
+          .map((order, i) => (
+            <OrderCard order={order} key={i} />
+          ))}
+        {endedData.length === 0 ? (
+          <Typography variant="caption" color="textSecondary">
+            No orders in this section. Start selling some food!
+          </Typography>
+        ) : (
+          <SeeAllButton to="/your-restaurant/orders/ended" />
         )}
       </div>
     );

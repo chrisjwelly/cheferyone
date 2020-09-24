@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     get 'test/index'
     get 'authenticated', to: 'test#authenticated'
 
-    devise_for :users, skip: :all         # will be customized manually
+    devise_for :users, skip: [:registrations, :passwords, :sessions], controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
     devise_scope :user do
       post 'users/sign_in', to: 'users/sessions#create'
       delete 'users/sign_out', to: 'users/sessions#destroy'

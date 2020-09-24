@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { Link as LinkRouter } from "react-router-dom";
 import ReactGA from "react-ga";
 
@@ -41,7 +41,7 @@ export default function Login() {
   // Redirect if logged in
   const currUser = useSelector((store) => store.auth.user);
   useEffect(() => {
-    if (!_.isEmpty(currUser)) {
+    if (!isEmpty(currUser)) {
       history.push("/");
     }
   });
@@ -67,7 +67,7 @@ export default function Login() {
     ReactGA.event({
       category: "Logging in",
       action: "User is logging in",
-    })
+    });
     e.preventDefault();
     dispatch(
       loginUser(
@@ -80,7 +80,10 @@ export default function Login() {
               },
             },
             "/api/v1/users/sign_in",
-            "POST"
+            "POST",
+            null,
+            false,
+            true
           ),
         inputs.isRemember,
         () => setIsLoading(false),
@@ -142,12 +145,7 @@ export default function Login() {
           >
             Log In
           </LoadingButton>
-          <Grid container>
-            <Grid item xs>
-              {/* <Link component={LinkRouter} to="/" variant="body2">
-                Forgot Password?
-              </Link> */}
-            </Grid>
+          <Grid container justify="flex-end">
             <Grid item>
               <Link component={LinkRouter} to="/register" variant="body2">
                 Don't have an account? Register

@@ -91,7 +91,7 @@ export default function MenuOrderDrawer({
       method
     );
     
-    if (res) {
+    if (res && res !== "offline") {
       if (isAddToCart) {
         dispatch(openSuccessSnackBar("Order added to cart!"));
       } else {

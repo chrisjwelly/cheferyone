@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { makeStyles, fade } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -7,19 +7,21 @@ import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ReactGA from "react-ga";
+import Tab from "@material-ui/core/Tab";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 import { setOrdersTabIndex } from "../actions/orders-tab-actions";
 import { setIsShowSearchOverlay } from "../actions/search-actions";
 import { uppercaseFirst } from "../utils/general";
+import LoadingCenter from "./LoadingCenter";
+
+const Tabs = lazy(() => import("@material-ui/core/Tabs"));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -116,7 +118,8 @@ export default function TopAppBar({ hasBell }) {
                     ReactGA.event({
                       category: "Searching",
                       action: "User is using the search bar",
-                    });                    e.preventDefault();
+                    });
+                    e.preventDefault();
                     if (searchTerm !== "") {
                       dispatch(setIsShowSearchOverlay(false));
                       history.push(`/search/${searchSection}/${searchTerm}`);
@@ -147,31 +150,35 @@ export default function TopAppBar({ hasBell }) {
           )}
         </Toolbar>
         {isTabsShown && (
-          <Tabs
-            centered
-            indicatorColor="primary"
-            value={index}
-            onChange={(_, index) =>
-              dispatch(setRestaurantTabIndex(index, history))
-            }
-            aria-label="your restaurant tabs"
-          >
-            <Tab label="Menus" />
-            <Tab label="Orders" />
-            <Tab label="Edit" />
-          </Tabs>
+          <Suspense fallback={LoadingCenter}>
+            <Tabs
+              centered
+              indicatorColor="primary"
+              value={index}
+              onChange={(_, index) =>
+                dispatch(setRestaurantTabIndex(index, history))
+              }
+              aria-label="your restaurant tabs"
+            >
+              <Tab label="Menus" />
+              <Tab label="Orders" />
+              <Tab label="Edit" />
+            </Tabs>
+          </Suspense>
         )}
         {isOrdersTabsShown && (
-          <Tabs
-            centered
-            indicatorColor="primary"
-            value={ordersTabIndex}
-            onChange={(_, index) => dispatch(setOrdersTabIndex(index))}
-            aria-label="orders tabs"
-          >
-            <Tab label="Cart" />
-            <Tab label="Paid" />
-          </Tabs>
+          <Suspense fallback={LoadingCenter}>
+            <Tabs
+              centered
+              indicatorColor="primary"
+              value={ordersTabIndex}
+              onChange={(_, index) => dispatch(setOrdersTabIndex(index))}
+              aria-label="orders tabs"
+            >
+              <Tab label="Cart" />
+              <Tab label="Paid" />
+            </Tabs>
+          </Suspense>
         )}
       </AppBar>
       <Toolbar />

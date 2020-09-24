@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 import Typography from "@material-ui/core/Typography";
 import HTMLEllipsis from "react-lines-ellipsis/lib/html";
-import sanitizeHtml from "sanitize-html";
 import { useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
@@ -81,11 +80,9 @@ export default function SearchPage({ isFilter }) {
                         result._highlightResult &&
                         result._highlightResult.description &&
                         result._highlightResult.description.value
-                          ? sanitizeHtml(
-                              result._highlightResult.description.value,
-                              {
-                                allowedTags: ["em"],
-                              }
+                          ? result._highlightResult.description.value.replace(
+                              /<(?!\s*\/?\s*em\b)[^>]*>/gi,
+                              ""
                             )
                           : result.description
                       }

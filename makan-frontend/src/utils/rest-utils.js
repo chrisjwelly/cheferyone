@@ -3,7 +3,9 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import useSWR, { useSWRInfinite } from "swr";
 import { v4 as uuidv4 } from "uuid";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
+import { useHistory } from "react-router-dom";
 
 import { PAGE_SIZE } from "../constants";
 import storage from "./firebase-storage";
@@ -11,7 +13,8 @@ import {
   openWarningSnackBar,
   openErrorSnackBar,
 } from "../actions/snackbar-actions";
-import { useHistory } from "react-router-dom";
+import { saveRequest } from "../utils/offline-utils";
+import { uppercaseFirst } from "../utils/general";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -51,11 +54,12 @@ function displayMessage(
   } else if (isNotFound) {
     history.push("/404");
   } else if (isOffline) {
-    dispatch(
-      openWarningSnackBar(
-        "You are currently offline. Offline functionality may be limited"
-      )
-    );
+    // placeholder
+    // dispatch(
+    //   openWarningSnackBar(
+    //     "You are currently offline. Offline functionality may be limited"
+    //   )
+    // );
   } else if (
     error &&
     error.response &&
@@ -136,8 +140,31 @@ export function useInfinite(url) {
 export function usePost() {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const post = async (dataToPost, path, method, imageBlob = null) => {
+  const post = async (
+    dataToPost,
+    path,
+    method,
+    imageBlob = null,
+    isSaveOffline = true,
+    displayErrorKeys = false
+  ) => {
+    if (
+      offlineHandler(
+        isSaveOffline,
+        imageBlob,
+        method,
+        path,
+        dataToPost,
+        dispatch,
+        history
+      )
+    ) {
+      // Stop execution if request has been saved offline
+      return "offline";
+    }
+
     let err = {};
 
     if (imageBlob) {
@@ -149,7 +176,7 @@ export function usePost() {
     }
     setErrors(err);
 
-    if (imageBlob && !_.isEmpty(err)) {
+    if (imageBlob && !isEmpty(err)) {
       // Show image errors
       dispatch(openErrorSnackBar(parseErrors(err)));
       return false;
@@ -178,12 +205,12 @@ export function usePost() {
       return res;
     } catch (e) {
       const err = e.response.data;
-      if (_.isObject(err) && "errors" in err) {
+      if (isObject(err) && "errors" in err) {
         setErrors(err.errors);
       } else {
         setErrors(err);
       }
-      dispatch(openErrorSnackBar(parseErrors(err)));
+      dispatch(openErrorSnackBar(parseErrors(err, displayErrorKeys)));
       return false;
     }
   };
@@ -192,14 +219,60 @@ export function usePost() {
   return { errors, post, resetErrors };
 }
 
-function parseErrors(err) {
-  if (_.isObject(err) && "errors" in err) {
+function parseErrors(err, displayErrorKeys = false) {
+  if (isObject(err) && "errors" in err) {
     let result = [];
-    for (const key in err.errors) {
-      result.push(<p key={key}>{err.errors[key].join(" ")}</p>);
+
+    if (!displayErrorKeys) {
+      for (const key in err.errors) {
+        result.push(<p key={key}>{err.errors[key].join(", ")}</p>);
+      }
+    } else {
+      for (const key in err.errors) {
+        result.push(
+          <p key={key}>
+            {uppercaseFirst(key).replace("_", " ") +
+              ": " +
+              err.errors[key].join(", ")}
+          </p>
+        );
+      }
     }
     return result;
   } else {
     return <p>An error has occurred, please try again</p>;
   }
+}
+
+function offlineHandler(
+  isSaveOffline,
+  imageBlob,
+  method,
+  path,
+  data,
+  dispatch,
+  history
+) {
+  if (!navigator.onLine && isSaveOffline && !imageBlob) {
+    saveRequest({
+      method,
+      url: path,
+      data: JSON.stringify(data),
+    });
+
+    dispatch(
+      openWarningSnackBar(
+        "No network detected, operation will be completed when device is connected to the internet"
+      )
+    );
+    history.goBack();
+
+    return true;
+  } else if (!navigator.onLine) {
+    console.log("here");
+    dispatch(openErrorSnackBar("No internet connection!"));
+    return true;
+  }
+
+  return false;
 }

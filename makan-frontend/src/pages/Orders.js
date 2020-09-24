@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setTabIndex } from "../actions/bottombar-actions";
-import { setOrdersTabState } from "../actions/orders-tab-actions";
+import { setOrdersTabState, setOrdersTabIndex } from "../actions/orders-tab-actions";
 import NotFound from "./NotFound";
 import Cart from "./Cart";
 import PaidOrders from "./PaidOrders";
@@ -21,6 +21,7 @@ export default function Orders() {
     dispatch(setTabIndex(2));
 
     dispatch(setOrdersTabState(true)); // show tabs
+    dispatch(setOrdersTabIndex(0));
     return () => dispatch(setOrdersTabState(false)); // hide tabs
   }, [dispatch]);
 

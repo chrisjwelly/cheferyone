@@ -1,6 +1,6 @@
 import setAuthHeaders from "../utils/set-auth-headers";
 import { SET_CURRENT_USER } from "./types";
-import { openSuccessSnackBar, closeErrorSnackBar } from "./snackbar-actions";
+import { openSuccessSnackBar } from "./snackbar-actions";
 
 // Login - get user token
 export const loginUser = (post, isRemember, setLoadingDone, history) => (
@@ -8,7 +8,6 @@ export const loginUser = (post, isRemember, setLoadingDone, history) => (
 ) => {
   post().then((res) => {
     if (res) {
-      dispatch(closeErrorSnackBar());
       const user = {
         email: res.data.email,
         authentication_token: res.data.authentication_token,

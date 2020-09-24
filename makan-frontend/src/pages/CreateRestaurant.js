@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import ReactGA from "react-ga";
 
 import RestaurantForm from "../components/RestaurantForm";
-import { openSuccessSnackBar } from "../actions/snackbar-actions";
-import { usePost } from "../utils/rest-utils";
 
 const useStyles = makeStyles((theme) => ({
   headerContainer: {
@@ -16,40 +12,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateRestaurant() {
-  const dispatch = useDispatch();
   const classes = useStyles();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [imageBlob, setImageBlob] = useState(null);
   const [fields, setFields] = useState({
-    location: "",
+    location: null,
+    latitude: "",
+    longitude: "",
     description: "",
+    tags: [],
   });
-
-  const { errors, post, resetErrors } = usePost();
-
-  const onSubmit = async (e) => {
-    ReactGA.event({
-      category: "Creating a Restaurant",
-      action: "User is creating a restaurant",
-    })
-    e.preventDefault();
-    setIsLoading(true);
-
-    const res = await post(
-      { restaurant: fields },
-      `/api/v1/your_restaurant`,
-      "POST",
-      imageBlob
-    );
-    if (res) {
-      dispatch(openSuccessSnackBar("Restaurant created!"));
-
-      window.location.reload();
-    } else {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div>
@@ -66,14 +38,9 @@ export default function CreateRestaurant() {
       </div>
       <RestaurantForm
         fields={fields}
-        setFields={(fields) => {
-          resetErrors();
-          setFields(fields);
-        }}
+        setFields={setFields}
+        imageBlob={imageBlob}
         setImageBlob={setImageBlob}
-        errors={errors}
-        isLoading={isLoading}
-        onSubmit={onSubmit}
       />
     </div>
   );

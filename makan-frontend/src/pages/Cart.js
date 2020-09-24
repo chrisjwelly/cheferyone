@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import { openDialog, closeDialog } from "../actions/dialog-actions";
@@ -105,7 +105,7 @@ export default function Cart() {
               dispatch(closeDialog());
               const res = await post({}, `/api/v1/orders/${id}`, "DELETE");
 
-              if (res) {
+              if (res && res !== "offline") {
                 dispatch(openSuccessSnackBar("Order deleted!"));
                 history.push("/");
                 history.push("/orders");
@@ -122,7 +122,7 @@ export default function Cart() {
 
   if (isLoading) {
     return <LoadingCenter />;
-  } else if (_.isEmpty(data)) {
+  } else if (isEmpty(data)) {
     return (
       <Typography variant="caption" color="textSecondary">
         It seems a little lonely here... Add some food to your cart!
