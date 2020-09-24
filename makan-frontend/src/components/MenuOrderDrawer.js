@@ -90,7 +90,7 @@ export default function MenuOrderDrawer({
       apiPath,
       method
     );
-    
+
     if (res && res !== "offline") {
       if (isAddToCart) {
         dispatch(openSuccessSnackBar("Order added to cart!"));
@@ -111,7 +111,12 @@ export default function MenuOrderDrawer({
             <Grid container wrap="nowrap" alignItems="center">
               <Grid item>
                 {image && (
-                  <img alt={name} className={classes.thumbnail} src={image} />
+                  <img
+                    crossorigin="anonymous"
+                    alt={name}
+                    className={classes.thumbnail}
+                    src={image}
+                  />
                 )}
               </Grid>
               <Grid item className={classes.nameContainer}>

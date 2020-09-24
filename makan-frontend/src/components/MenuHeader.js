@@ -33,7 +33,12 @@ export default function MenuHeader({ name, rating, homecook, image }) {
     <Grid container wrap="nowrap" alignItems="center">
       {image && (
         <Grid item component={Link} href={image}>
-          <img alt={name} className={classes.thumbnail} src={image} />
+          <img
+            crossorigin="anonymous"
+            alt={name}
+            className={classes.thumbnail}
+            src={image}
+          />
         </Grid>
       )}
       <Grid item className={classes.nameContainer}>
@@ -46,7 +51,7 @@ export default function MenuHeader({ name, rating, homecook, image }) {
           component={RouterLink}
           to={`/chef/${homecook}`}
           className={classes.linkStyle}
-        >{`Homecook: ${homecook}`}</Typography>
+        >{`Home Chef: ${homecook}`}</Typography>
       </Grid>
     </Grid>
   );
