@@ -30,7 +30,12 @@ export default function ChefHeader({
   return (
     <Grid container className={classes.root} alignItems="center">
       <Grid item xs={5}>
-        <Avatar alt={username} src={image_url} className={classes.avatar} />
+        <Avatar
+          crossorigin="anonymous"
+          alt={username}
+          src={image_url}
+          className={classes.avatar}
+        />
       </Grid>
       <Grid item xs={7}>
         <Grid container spacing={1}>

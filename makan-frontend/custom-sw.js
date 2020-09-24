@@ -3,7 +3,6 @@
 // cache all GET
 self.addEventListener("fetch", function (event) {
   if (event.request.method === "GET") {
-    console.log(event);
     event.respondWith(
       caches.open("dynamic").then(function (cache) {
         return cache.match(event.request).then(function (response) {
