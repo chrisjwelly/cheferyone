@@ -41,9 +41,10 @@ class User < ApplicationRecord
   has_many :notifications, as: :notifiable 
   has_many :orders
 
-  validates :username, presence: { message: "Username can't be empty" }
+  validates :username, presence: { message: "can't be empty" }, uniqueness: { message: "has already been taken" }
   validates :username, format: { with: /\A[a-zA-Z0-9_]+\Z/,
     message: 'Username should only include alphanumeric characters and underscore' }
+  validates :email, uniqueness: { message: "has already been taken" }
 
   acts_as_token_authenticatable
   def as_json(options = {})
