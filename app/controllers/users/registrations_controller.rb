@@ -19,6 +19,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  # Get current account information
+  def index
+    if current_user.nil?
+      render body: nil, status: :unauthorized
+      return
+    end
+
+    render json: current_user, status: :ok
+  end
+
   # Delete account
   def destroy
     if current_user.nil?
