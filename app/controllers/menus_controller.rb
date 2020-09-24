@@ -1,5 +1,5 @@
 class MenusController < ApplicationController
-  acts_as_token_authentication_handler_for User, only: [:belongs, :recommended, :subscribe, :unsubscribe]
+  acts_as_token_authentication_handler_for User, only: [:belongs, :recommended, :subscribe, :unsubscribe, :is_subscribed]
   before_action :ensure_chef!, only: [:belongs]
   before_action :set_menu, only: [:show, :belongs, :reviews]
   before_action :set_offset_and_limit, only: [:filter, :search, :recommended, :near_you, :recent, :index, :reviews]
@@ -119,6 +119,20 @@ class MenusController < ApplicationController
           message: "Something went wrong"
         }, status: :unprocessable_entity
       end
+    end
+  end
+
+  # POST /menus/1/is_subscribed
+  def is_subscribed
+    @menu = Menu.find(params[:id])
+    if Subscription.exists?(user: current_user, subscribable: @menu)
+      render json: {
+         is_subscribed: true
+      }, status: :ok
+    else
+      render json: {
+         is_subscribed: false
+      }, status: :ok
     end
   end
 

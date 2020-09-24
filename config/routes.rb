@@ -32,6 +32,7 @@ Rails.application.routes.draw do
         get 'belongs'
         post 'subscribe'
         post 'unsubscribe'
+        get 'is_subscribed'
         get 'reviews'
       end
     end
@@ -47,6 +48,7 @@ Rails.application.routes.draw do
       member do
         post 'subscribe'
         post 'unsubscribe'
+        get 'is_subscribed'
       end
     end
 
