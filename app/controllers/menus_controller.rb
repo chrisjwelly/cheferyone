@@ -23,8 +23,21 @@ class MenusController < ApplicationController
 
   # GET /menus/recommended
   def recommended
-    list_of_tags = User.limit(3).includes(orders: { preorder: { menu: :tags }}).where(id: current_user.id, orders: { status: "completed" }).group("tags.name").order("sum(orders.quantity) desc").pluck('tags.name as favourite')
-    @menus = Menu.joins(:tags).left_outer_joins(:reviews).where(tags: { name: list_of_tags }).group(:id).order('avg(rating) desc').limit(@limit).offset(@offset)
+    tags_limit = 3
+    list_of_tags = User.limit(tags_limit).includes(orders: { preorder: { menu: :tags }})
+        .where(id: current_user.id, orders: { status: "completed" }).group("tags.name")
+        .order("sum(orders.quantity) desc").pluck('tags.name as favourite')
+
+    # if favourite tags is below 3, add random tags
+    total_tags = Tag.count
+    # For consistency, random using a fixed seed for each user
+    srand(current_user.id)
+    while list_of_tags.count < tags_limit do
+      list_of_tags.push(Tag.find(rand(1..total_tags)).name)
+    end
+
+    @menus = Menu.joins(:tags).left_outer_joins(:reviews).where(tags: { name: list_of_tags })
+        .group(:id).order('avg(rating) desc').limit(@limit).offset(@offset)
     render json: @menus
   end
 
