@@ -26,7 +26,7 @@ export default function Orders({ isPaid }) {
     dispatch(setOrdersTabState(true)); // show tabs
     dispatch(setOrdersTabIndex(isPaid ? 1 : 0));
     return () => dispatch(setOrdersTabState(false)); // hide tabs
-  }, [dispatch]);
+  }, [dispatch, isPaid]);
 
   return (
     <div className={classes.root}>

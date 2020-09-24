@@ -8,6 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import { format } from "date-fns";
+import ImageIcon from "@material-ui/icons/Image";
+import { useHistory } from "react-router-dom";
 
 import { setDrawerState } from "../actions/notification-actions";
 
@@ -28,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   notification: {
     padding: theme.spacing(1, 0, 1, 0),
+    marginBottom: theme.spacing(2),
   },
   date: {
     marginRight: theme.spacing(1),
@@ -42,7 +45,28 @@ export default function NotificationsDrawer() {
   );
   const isOpen = useSelector((store) => store.notification.isOpen);
   const [consumer, setConsumer] = useState(null);
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([
+    {
+      content: "ah_beng's ee is in the town! Go check it out!",
+      object: {
+        image_url: null,
+        redirect_url: "/menu/26",
+        created_at: "2020-09-24T23:13:30.319Z",
+      },
+      to: {
+        id: 1,
+        email: "user1@example.com",
+        created_at: "2020-09-24T22:36:23.504Z",
+        updated_at: "2020-09-24T22:36:23.504Z",
+        username: "user1",
+        is_chef: false,
+        tags: null,
+        description: null,
+        image_url: null,
+        location: null,
+      },
+    },
+  ]);
 
   useEffect(() => {
     if (authToken && !consumer) {
@@ -52,15 +76,13 @@ export default function NotificationsDrawer() {
         { channel: "NotificationsChannel" },
         {
           received(data) {
-            console.log(data);
+            console.log(JSON.stringify(data));
             setNotifications((notifications) => [data, ...notifications]);
           },
         }
       );
     }
   }, [authToken, consumer]);
-
-  console.log(notifications);
 
   return (
     <Drawer
@@ -69,23 +91,23 @@ export default function NotificationsDrawer() {
       open={isOpen}
       onClose={() => dispatch(setDrawerState(false))}
     >
-      {notifications.length === 0 ? (
-        <Typography variant="caption">
-          No notifications yet. It seems a little lonely here...
-        </Typography>
-      ) : (
-        notifications.map(
-          ({ content, image_url, redirect_url, created_at }, i) => (
+      <div>
+        {notifications.length === 0 ? (
+          <Typography variant="caption">
+            No notifications yet. It seems a little lonely here...
+          </Typography>
+        ) : (
+          notifications.map((notification, i) => (
             <CurrentNotification
               key={i}
-              content={content}
-              image_url={image_url}
-              redirect_url={redirect_url}
-              created_at={created_at}
+              content={notification.content}
+              image_url={notification.object.image_url}
+              redirect_url={notification.object.redirect_url}
+              created_at={notification.object.created_at}
             />
-          )
-        )
-      )}
+          ))
+        )}
+      </div>
     </Drawer>
   );
 }
@@ -99,10 +121,18 @@ function getWebSocketUrl(authToken) {
 }
 
 function CurrentNotification({ content, image_url, redirect_url, created_at }) {
-  console.log(created_at);
   const classes = useStyles();
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   return (
-    <Card className={classes.notification}>
+    <Card
+      className={classes.notification}
+      onClick={() => {
+        dispatch(setDrawerState(false));
+        history.push(redirect_url);
+      }}
+    >
       <Grid container justify="flex-end">
         <Grid item>
           <Typography variant="caption" className={classes.date}>
@@ -112,7 +142,9 @@ function CurrentNotification({ content, image_url, redirect_url, created_at }) {
       </Grid>
       <Grid container wrap="nowrap" alignItems="center">
         <Grid item>
-          <Avatar className={classes.avatar} variant="square" src={image_url} />
+          <Avatar className={classes.avatar} variant="square" src={image_url}>
+            <ImageIcon fontSize="large" />
+          </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="caption">{content}</Typography>
