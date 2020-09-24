@@ -28,6 +28,7 @@ const initialState = {
     searchSection: "menus",
   },
   location: "loading", // Either false, "loading", or { name: null, lat, lng }
+  notification: { isOpen: false },
 };
 
 const middleware = [thunk];

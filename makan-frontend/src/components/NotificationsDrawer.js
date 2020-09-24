@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { createConsumer } from "@rails/actioncable";
 
-import consumer from "../utils/consumer";
-
-const useStyles = makeStyles({ drawer: { width: 240 } });
+const useStyles = makeStyles((theme) => ({
+  drawer: { width: 240 },
+  root: { zIndex: theme.zIndex.modal },
+}));
 
 export default function NotificationsDrawer() {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const authToken = useSelector(
     (store) => store.auth.user.authentication_token
   );
 
+  const [consumer, setConsumer] = useState(null);
+
   useEffect(() => {
-    if (authToken) {
-      consumer.subscriptions.create(
+    if (authToken && !consumer) {
+      const currConsumer = createConsumer(getWebSocketUrl(authToken));
+      setConsumer(currConsumer);
+      currConsumer.subscriptions.create(
         { channel: "NotificationsChannel" },
         {
           received(data) {
@@ -24,10 +31,13 @@ export default function NotificationsDrawer() {
         }
       );
     }
-  }, [authToken]);
+  }, [authToken, consumer]);
 
   return (
-    <Drawer classes={{ paper: classes.drawer }} anchor="right">
+    <Drawer
+      classes={{ paper: classes.drawer, root: classes.root }}
+      anchor="right"
+    >
       Test
     </Drawer>
   );
@@ -40,3 +50,5 @@ function getWebSocketUrl(authToken) {
     return `wss://cheferyone.herokuapp.com/cable?token=${authToken}`;
   }
 }
+
+function CurrentNotification() {}

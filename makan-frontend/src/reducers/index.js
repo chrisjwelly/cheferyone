@@ -8,6 +8,7 @@ import ordersTabReducer from "./orders-tab-reducer";
 import dialogReducer from "./dialog-reducer";
 import searchReducer from "./search-reducer";
 import locationReducer from "./location-reducer";
+import notificationReducer from "./notification-reducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -18,4 +19,5 @@ export default combineReducers({
   search: searchReducer,
   ordersTab: ordersTabReducer,
   location: locationReducer,
+  notification: notificationReducer,
 });

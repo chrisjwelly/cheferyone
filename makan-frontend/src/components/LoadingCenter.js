@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     left: "calc(50% - 20px)",
     top: "calc(50% - 20px)",
-    zIndex: theme.zIndex.tooltip,
+    zIndex: theme.zIndex.mobileStepper,
   },
 }));
 export default function LoadingCenter(props) {
