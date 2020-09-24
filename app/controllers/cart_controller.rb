@@ -35,12 +35,14 @@ class CartController < ApplicationController
       grouped_orders = {}
       
       current_user.orders.unpaid.each do |order|
-        chef_name = order.restaurant.user.username
+        if !order.preorder.has_ended?
+          chef_name = order.restaurant.user.username
 
-        if grouped_orders.has_key? chef_name
-          grouped_orders[chef_name] << order
-        else
-          grouped_orders.store(chef_name, [order])
+          if grouped_orders.has_key? chef_name
+            grouped_orders[chef_name] << order
+          else
+            grouped_orders.store(chef_name, [order])
+          end
         end
       end
 

@@ -63,8 +63,4 @@ class User < ApplicationRecord
   	where(conditions).where(["lower(username) = :value OR lower(email) = :value",
       { value: login.downcase}]).first
   end
-
-  def self.from_google(email:)
-    return create_with(username: "#{email[/^[^@]+/]}_#{SecureRandom.hex(1)}", password: "#{email[/^[^@]+/]}").find_or_create_by!(email: email)
-  end
 end
