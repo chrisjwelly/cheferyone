@@ -31,9 +31,9 @@ class OrdersController < ApplicationController
       .build(create_order_params.merge({ status: Order.statuses[:unpaid] }))
 
     if @order.save
-      menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
+      menu = @order.menu
       message = "Sweet! #{current_user.username} has ordered for #{menu.name}"
-      recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
+      recipient = menu.restaurant.user
       notify(recipient, @order, message)
       render json: @order, status: :created, location: @order
     else

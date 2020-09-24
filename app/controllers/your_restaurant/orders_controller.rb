@@ -22,7 +22,7 @@ class YourRestaurant::OrdersController < YourRestaurant::ApplicationController
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
-      menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
+      menu = @order.menu
       recipient = User.where(id: @order.user_id).first
       if status == "completed"
           message = "Your order: #{current_user.username}'s #{menu.name} is completed. Please write a sweet note to the chef by reviewing the menu!"
