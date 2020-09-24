@@ -5,7 +5,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
   before_action :set_offset_and_limit, only: :index
   before_action :set_menu, only: [:show, :update, :destroy]
 
-  include Subscribable
+  include Notifier
   # GET /your_restaurant/menus
   def index
     @menus = current_user.restaurant.menus.limit(@limit).offset(@offset)
@@ -50,25 +50,26 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
 
   # PATCH/PUT /your_restaurant/menus/1
   def update
+    exist_new_preorder = !params[:menu][:new_preorders].blank?
+    is_success = true
     ActiveRecord::Base.transaction do
-      exist_new_preorder = !params[:new_preorders].blank
       if !@menu.update(menu_params)
         # Status code: 422
         render json: { errors: @menu.errors }, status: :unprocessable_entity
         raise ActiveRecord::Rollback
       end
 
-      if create_preorders?
+      if !create_preorders?
         is_success = false
         raise ActiveRecord::Rollback
       end
 
-      if update_preorders?
+      if !update_preorders?
         is_success = false
         raise ActiveRecord::Rollback
       end
 
-      if destroy_preorders?
+      if !destroy_preorders?
         is_success = false
         raise ActiveRecord::Rollback
       end

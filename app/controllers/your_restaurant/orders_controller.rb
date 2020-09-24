@@ -3,6 +3,7 @@ class YourRestaurant::OrdersController < YourRestaurant::ApplicationController
   before_action :set_order, only: [:show, :update_status]
 
   before_action :ensure_chef!
+  include Notifier
 
   # GET /your_restaurant/orders
   def index
@@ -17,20 +18,22 @@ class YourRestaurant::OrdersController < YourRestaurant::ApplicationController
 
   # PATCH/PUT /your_restaurant/orders/1/update_status
   def update_status
+    status = update_status_params[:status]
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
       menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
       recipient = User.where(id: @order.user_id).first
-      if params[:status] == "completed"
+      if status == "completed"
           message = "Your order: #{current_user.username}'s #{menu.name} is completed. Please write a sweet note to the chef by reviewing the menu!"
           notify(recipient, @order, message)
-      elsif params[:status] == "ended"
+      elsif status == "ended"
           message = "Too bad :(, Your order: #{current_user.username}'s #{menu.name} is rejected."
           notify(recipient, @order, message)
-      elsif params[:status] == "confirmed"
+      elsif status == "confirmed"
           message = "Congrats! Your order: #{current_user.username}'s #{menu.name} is approved. Hang on tight and wait for the next info for collection!"
           notify(recipient, @order, message)
+      end
       render json: @order
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity

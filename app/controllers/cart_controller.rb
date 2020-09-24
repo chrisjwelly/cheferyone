@@ -1,5 +1,6 @@
 class CartController < ApplicationController
   acts_as_token_authentication_handler_for User
+  include Notifier
   # GET /cart
   def show 
     @unpaid_orders = group_by_restaurant_name
@@ -31,7 +32,7 @@ class CartController < ApplicationController
       menu = Menu.where(id: Preorder.where(id: order.preorder_id).first.menu_id).first
       message = "Sweet! #{current_user.username} has paid an order for #{menu.name}"
       recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
-      notify(recipient, order, menu)
+      notify(recipient, order, message)
     end
 
     render body: nil, status: :ok

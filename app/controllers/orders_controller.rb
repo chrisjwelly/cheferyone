@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   acts_as_token_authentication_handler_for User
   before_action :set_order, only: [:show, :update, :destroy, :update_status]
-
+  include Notifier
   # GET /orders
   def index
     @orders = current_user.orders.where.not(status: Order.statuses[:unpaid])
@@ -34,7 +34,7 @@ class OrdersController < ApplicationController
       menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
       message = "Sweet! #{current_user.username} has ordered for #{menu.name}"
       recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
-      notify(recipient, order, menu)
+      notify(recipient, @order, message)
       render json: @order, status: :created, location: @order
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity
@@ -55,13 +55,14 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1/update_status
   def update_status
+    puts "lololl"
     if !is_valid_status_change?
       render body: nil, status: :unprocessable_entity
     elsif @order.update(update_status_params)
       menu = Menu.where(id: Preorder.where(id: @order.preorder_id).first.menu_id).first
       message = "Too bad! #{current_user.username} has cancelled an order for #{menu.name}"
       recipient = User.where(id: Restaurant.where(id: menu.restaurant_id).first.user_id).first
-      notify(recipient, order, menu)
+      notify(recipient, order, message)
       render json: @order
     else
       render json: { errors: @order.errors }, status: :unprocessable_entity
