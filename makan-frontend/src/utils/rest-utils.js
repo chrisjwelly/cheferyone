@@ -3,16 +3,9 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import useSWR, { useSWRInfinite } from "swr";
 import { v4 as uuidv4 } from "uuid";
-<<<<<<< HEAD
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import { useHistory } from "react-router-dom";
-||||||| merged common ancestors
-import _ from "lodash";
-=======
-import isEmpty from "lodash/isEmpty";
-import isObject from "lodash/isObject";
->>>>>>> 2b2343200b3a48d5a665963d0428a9b99bcdb62e
 
 import { PAGE_SIZE } from "../constants";
 import storage from "./firebase-storage";
