@@ -52,7 +52,7 @@ function Authenticated() {
   useEffect(() => {
     setHasLocationName(!!location && !!location.name);
 
-    if (!!location) {
+    if (!!location && navigator.onLine) {
       setNearbyPath(
         `/api/v1/menus/near_you?latitude=${location.lat}&longitude=${location.lng}&limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
       );
