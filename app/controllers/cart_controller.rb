@@ -1,5 +1,6 @@
 class CartController < ApplicationController
   acts_as_token_authentication_handler_for User
+  include Notifier
   # GET /cart
   def show 
     @unpaid_orders = group_by_restaurant_name
@@ -18,13 +19,22 @@ class CartController < ApplicationController
       new_tid = max_tid + 1
     end
 
+    orders = current_user.orders.unpaid
     # TODO: Stripe Integrations
-    current_user.orders.unpaid.each do |order|
+    orders.each do |order|
       # TODO: Do a Transaction for rollback
       if !order.update(status: Order.statuses[:paid], transaction_id: new_tid, paid_date: now)
         render json: { errors: @order.errors }, status: :unprocessable_entity
       end
     end
+
+    orders.each do |order|
+      menu = order.menu
+      message = "Sweet! #{current_user.username} has paid an order for #{menu.name}"
+      recipient = menu.restaurant.user
+      notify(recipient, order, message)
+    end
+
     render body: nil, status: :ok
   end
 
