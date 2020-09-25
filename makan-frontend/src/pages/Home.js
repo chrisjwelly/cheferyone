@@ -36,7 +36,8 @@ export default function Home() {
   }, [location]);
 
   const recommended = useGet(
-    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
+    `/api/v1/menus/recommended?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`,
+    true
   );
   const nearby = useGet(nearbyPath);
   const recent = useGet(
