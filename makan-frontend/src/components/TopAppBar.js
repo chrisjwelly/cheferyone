@@ -14,7 +14,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ReactGA from "react-ga";
 import Tab from "@material-ui/core/Tab";
-import clsx from "clsx";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 import { setOrdersTabIndex } from "../actions/orders-tab-actions";
@@ -124,6 +123,7 @@ export default function TopAppBar({ hasBell }) {
               {!isNarrow && (
                 <Grid item>
                   <img
+                    crossOrigin="anonymous"
                     onClick={() => history.push("/")}
                     alt="icon"
                     src={`${process.env.PUBLIC_URL}/logo48.png`}
