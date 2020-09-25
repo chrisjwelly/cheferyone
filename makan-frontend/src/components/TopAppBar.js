@@ -2,18 +2,19 @@ import React, { useState, Suspense, lazy } from "react";
 import { makeStyles, fade } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ReactGA from "react-ga";
 import Tab from "@material-ui/core/Tab";
+import clsx from "clsx";
 
 import { setRestaurantTabIndex } from "../actions/restaurant-tab-actions";
 import { setOrdersTabIndex } from "../actions/orders-tab-actions";
@@ -53,8 +54,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
-  exitSearchButton: {
+  white: {
     color: theme.palette.common.white,
+  },
+  hide: {
+    visibility: "hidden",
   },
   inputRoot: {
     color: "inherit",
@@ -78,7 +82,8 @@ export default function TopAppBar({ hasBell }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const isNarrow = useMediaQuery("(max-width:500px)");
+  const location = useLocation();
+  const isNarrow = useMediaQuery("(max-width:300px)");
 
   const { index, isShown: isTabsShown } = useSelector(
     (store) => store.restaurantTab
@@ -97,19 +102,36 @@ export default function TopAppBar({ hasBell }) {
     <>
       <AppBar className={classes.root}>
         <Toolbar>
-          {!isNarrow && !isShowSearchOverlay && <img src="logo192.png" />}
-          {/* <Typography variant="h6" className={classes.title}>
-            {isNarrow && isShowSearchOverlay ? "" : "Cheferyone"}
-          </Typography> */}
-          {isShowSearchOverlay && (
-            <IconButton
-              onMouseDown={() => {
-                dispatch(setIsShowSearchOverlay(false));
-              }}
-            >
-              <ArrowBackIcon className={classes.exitSearchButton} />
-            </IconButton>
-          )}
+          <div className={classes.title}>
+            <Grid container wrap="nowrap" alignItems="center" spacing={1}>
+              {(location.pathname !== "/" || isShowSearchOverlay) && (
+                <Grid item>
+                  <IconButton
+                    className={classes.white}
+                    size="small"
+                    onMouseDown={() => {
+                      if (isShowSearchOverlay) {
+                        dispatch(setIsShowSearchOverlay(false));
+                      } else {
+                        history.goBack();
+                      }
+                    }}
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                </Grid>
+              )}
+              {!isNarrow && (
+                <Grid item>
+                  <img
+                    onClick={() => history.push("/")}
+                    alt="icon"
+                    src="/logo48.png"
+                  />
+                </Grid>
+              )}
+            </Grid>
+          </div>
           {hasBell && (
             <>
               <div className={classes.search}>
