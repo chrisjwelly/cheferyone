@@ -33,7 +33,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuCard({ name, price, rating, link, image, tags }) {
+export default function MenuCard({
+  name,
+  price,
+  rating,
+  count,
+  link,
+  image,
+  tags,
+}) {
   const classes = useStyles();
   return (
     <Link to={link} className={classes.root}>
@@ -65,7 +73,7 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
               </Grid>
             ))}
           </Grid>
-          <RatingStars size="small" rating={rating} />
+          <RatingStars size="small" rating={rating} count={count} />
         </CardContent>
       </Card>
     </Link>

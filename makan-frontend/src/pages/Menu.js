@@ -114,6 +114,7 @@ export default function Menu() {
           homecook={data.username}
           image={data.image_url}
           rating={data.rating}
+          count={data.review_counts}
           isOwner={!isNotOwner}
         />
         {!isNotOwner && (

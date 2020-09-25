@@ -18,6 +18,7 @@ import SuccessSnackbar from "./components/SuccessSnackbar";
 import TopAppBar from "./components/TopAppBar";
 import SearchOverlay from "./components/SearchOverlay";
 import NotificationsDrawer from "./components/NotificationsDrawer";
+import LoginPrompt from "./components/LoginPrompt";
 
 import setAuthHeaders from "./utils/set-auth-headers";
 import { setCurrentUser, logoutUser } from "./actions/auth-actions";
@@ -124,6 +125,7 @@ function Main() {
       <RootDialog />
       <NotificationsDrawer />
       <TopAppBar hasBell={!isEmpty(currUser)} />
+      {isEmpty(currUser) && <LoginPrompt />}
       {isShowSearchOverlay ? (
         <SearchOverlay />
       ) : (
@@ -157,27 +159,27 @@ function Main() {
               <PrivateRoute exact path="/recommended">
                 <ListMenu section="recommended" />
               </PrivateRoute>
-              <PrivateRoute exact path="/nearby">
-                <ListMenu section="nearby" />
-              </PrivateRoute>
               <PrivateRoute exact path="/menu/:id/edit">
                 <EditMenu />
               </PrivateRoute>
               <PrivateRoute exact path="/menu/:id/review">
                 <SubmitReview />
               </PrivateRoute>
-              <PrivateRoute exact path="/new">
-                <ListMenu section="new" />
-              </PrivateRoute>
-              <PrivateRoute exact path="/search/:section/:term">
-                <SearchPage />
-              </PrivateRoute>
-              <PrivateRoute exact path="/filter/:section/:term">
-                <SearchPage isFilter />
-              </PrivateRoute>
               <PrivateRoute exact path="/checkout">
                 <Checkout />
               </PrivateRoute>
+              <Route exact path="/nearby">
+                <ListMenu section="nearby" />
+              </Route>
+              <Route exact path="/new">
+                <ListMenu section="new" />
+              </Route>
+              <Route exact path="/search/:section/:term">
+                <SearchPage />
+              </Route>
+              <Route exact path="/filter/:section/:term">
+                <SearchPage isFilter />
+              </Route>
               <Route exact path="/register">
                 <Register />
               </Route>

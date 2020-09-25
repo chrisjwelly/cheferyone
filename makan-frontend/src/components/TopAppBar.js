@@ -134,50 +134,48 @@ export default function TopAppBar({ hasBell }) {
               )}
             </Grid>
           </div>
-          {hasBell && (
-            <>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <form
-                  onSubmit={(e) => {
-                    ReactGA.event({
-                      category: "Searching",
-                      action: "User is using the search bar",
-                    });
-                    e.preventDefault();
-                    if (searchTerm !== "") {
-                      dispatch(setIsShowSearchOverlay(false));
-                      history.push(`/search/${searchSection}/${searchTerm}`);
-                    }
-                  }}
-                >
-                  <InputBase
-                    onClick={() => dispatch(setIsShowSearchOverlay(true))}
-                    onChange={(e) => {
-                      setSearchTerm(e.target.value);
-                      dispatch(setIsShowSearchOverlay(true));
-                    }}
-                    value={searchTerm}
-                    placeholder={`${uppercaseFirst(searchSection)}...`}
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                  />
-                </form>
-              </div>
-              <IconButton
-                aria-label="notifications"
-                color="inherit"
-                onClick={() => {
-                  dispatch(setDrawerState(!isDrawerOpen));
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <form
+              onSubmit={(e) => {
+                ReactGA.event({
+                  category: "Searching",
+                  action: "User is using the search bar",
+                });
+                e.preventDefault();
+                if (searchTerm !== "") {
+                  dispatch(setIsShowSearchOverlay(false));
+                  history.push(`/search/${searchSection}/${searchTerm}`);
+                }
+              }}
+            >
+              <InputBase
+                onClick={() => dispatch(setIsShowSearchOverlay(true))}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  dispatch(setIsShowSearchOverlay(true));
                 }}
-              >
-                <NotificationsIcon />
-              </IconButton>
-            </>
+                value={searchTerm}
+                placeholder={`${uppercaseFirst(searchSection)}...`}
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+              />
+            </form>
+          </div>
+          {hasBell && (
+            <IconButton
+              aria-label="notifications"
+              color="inherit"
+              onClick={() => {
+                dispatch(setDrawerState(!isDrawerOpen));
+              }}
+            >
+              <NotificationsIcon />
+            </IconButton>
           )}
         </Toolbar>
         {isTabsShown && (

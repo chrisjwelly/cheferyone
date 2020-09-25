@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,10 +11,7 @@ import { useHistory } from "react-router-dom";
 
 import InfiniteScroll from "../components/InfiniteScroll";
 import AvatarCors from "./AvatarCors";
-import {
-  setDrawerState,
-  setUnreadNotifications,
-} from "../actions/notification-actions";
+import { setDrawerState } from "../actions/notification-actions";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {

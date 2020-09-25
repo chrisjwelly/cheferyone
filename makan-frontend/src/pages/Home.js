@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import isEmpty from "lodash/isEmpty";
-import { Link } from "react-router-dom";
 
 import MenuCard from "../components/MenuCard";
 import SuggestionsSectionContainer from "../components/SuggestionsSectionContainer";
@@ -12,16 +8,6 @@ import LoadingCenter from "../components/LoadingCenter";
 import { setTabIndex } from "../actions/bottombar-actions";
 import { useGet } from "../utils/rest-utils";
 import { NUMBER_OF_SUGGESTIONS } from "../constants";
-import GreenButton from "../components/GreenButton";
-
-const useStyles = makeStyles((theme) => ({
-  signInContainer: {
-    height: "100vh",
-  },
-  buttonContainer: {
-    width: theme.breakpoints.values.sm / 3,
-  },
-}));
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -29,21 +15,11 @@ export default function Home() {
   useEffect(() => {
     dispatch(setTabIndex(0));
   }, [dispatch]);
-
-  const currUser = useSelector((store) => store.auth.user);
-
-  if (isEmpty(currUser)) {
-    return <NotAuthenticated />;
-  } else {
-    return <Authenticated />;
-  }
-}
-
-function Authenticated() {
   const location = useSelector((store) => store.location);
   const [hasLocationName, setHasLocationName] = useState(
     !!location && !!location.name
   );
+  const currUser = useSelector((store) => store.auth.user);
 
   const [nearbyPath, setNearbyPath] = useState(
     `/api/v1/menus/near_you?limit=${NUMBER_OF_SUGGESTIONS}&offset=0`
@@ -69,9 +45,7 @@ function Authenticated() {
 
   return (
     <>
-      {recommended.isLoading ? (
-        <LoadingCenter />
-      ) : (
+      {recommended.isLoading || isEmpty(currUser) ? null : (
         <SuggestionsSectionContainer
           title="Recommended"
           seeMorePath="/recommended"
@@ -80,6 +54,7 @@ function Authenticated() {
             <MenuCard
               key={i}
               price={obj.price}
+              count={obj.review_counts}
               rating={obj.rating}
               name={obj.name}
               link={`/menu/${obj.id}`}
@@ -89,7 +64,9 @@ function Authenticated() {
           ))}
         </SuggestionsSectionContainer>
       )}
-      {nearby.isLoading ? null : (
+      {nearby.isLoading ? (
+        <LoadingCenter />
+      ) : (
         <SuggestionsSectionContainer
           title="Near You"
           seeMorePath="/nearby"
@@ -101,6 +78,7 @@ function Authenticated() {
               key={i}
               price={obj.price}
               rating={obj.rating}
+              count={obj.review_counts}
               name={obj.name}
               link={`/menu/${obj.id}`}
               image={obj.image_url}
@@ -116,6 +94,7 @@ function Authenticated() {
               key={i}
               price={obj.price}
               rating={obj.rating}
+              count={obj.review_counts}
               name={obj.name}
               link={`/menu/${obj.id}`}
               image={obj.image_url}
@@ -125,37 +104,5 @@ function Authenticated() {
         </SuggestionsSectionContainer>
       )}
     </>
-  );
-}
-
-function NotAuthenticated() {
-  const classes = useStyles();
-
-  return (
-    <Grid
-      className={classes.signInContainer}
-      container
-      spacing={3}
-      direction="column"
-      alignItems="center"
-      justify="center"
-    >
-      <Grid item className={classes.buttonContainer}>
-        <GreenButton fullWidth variant="contained" component={Link} to="/login">
-          Login
-        </GreenButton>
-      </Grid>
-      <Grid item className={classes.buttonContainer}>
-        <Button
-          fullWidth
-          variant="contained"
-          color="secondary"
-          component={Link}
-          to="/register"
-        >
-          Register
-        </Button>
-      </Grid>
-    </Grid>
   );
 }

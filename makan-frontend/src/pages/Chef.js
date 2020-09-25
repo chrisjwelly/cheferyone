@@ -94,7 +94,7 @@ export default function Chef() {
                     </Grid>
                   ))}
                 </Grid>
-                <RatingStars size="small" rating={menu.rating} />
+                <RatingStars size="small" rating={menu.rating} count={menu.review_counts} />
               </MenuListCard>
             ));
           })

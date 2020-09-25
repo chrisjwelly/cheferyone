@@ -119,7 +119,11 @@ function MenuList({ title, apiPath, locationName, isNearby }) {
                         </Grid>
                       ))}
                     </Grid>
-                    <RatingStars size="small" rating={menu.rating} />
+                    <RatingStars
+                      size="small"
+                      rating={menu.rating}
+                      count={menu.review_counts}
+                    />
                   </MenuListCard>
                 );
               });

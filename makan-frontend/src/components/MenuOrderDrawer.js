@@ -119,7 +119,7 @@ export default function MenuOrderDrawer({
                   {name}
                 </Typography>
                 <Typography variant="body1">{`S$${stringToMoney(
-                  price
+                  Number(price) * quantity
                 )}`}</Typography>
               </Grid>
             </Grid>

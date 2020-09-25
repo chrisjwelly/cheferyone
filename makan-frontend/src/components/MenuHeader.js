@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MenuHeader({
   name,
   rating,
+  count,
   homecook,
   image,
   id,
@@ -67,7 +68,7 @@ export default function MenuHeader({
             menuId={id}
           />
         )}
-        <RatingStars size="small" rating={rating} />
+        <RatingStars size="small" rating={rating} count={count} />
         <Typography
           variant="caption"
           component={RouterLink}
