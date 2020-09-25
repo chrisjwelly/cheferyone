@@ -2,7 +2,12 @@
 
 // cache all GET
 self.addEventListener("fetch", function (event) {
-  if (event.request.method === "GET") {
+  console.log(event.request.url);
+  if (
+    event.request.method === "GET" &&
+    !event.request.url.includes("https://www.google-analytics.com") &&
+    !event.request.url.includes("https://maps.googleapis.com")
+  ) {
     event.respondWith(
       caches.open("dynamic").then(function (cache) {
         return cache.match(event.request).then(function (response) {

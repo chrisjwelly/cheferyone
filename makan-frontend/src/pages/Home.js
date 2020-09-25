@@ -89,9 +89,7 @@ function Authenticated() {
           ))}
         </SuggestionsSectionContainer>
       )}
-      {nearby.isLoading ? (
-        <LoadingCenter />
-      ) : (
+      {nearby.isLoading ? null : (
         <SuggestionsSectionContainer
           title="Near You"
           seeMorePath="/nearby"
@@ -111,9 +109,7 @@ function Authenticated() {
           ))}
         </SuggestionsSectionContainer>
       )}
-      {recent.isLoading ? (
-        <LoadingCenter />
-      ) : (
+      {recent.isLoading ? null : (
         <SuggestionsSectionContainer title="New" seeMorePath="/new">
           {recent.data.map((obj, i) => (
             <MenuCard

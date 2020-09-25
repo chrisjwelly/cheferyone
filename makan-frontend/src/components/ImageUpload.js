@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import Badge from "@material-ui/core/Badge";
-import Avatar from "@material-ui/core/Avatar";
-import ImageIcon from "@material-ui/icons/Image";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+
+import AvatarCors from "./AvatarCors";
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -61,9 +61,7 @@ export default function ImageUpload({ initialImage, setImageBlob }) {
             </>
           }
         >
-          <Avatar variant="square" className={classes.image} src={image}>
-            <ImageIcon fontSize="large" />
-          </Avatar>
+          <AvatarCors variant="square" className={classes.image} src={image} />
         </Badge>
       </Grid>
       <Grid xs={12} item>

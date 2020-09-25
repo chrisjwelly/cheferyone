@@ -29,7 +29,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Router history={history}>
         <SWRConfig value={{ shouldRetryOnError: false }}>
-            <App />
+          <App />
         </SWRConfig>
       </Router>
     </Provider>

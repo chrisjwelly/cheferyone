@@ -44,7 +44,13 @@ export default function MenuListCard({ name, link, image, children, ...rest }) {
         <Grid container wrap="nowrap" alignItems="center">
           {image && (
             <Grid item>
-              <CardMedia className={classes.media} image={image} title={name} />
+              <CardMedia
+                component="img"
+                crossOrigin="anonymous"
+                className={classes.media}
+                image={image}
+                title={name}
+              />
             </Grid>
           )}
           <Grid item className={classes.detailsContainer} xs={12}>

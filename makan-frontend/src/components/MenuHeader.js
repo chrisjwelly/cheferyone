@@ -48,7 +48,12 @@ export default function MenuHeader({
     <Grid container wrap="nowrap" alignItems="center">
       {image && (
         <Grid item component={Link} href={image}>
-          <img alt={name} className={classes.thumbnail} src={image} />
+          <img
+            crossOrigin="anonymous"
+            alt={name}
+            className={classes.thumbnail}
+            src={image}
+          />
         </Grid>
       )}
       <Grid item className={classes.nameContainer}>

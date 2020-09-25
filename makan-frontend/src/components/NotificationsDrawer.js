@@ -5,12 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { createConsumer } from "@rails/actioncable";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
-import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import { format } from "date-fns";
-import ImageIcon from "@material-ui/icons/Image";
 import { useHistory } from "react-router-dom";
 
+import AvatarCors from "./AvatarCors";
 import { setDrawerState } from "../actions/notification-actions";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,28 +44,7 @@ export default function NotificationsDrawer() {
   );
   const isOpen = useSelector((store) => store.notification.isOpen);
   const [consumer, setConsumer] = useState(null);
-  const [notifications, setNotifications] = useState([
-    {
-      content: "ah_beng's ee is in the town! Go check it out!",
-      object: {
-        image_url: null,
-        redirect_url: "/menu/26",
-        created_at: "2020-09-24T23:13:30.319Z",
-      },
-      to: {
-        id: 1,
-        email: "user1@example.com",
-        created_at: "2020-09-24T22:36:23.504Z",
-        updated_at: "2020-09-24T22:36:23.504Z",
-        username: "user1",
-        is_chef: false,
-        tags: null,
-        description: null,
-        image_url: null,
-        location: null,
-      },
-    },
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     if (authToken && !consumer) {
@@ -76,7 +54,6 @@ export default function NotificationsDrawer() {
         { channel: "NotificationsChannel" },
         {
           received(data) {
-            console.log(JSON.stringify(data));
             setNotifications((notifications) => [data, ...notifications]);
           },
         }
@@ -142,9 +119,11 @@ function CurrentNotification({ content, image_url, redirect_url, created_at }) {
       </Grid>
       <Grid container wrap="nowrap" alignItems="center">
         <Grid item>
-          <Avatar className={classes.avatar} variant="square" src={image_url}>
-            <ImageIcon fontSize="large" />
-          </Avatar>
+          <AvatarCors
+            className={classes.avatar}
+            variant="square"
+            src={image_url}
+          />
         </Grid>
         <Grid item>
           <Typography variant="caption">{content}</Typography>

@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: theme.breakpoints.values.sm / 4,
   },
   media: {
-    height: 0,
-    paddingTop: "75%", // 4:3
+    height: theme.spacing(14),
+    objectFit: "cover",
   },
   title: {
     fontWeight: "bold",
@@ -40,6 +40,8 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}
+          component="img"
+          crossOrigin="anonymous"
           image={!image ? "/insert_photo-24px.svg" : image}
           title={name}
         />
@@ -59,10 +61,7 @@ export default function MenuCard({ name, price, rating, link, image, tags }) {
           >
             {tags.map((t, i) => (
               <Grid key={i} item>
-                <Chip
-                  size="small"
-                  label={t.name + " "}
-                />
+                <Chip size="small" label={t.name + " "} />
               </Grid>
             ))}
           </Grid>

@@ -128,7 +128,7 @@ function Main() {
         <SearchOverlay />
       ) : (
         <Container className={classes.root} maxWidth="sm">
-          <Suspense fallback={<LoadingCenter />}>
+          <Suspense fallback={null}>
             <Switch>
               <PrivateRoute exact path="/your-restaurant">
                 <YourRestaurant currTab={0} />

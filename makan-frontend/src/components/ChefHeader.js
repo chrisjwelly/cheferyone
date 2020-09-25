@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
@@ -9,7 +8,8 @@ import isEmpty from "lodash/isEmpty";
 import { useSelector } from "react-redux";
 
 import CollapsibleText from "./CollapsibleText";
-import SubscribeButton from "../components/SubscribeButton";
+import SubscribeButton from "./SubscribeButton";
+import AvatarCors from "./AvatarCors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +36,7 @@ export default function ChefHeader({
   return (
     <Grid container className={classes.root} alignItems="center">
       <Grid item xs={5}>
-        <Avatar alt={username} src={image_url} className={classes.avatar} />
+        <AvatarCors alt={username} src={image_url} className={classes.avatar} />
       </Grid>
       <Grid item xs={7}>
         <Grid container spacing={1}>
