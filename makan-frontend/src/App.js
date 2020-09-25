@@ -122,7 +122,7 @@ function Main() {
       <SuccessSnackbar />
       <WarningSnackbar />
       <RootDialog />
-      {/* <NotificationsDrawer /> */}
+      <NotificationsDrawer />
       <TopAppBar hasBell={!isEmpty(currUser)} />
       {isShowSearchOverlay ? (
         <SearchOverlay />
