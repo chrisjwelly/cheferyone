@@ -270,7 +270,6 @@ function offlineHandler(
 
     return true;
   } else if (!navigator.onLine) {
-    console.log("here");
     dispatch(openErrorSnackBar("No internet connection!"));
     return true;
   }
