@@ -35,9 +35,8 @@ class MenusController < ApplicationController
     while list_of_tags.count < tags_limit do
       list_of_tags.push(Tag.find(rand(1..total_tags)).name)
     end
-
     @menus = Menu.joins(:tags).left_outer_joins(:reviews).where(tags: { name: list_of_tags })
-        .group(:id).order('avg(rating) desc').limit(@limit).offset(@offset)
+        .group(:id).order('COALESCE(AVG(rating), 0.0) desc').limit(@limit).offset(@offset)
     render json: @menus
   end
 
