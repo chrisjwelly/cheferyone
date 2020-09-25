@@ -126,7 +126,7 @@ export default function TopAppBar({ hasBell }) {
                   <img
                     onClick={() => history.push("/")}
                     alt="icon"
-                    src="/logo48.png"
+                    src={`${process.env.PUBLIC_URL}/logo48.png`}
                   />
                 </Grid>
               )}
