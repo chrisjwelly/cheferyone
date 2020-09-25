@@ -187,11 +187,13 @@ create_preorders(ayam_geprek)
   now = DateTime.now
   3.times do |j|
     order1 = list_of_users[i].orders.create(quantity: 1, status: j + 1, remarks: "This is a dummy remark", preorder_id: (j + 1 + 3*i), transaction_id: j + 1, paid_date: now)
-    if j == 2:
+    if j == 2
       order1.create_review(rating: [i,j].max + 2 , content: "I really like this menu")
+    end
     order2 = list_of_users[i].orders.create(quantity: 1, status: j + 1, remarks: "Second remark", preorder_id: 12 + (j + 1 + 3*i), transaction_id: j + 1, paid_date: now)
-    if j == 2:
+    if j == 2
       order2.create_review(rating: ([i,j].max + 5)/2 , content: "So-So ah")
+    end
   end
 
   3.times do |j|
