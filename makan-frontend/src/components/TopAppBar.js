@@ -97,9 +97,10 @@ export default function TopAppBar({ hasBell }) {
     <>
       <AppBar className={classes.root}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          {!isNarrow && !isShowSearchOverlay && <img src="logo192.png" />}
+          {/* <Typography variant="h6" className={classes.title}>
             {isNarrow && isShowSearchOverlay ? "" : "Cheferyone"}
-          </Typography>
+          </Typography> */}
           {isShowSearchOverlay && (
             <IconButton
               onMouseDown={() => {
