@@ -16,35 +16,6 @@ export default function SubscribeButton({ chefName, menuId, ...rest }) {
 
   const { post } = usePost();
 
-  const unsubChef = async () => {
-    const res = await post({}, `/api/v1/chefs/${chefName}/unsubscribe`, "POST");
-
-    if (res && res !== "offline") {
-      window.location.reload();
-    }
-  };
-  const subChef = async () => {
-    const res = await post({}, `/api/v1/chefs/${chefName}/subscribe`, "POST");
-
-    if (res && res !== "offline") {
-      window.location.reload();
-    }
-  };
-  const unsubMenu = async () => {
-    const res = await post({}, `/api/v1/menus/${menuId}/unsubscribe`, "POST");
-
-    if (res && res !== "offline") {
-      window.location.reload();
-    }
-  };
-  const subMenu = async () => {
-    const res = await post({}, `/api/v1/menus/${menuId}/subscribe`, "POST");
-
-    if (res && res !== "offline") {
-      window.location.reload();
-    }
-  };
-
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
@@ -52,6 +23,35 @@ export default function SubscribeButton({ chefName, menuId, ...rest }) {
       setIsSubscribed(true);
     }
   }, [data]);
+
+  const unsubChef = async () => {
+    const res = await post({}, `/api/v1/chefs/${chefName}/unsubscribe`, "POST");
+
+    if (res && res !== "offline") {
+      setIsSubscribed(false);
+    }
+  };
+  const subChef = async () => {
+    const res = await post({}, `/api/v1/chefs/${chefName}/subscribe`, "POST");
+
+    if (res && res !== "offline") {
+      setIsSubscribed(true);
+    }
+  };
+  const unsubMenu = async () => {
+    const res = await post({}, `/api/v1/menus/${menuId}/unsubscribe`, "POST");
+
+    if (res && res !== "offline") {
+      setIsSubscribed(false);
+    }
+  };
+  const subMenu = async () => {
+    const res = await post({}, `/api/v1/menus/${menuId}/subscribe`, "POST");
+
+    if (res && res !== "offline") {
+      setIsSubscribed(true);
+    }
+  };
 
   if (chefName && isSubscribed) {
     return (
