@@ -75,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  pointer: {
+    cursor: "pointer",
+  },
 }));
 
 export default function TopAppBar({ hasBell }) {
@@ -121,7 +124,7 @@ export default function TopAppBar({ hasBell }) {
                 </Grid>
               )}
               {!isNarrow && (
-                <Grid item>
+                <Grid item className={classes.pointer}>
                   <img
                     crossOrigin="anonymous"
                     onClick={() => history.push("/")}

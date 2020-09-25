@@ -54,12 +54,11 @@ function displayMessage(
   } else if (isNotFound) {
     history.push("/404");
   } else if (isOffline) {
-    // placeholder
-    // dispatch(
-    //   openWarningSnackBar(
-    //     "You are currently offline. Offline functionality may be limited"
-    //   )
-    // );
+    dispatch(
+      openWarningSnackBar(
+        "You are currently offline. Offline functionality may be limited"
+      )
+    );
   } else if (
     error &&
     error.response &&
