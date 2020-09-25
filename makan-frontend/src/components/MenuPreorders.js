@@ -33,7 +33,7 @@ function Cards({ preorders, current_preorder }) {
     return (
       <Grid item>
         <Typography variant="caption" color="textSecondary">
-          It seems a little lonely here...
+          No preorders scheduled yet!
         </Typography>
       </Grid>
     );

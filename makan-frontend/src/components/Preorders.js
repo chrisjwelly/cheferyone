@@ -12,11 +12,11 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SvgIcon from "@material-ui/core/SvgIcon";
-import DoneIcon from "@material-ui/icons/Done";
-import CloseIcon from "@material-ui/icons/Close";
 import Chip from "@material-ui/core/Chip";
 
 import NumberInput from "./NumberInput";
+import GreenButton from "./GreenButton";
+import RedButton from "./RedButton";
 
 const FORMAT = "dd/MMM/yy hh:mma";
 
@@ -245,12 +245,10 @@ export function PreorderEdit({
         </Grid>
       </CardContent>
       <CardActions>
-        <IconButton onClick={() => onClose(preorder)}>
-          <CloseIcon />
-        </IconButton>
-        <IconButton onClick={() => onDone(preorder)} disabled={isDisabled}>
-          <DoneIcon />
-        </IconButton>
+        <RedButton onClick={() => onClose(preorder)}>Cancel</RedButton>
+        <GreenButton onClick={() => onDone(preorder)} disabled={isDisabled}>
+          Confirm
+        </GreenButton>
       </CardActions>
       {isDisabled && (
         <CardContent>
