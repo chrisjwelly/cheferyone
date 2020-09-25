@@ -37,3 +37,4 @@ Scripts/
 
 # Ignore public folder
 /public
+node_modules/

@@ -81,7 +81,7 @@ class YourRestaurant::MenusController < YourRestaurant::ApplicationController
 
     # Notify subscribers of the newly scheduled preorder
     if exist_new_preorder
-      @subscriptions = Subscription.where(subscribable: current_user.restaurant) | Subscription.where(subscribable: @menu)
+      @subscriptions = Subscription.where(subscribable: @menu)
       message = "#{current_user.username}'s #{@menu.name} is scheduled for a pre-order! Let's check it out"
       @subscriptions.each do |subscription|
         notify(subscription.user, @menu, message, @menu.image_url, "/menu/#{@menu.id}")
