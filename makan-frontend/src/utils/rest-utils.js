@@ -101,7 +101,7 @@ export function useGet(
   };
 }
 
-export function useInfinite(url) {
+export function useInfinite(url, offset = 0) {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -110,7 +110,9 @@ export function useInfinite(url) {
       if (previousPageData && !previousPageData.length) {
         return null;
       }
-      return `${url}?limit=${PAGE_SIZE}&offset=${pageIndex * PAGE_SIZE}`;
+      return `${url}?limit=${PAGE_SIZE}&offset=${
+        pageIndex * PAGE_SIZE + offset
+      }`;
     },
     fetcher
   );

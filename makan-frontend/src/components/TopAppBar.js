@@ -4,7 +4,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useSelector, useDispatch } from "react-redux";
@@ -172,11 +171,11 @@ export default function TopAppBar({ hasBell }) {
               <IconButton
                 aria-label="notifications"
                 color="inherit"
-                onClick={() => dispatch(setDrawerState(!isDrawerOpen))}
+                onClick={() => {
+                  dispatch(setDrawerState(!isDrawerOpen));
+                }}
               >
-                <Badge badgeContent={0} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
+                <NotificationsIcon />
               </IconButton>
             </>
           )}

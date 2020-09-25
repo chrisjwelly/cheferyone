@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,14 +9,18 @@ import Grid from "@material-ui/core/Grid";
 import { format } from "date-fns";
 import { useHistory } from "react-router-dom";
 
+import InfiniteScroll from "../components/InfiniteScroll";
 import AvatarCors from "./AvatarCors";
-import { setDrawerState } from "../actions/notification-actions";
+import {
+  setDrawerState,
+  setUnreadNotifications,
+} from "../actions/notification-actions";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
     width: theme.breakpoints.values.sm,
     [theme.breakpoints.down("sm")]: {
-      width: theme.breakpoints.values.sm / 2,
+      width: theme.breakpoints.values.sm / 2.5,
     },
     padding: theme.spacing(2),
     backgroundColor: theme.palette.background.default,
@@ -43,6 +47,7 @@ export default function NotificationsDrawer() {
     (store) => store.auth.user.authentication_token
   );
   const isOpen = useSelector((store) => store.notification.isOpen);
+
   const [consumer, setConsumer] = useState(null);
   const [notifications, setNotifications] = useState([]);
 
@@ -53,13 +58,25 @@ export default function NotificationsDrawer() {
       currConsumer.subscriptions.create(
         { channel: "NotificationsChannel" },
         {
-          received(data) {
+          received: (data) => {
             setNotifications((notifications) => [data, ...notifications]);
           },
         }
       );
     }
-  }, [authToken, consumer]);
+  }, [authToken, consumer, dispatch]);
+
+  const renderCards = (notification, i) => {
+    return (
+      <CurrentNotification
+        key={i}
+        content={notification.content}
+        image_url={notification.object.image_url}
+        redirect_url={notification.object.redirect_url}
+        created_at={notification.object.created_at}
+      />
+    );
+  };
 
   return (
     <Drawer
@@ -69,21 +86,13 @@ export default function NotificationsDrawer() {
       onClose={() => dispatch(setDrawerState(false))}
     >
       <div>
-        {notifications.length === 0 ? (
-          <Typography variant="caption">
-            No notifications yet. It seems a little lonely here...
-          </Typography>
-        ) : (
-          notifications.map((notification, i) => (
-            <CurrentNotification
-              key={i}
-              content={notification.content}
-              image_url={notification.object.image_url}
-              redirect_url={notification.object.redirect_url}
-              created_at={notification.object.created_at}
-            />
-          ))
-        )}
+        {notifications.map(renderCards)}
+        <InfiniteScroll
+          apiPath="/api/v1/notifications"
+          offset={notifications.length}
+        >
+          {(data) => data.map((page) => page.map(renderCards))}
+        </InfiniteScroll>
       </div>
     </Drawer>
   );

@@ -14,11 +14,11 @@ const useStyles = makeStyles({
   },
 });
 
-export default function InfiniteScroll({ apiPath, children }) {
+export default function InfiniteScroll({ apiPath, children, offset }) {
   const classes = useStyles();
-  const res = useInfinite(apiPath);
+  const res = useInfinite(apiPath, offset || 0);
   const { data, isLoading, isLoadingNextPage, isEnd, loadNextPage } = res;
-  
+
   const requestNextPage = (isVisible) => {
     if (isVisible && !isEnd && !isLoadingNextPage) {
       loadNextPage();
